@@ -11,3 +11,6 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 node_modules/.tmp
+
+# Private runbook — re-ping recipient name lives here
+_runbook/
