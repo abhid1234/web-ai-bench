@@ -1,0 +1,151 @@
+[
+  {
+    "id": "Xenova/all-MiniLM-L6-v2",
+    "name": "all-MiniLM-L6-v2",
+    "task": "embed",
+    "pipeline": "feature-extraction",
+    "sizeMB": 23,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": { "type": "text", "value": "On-device ML is changing what's possible in the browser." },
+    "callOptions": { "pooling": "mean", "normalize": true },
+    "hfUrl": "https://huggingface.co/Xenova/all-MiniLM-L6-v2",
+    "notes": "The classic sentence embedder. Smallest, safest baseline. 384-dim output."
+  },
+  {
+    "id": "Xenova/bge-small-en-v1.5",
+    "name": "bge-small-en-v1.5",
+    "task": "embed",
+    "pipeline": "feature-extraction",
+    "sizeMB": 33,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": { "type": "text", "value": "On-device ML is changing what's possible in the browser." },
+    "callOptions": { "pooling": "mean", "normalize": true },
+    "hfUrl": "https://huggingface.co/Xenova/bge-small-en-v1.5",
+    "notes": "BGE small from BAAI. Strong English embedder, popular in RAG pipelines."
+  },
+  {
+    "id": "Xenova/multilingual-e5-small",
+    "name": "multilingual-e5-small",
+    "task": "embed",
+    "pipeline": "feature-extraction",
+    "sizeMB": 118,
+    "dtypes": { "webnn": "q8", "webgpu": "fp16", "wasm": "fp32" },
+    "testInput": { "type": "text", "value": "query: how does WebNN compare to WebGPU for inference latency?" },
+    "callOptions": { "pooling": "mean", "normalize": true },
+    "hfUrl": "https://huggingface.co/Xenova/multilingual-e5-small",
+    "notes": "Multilingual E5 — supports 100+ languages. Tests how non-English models behave on each backend."
+  },
+  {
+    "id": "Xenova/all-distilroberta-v1",
+    "name": "all-distilroberta-v1",
+    "task": "embed",
+    "pipeline": "feature-extraction",
+    "sizeMB": 82,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": { "type": "text", "value": "Architecture diversity matters when measuring backend coverage." },
+    "callOptions": { "pooling": "mean", "normalize": true },
+    "hfUrl": "https://huggingface.co/Xenova/all-distilroberta-v1",
+    "notes": "RoBERTa-distilled embedder. Different attention layout from BERT — exercises different ops."
+  },
+  {
+    "id": "Xenova/distilbert-base-uncased-finetuned-sst-2-english",
+    "name": "distilbert-sst2",
+    "task": "classify",
+    "pipeline": "text-classification",
+    "sizeMB": 67,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": { "type": "text", "value": "WebNN running on dedicated NPU silicon is genuinely impressive." },
+    "hfUrl": "https://huggingface.co/Xenova/distilbert-base-uncased-finetuned-sst-2-english",
+    "notes": "Sentiment classifier. The standard text-classification smoke test."
+  },
+  {
+    "id": "Xenova/mobilenet_v3_small_100",
+    "name": "mobilenet-v3-small",
+    "task": "vision-classify",
+    "pipeline": "image-classification",
+    "sizeMB": 10,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": {
+      "type": "image-url",
+      "value": "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg"
+    },
+    "hfUrl": "https://huggingface.co/Xenova/mobilenet_v3_small_100",
+    "notes": "Tiny vision classifier. Designed for mobile/edge — should be the friendliest model on every backend."
+  },
+  {
+    "id": "Xenova/vit-base-patch16-224",
+    "name": "vit-base-patch16-224",
+    "task": "vision-classify",
+    "pipeline": "image-classification",
+    "sizeMB": 86,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": {
+      "type": "image-url",
+      "value": "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/tiger.jpg"
+    },
+    "hfUrl": "https://huggingface.co/Xenova/vit-base-patch16-224",
+    "notes": "Vision Transformer base. Heavier than MobileNet — good for measuring transformer-vs-conv overhead."
+  },
+  {
+    "id": "Xenova/clip-vit-base-patch32",
+    "name": "clip-vit-base-patch32",
+    "task": "multimodal-embed",
+    "pipeline": "feature-extraction",
+    "sizeMB": 151,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": { "type": "text", "value": "a photo of a tiger in a forest" },
+    "callOptions": { "pooling": "mean" },
+    "hfUrl": "https://huggingface.co/Xenova/clip-vit-base-patch32",
+    "notes": "CLIP text encoder only (image side benchmarks separately). Multimodal embedder used in countless retrieval apps."
+  },
+  {
+    "id": "Xenova/whisper-tiny.en",
+    "name": "whisper-tiny.en",
+    "task": "asr",
+    "pipeline": "automatic-speech-recognition",
+    "sizeMB": 75,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": {
+      "type": "audio-url",
+      "value": "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/jfk.wav"
+    },
+    "hfUrl": "https://huggingface.co/Xenova/whisper-tiny.en",
+    "notes": "Smallest Whisper. Encoder-decoder — exercises ops that fail on some WebNN backends (cross-attention, dynamic shapes)."
+  },
+  {
+    "id": "Xenova/distilgpt2",
+    "name": "distilgpt2",
+    "task": "generate",
+    "pipeline": "text-generation",
+    "sizeMB": 124,
+    "dtypes": { "webnn": "q8", "webgpu": "fp32", "wasm": "fp32" },
+    "testInput": { "type": "text", "value": "Web AI Bench measures" },
+    "callOptions": { "max_new_tokens": 16, "do_sample": false },
+    "hfUrl": "https://huggingface.co/Xenova/distilgpt2",
+    "notes": "Smallest decent generator. Greedy decoding for reproducibility."
+  },
+  {
+    "id": "onnx-community/Qwen2.5-0.5B-Instruct",
+    "name": "Qwen2.5-0.5B-Instruct",
+    "task": "generate",
+    "pipeline": "text-generation",
+    "sizeMB": 530,
+    "dtypes": { "webnn": "q4", "webgpu": "q4f16", "wasm": "q4" },
+    "testInput": { "type": "text", "value": "Q: What is WebNN? A:" },
+    "callOptions": { "max_new_tokens": 32, "do_sample": false },
+    "hfUrl": "https://huggingface.co/onnx-community/Qwen2.5-0.5B-Instruct",
+    "notes": "Small instruct LLM. Q4 quantized — pushes the 4GB WASM ceiling on weaker devices but should fit on most."
+  },
+  {
+    "id": "onnx-community/Phi-3.5-mini-instruct-onnx-web",
+    "name": "Phi-3.5-mini-instruct",
+    "task": "generate",
+    "pipeline": "text-generation",
+    "sizeMB": 2100,
+    "dtypes": { "webgpu": "q4f16" },
+    "testInput": { "type": "text", "value": "Explain on-device ML in one sentence:" },
+    "callOptions": { "max_new_tokens": 32, "do_sample": false },
+    "hfUrl": "https://huggingface.co/onnx-community/Phi-3.5-mini-instruct-onnx-web",
+    "notes": "Big LLM. Will OOM on most WebNN/WASM paths and on low-RAM devices — that IS the data point. Documents the ceiling."
+  }
+]
