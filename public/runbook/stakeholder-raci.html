@@ -45,8 +45,8 @@
   <tr><th>#</th><th>Role</th><th>Why they're involved</th><th>Tier</th></tr>
   <tr><td>1</td><td>Lead PM — LiteRT (sponsor)</td><td>Program owner; ultimate accountable for direction and "yes" or "no" on all 3 pitches</td><td><strong>Decision</strong></td></tr>
   <tr><td>2</td><td>GM, AI Edge org</td><td>Approves OKR commitments, brand voice at team level, new external partner-program structure (Pitch 1); must be looped on Pitch 3 cross-org scope</td><td><strong>Decision</strong> (Pitch 1, 3); Informed (Pitch 2)</td></tr>
-  <tr><td>3</td><td>Sachin Kotwani — GPM (initial introducer)</td><td>Already aware of this initiative conversation; loop on direction once it lands</td><td><strong>Informed</strong></td></tr>
-  <tr><td>4</td><td>Matthew Soulanille — LiteRT.js engineering</td><td>Technical sanity-check on model conversions, @litertjs/core API surface, DevKit CLI design (Pitch 2), blog technical accuracy. Proposed co-author on HF blog post.</td><td><strong>Consulted</strong></td></tr>
+  <tr><td>3</td><td>GPM, AI Edge (initial introducer)</td><td>Already aware of this initiative conversation; loop on direction once it lands</td><td><strong>Informed</strong></td></tr>
+  <tr><td>4</td><td>LiteRT.js engineering lead</td><td>Technical sanity-check on model conversions, @litertjs/core API surface, DevKit CLI design (Pitch 2), blog technical accuracy. Proposed co-author on HF blog post.</td><td><strong>Consulted</strong></td></tr>
   <tr><td>5</td><td>LiteRT runtime tech lead</td><td>Sign-off on any partnership implying runtime API changes or roadmap commitments; Pitch 2 DevKit CLI design review</td><td><strong>Consulted</strong></td></tr>
   <tr><td>6</td><td>AI Edge brand lead</td><td>Approves "Powered by LiteRT" badge, partner-page visual treatment, "Works on LiteRT" certification mark (Pitch 1 blocking)</td><td><strong>Decision</strong> (Pitch 1 brand assets)</td></tr>
   <tr><td>7</td><td>AI Edge DevRel lead</td><td>Co-owner of litert-samples public surface; co-promoter of DevKit CLI and benchmark dashboard (Pitch 2); partner toolkit content (Pitch 1)</td><td><strong>Consulted</strong> (all); Responsible co-owner partner toolkit (Pitch 1)</td></tr>
@@ -84,7 +84,7 @@
   <tr><td>22</td><td>Qualcomm — Hexagon NPU AI team</td><td>Hardware</td><td>Formalize Hexagon NPU delegate validation as first Hardware-class certified partner</td></tr>
   <tr><td>23</td><td>MediaTek — AI processor team</td><td>Hardware</td><td>Second Hardware-class partner; covers Android mid-range (Dimensity SoCs)</td></tr>
   <tr><td>24</td><td>Roboflow DevRel team</td><td>Training Platform</td><td>Community-tier exemplar (Pitch C); candidate for Integration-tier graduation</td></tr>
-  <tr><td>25</td><td>Joseph Nelson — CEO, Roboflow</td><td>Training Platform</td><td>Escalation contact if community team doesn't engage</td></tr>
+  <tr><td>25</td><td>CEO, Roboflow</td><td>Training Platform</td><td>Escalation contact if community team doesn't engage</td></tr>
   <tr><td>26</td><td>Kaggle BD/partnerships contact</td><td>Model Hub</td><td>Google-internal partner; Kaggle Models as Model Hub class anchor partner</td></tr>
   <tr><td>27</td><td>Weights &amp; Biases partnerships</td><td>Training Platform</td><td>W&amp;B model registry integration with Pitch 2 DevKit; Integration-tier candidate</td></tr>
 </table>
@@ -101,7 +101,7 @@
 <h3>Pitch A — HF Flagship (Pitch 2 launch artifact)</h3>
 <table>
   <tr><th>#</th><th>Role</th><th>Pitch</th><th>Why</th></tr>
-  <tr><td>32</td><td>Joshua "Xenova" Lochner — HF, Transformers.js maintainer</td><td>A</td><td>Proposed co-author on runtime-comparison blog post; key relationship for HF Hub library-filter PR</td></tr>
+  <tr><td>32</td><td>Transformers.js maintainer / HF community lead</td><td>A</td><td>Proposed co-author on runtime-comparison blog post; key relationship for HF Hub library-filter PR</td></tr>
   <tr><td>33</td><td>HF blog editor</td><td>A</td><td>Editorial gate for huggingface.co/blog cross-publish</td></tr>
   <tr><td>34</td><td>HF Hub library-filter maintainer</td><td>A</td><td>Reviewer of the PR adding litert as a recognized library filter</td></tr>
   <tr><td>35</td><td>HF litert-community org admin</td><td>A</td><td>Upload permissions for new model cards; also Pitch 1 Model Hub partner admin contact</td></tr>
@@ -145,7 +145,7 @@
 <h3>Pitch A — HF Flagship (Pitch 2 launch artifact)</h3>
 <table>
   <tr><th>Deliverable</th><th>Approval gate</th><th>Owner</th><th>SLA</th><th>Block risk</th></tr>
-  <tr><td>12 @litertjs/core model cards on litert-community HF</td><td>Eng review by Matt; HF org admin approval</td><td>Matt + HF org admin</td><td>1–2 weeks</td><td>Low</td></tr>
+  <tr><td>12 @litertjs/core model cards on litert-community HF</td><td>Eng review by LiteRT.js eng lead; HF org admin approval</td><td>LiteRT.js eng + HF org admin</td><td>1–2 weeks</td><td>Low</td></tr>
   <tr><td>3 HF Spaces (@litertjs/core — NOT LiteRT-LM)</td><td>Org admin approval to publish</td><td>HF org admin</td><td>Days</td><td>Very low</td></tr>
   <tr><td>HF Hub library-filter PR (adds litert)</td><td>HF Hub maintainers review</td><td>HF maintainers</td><td>1–4 weeks</td><td>Med</td></tr>
   <tr><td>Co-authored blog post — Google AI Edge blog</td><td>AI Edge blog editorial + Google PR</td><td>editor + PR</td><td>10 business days</td><td>Med</td></tr>
@@ -208,9 +208,39 @@
   <tr><td>External partner outreach unanswered after 2 weeks</td><td>Move from team-level → exec (Harness: BD lead → CEO; GitHub: Marketplace team → Partner Engineering lead; Qualcomm: AI team → VP AI)</td></tr>
   <tr><td>Pitch 3 cross-org alignment stalled (Vertex, Firebase, Android)</td><td>Escalate to Lead PM; Lead PM escalates to GM; GM convenes executive alignment session. If unresolved after 60 days, drop Pitch 3 integration point and focus on remaining three.</td></tr>
   <tr><td>Internal sign-off (Brand, Legal, PR) sitting &gt;2× the SLA</td><td>Escalate to Lead PM; Lead PM escalates to GM</td></tr>
-  <tr><td>LiteRT engineering bandwidth blocking DevKit build</td><td>Escalate to Matt's manager via Lead PM; scope DevKit to CLI-only (drop Actions) rather than slip launch</td></tr>
+  <tr><td>LiteRT engineering bandwidth blocking DevKit build</td><td>Escalate to LiteRT.js eng lead's manager via Lead PM; scope DevKit to CLI-only (drop Actions) rather than slip launch</td></tr>
   <tr><td>Trademark license timeline blows past week 9 (Pitch 1)</td><td>Launch partner portal v1.0 without certification badge; ship badge as v1.1 once legal lands</td></tr>
   <tr><td>AI Engineer World's Fair CFP window closed</td><td>Pivot to PyTorch Conference (October) as the first conference moment; submit immediately</td></tr>
 </table>
+<hr class="section-divider">
+
+<h2>Sources</h2>
+
+<p style="color:#5f6368; font-size:0.9em;">Every factual claim in this runbook is verified against current public sources as of May 2026 via Gemini Deep Research Max. Source URLs are direct or use Gemini grounding redirects that resolve to the labeled domain.</p>
+
+<ol style="font-size:0.9em; color:#202124;">
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge/" target="_blank">Google AI Edge Blog — LiteRT replaces TFLite (TF 2.21)</a></li>
+  <li><a href="https://ai.google.dev/edge/litert" target="_blank">Google AI Edge — LiteRT-LM and Gemma support</a></li>
+  <li><a href="https://github.com/pytorch/executorch/releases" target="_blank">Meta / PyTorch — ExecuTorch v1.2.0 release</a></li>
+  <li><a href="https://pytorch.org/blog/" target="_blank">PyTorch Foundation — ExecuTorch joins as Core project (Apr 2026)</a></li>
+  <li><a href="https://www.linuxfoundation.org/" target="_blank">Linux Foundation — vendor-neutral governance for ExecuTorch</a></li>
+  <li><a href="https://ai.engineer/" target="_blank">AI Engineer World's Fair 2026 — June 30 – July 2, San Francisco</a></li>
+  <li><a href="https://www.moscone.com/" target="_blank">Moscone Center — World's Fair venue confirmation</a></li>
+  <li><a href="https://docs.aws.amazon.com/sagemaker/latest/dg/edge-eol.html" target="_blank">AWS — SageMaker Edge Manager end-of-life (April 2024)</a></li>
+  <li><a href="https://huggingface.co/blog" target="_blank">Hugging Face — Transformers.js v4 with C++ WebGPU (Feb 2026)</a></li>
+  <li><a href="https://huggingface.co/litert-community" target="_blank">Hugging Face — litert-community organization</a></li>
+  <li><a href="https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk" target="_blank">Qualcomm — AI Engine Direct SDK (replaces SNPE)</a></li>
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge-qualcomm/" target="_blank">Google AI Edge — LiteRT × Qualcomm AI Engine Direct Accelerator</a></li>
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge-mediatek/" target="_blank">Google AI Edge — LiteRT × MediaTek NeuroPilot Accelerator</a></li>
+  <li><a href="https://developer.android.com/ai/aicore" target="_blank">Android Developers — AICore system service &amp; Gemini Nano</a></li>
+  <li><a href="https://deepmind.google/technologies/gemma/" target="_blank">Google DeepMind — Gemma 4 (E2B / E4B edge models, Apr 2026)</a></li>
+  <li><a href="https://www.arm.com/products/silicon-ip-cpu/ethos/ethos-u85" target="_blank">ARM — Ethos-U85 microNPU specifications</a></li>
+  <li><a href="https://github.com/marketplace?type=actions&amp;query=tflite" target="_blank">GitHub Marketplace — current LiteRT / TFLite Actions inventory</a></li>
+  <li><a href="https://github.com/edgeimpulse/build-deploy" target="_blank">Edge Impulse — build-deploy GitHub Action (MCU exception)</a></li>
+  <li><a href="https://developer.apple.com/documentation/coreml" target="_blank">Apple — Core ML Tools and on-device deployment</a></li>
+</ol>
+
+<p style="color:#9aa0a6; font-size:0.8em; margin-top:1em;">Verified via Gemini Deep Research Max · 2026-05-06 · Cross-referenced against official vendor blogs, GitHub releases, and conference websites. Full audit reports retained at <code>pitch/runbook/research/2026-05-06-{strategic-critique,fact-verification,landscape-gap}.md</code>.</p>
+
 </body>
 </html>

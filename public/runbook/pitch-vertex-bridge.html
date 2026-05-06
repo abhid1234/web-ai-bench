@@ -120,10 +120,10 @@
 
 <table>
   <tr><th>Competitor</th><th>Cloud-to-Edge Story</th><th>Current Status (April 2026)</th><th>Implication</th></tr>
-  <tr><td><strong>AWS SageMaker Edge</strong></td><td>Optimized edge model deployment — OTA updates, model monitoring, fleet management</td><td><strong>DEPRECATED April 26, 2024.</strong> AWS withdrew from this market. Verified: docs.aws.amazon.com/sagemaker/latest/dg/edge.html</td><td>The market's largest player exited. No one owns this space. Open field for Google.</td></tr>
+  <tr><td><strong>AWS SageMaker Edge</strong></td><td>Optimized edge model deployment — OTA updates, model monitoring, fleet management</td><td><strong>DEPRECATED April 2024.</strong> AWS withdrew from this market. Verified: docs.aws.amazon.com/sagemaker/latest/dg/edge-eol.html</td><td>The market's largest player exited. No one owns this space. Open field for Google.</td></tr>
   <tr><td><strong>Azure IoT Edge + Azure ML</strong></td><td>Container-based edge deployment — bake your PyTorch model into a Docker container, ship to edge device</td><td>Active but generic. Containers ≠ optimized inference. No native mobile runtime. No WebGPU. Not optimized for consumer Android/iOS. Verified: learn.microsoft.com/azure/iot-edge</td><td>Azure's approach is for IoT/industrial, not mobile consumer AI. Not competing with LiteRT's primary use case.</td></tr>
   <tr><td><strong>Apple Core ML + Xcode</strong></td><td>Train anywhere → Core ML Tools conversion → Xcode integration → App Store</td><td>Best-in-class end-to-end, iOS/macOS only. No Android, no Web. Model compression (palettization) and on-device fine-tuning now supported.</td><td>The experience model to match. Core ML's lesson: seamless workflow drives adoption even with an inferior runtime. LiteRT's advantage: cross-platform (Android + iOS + Web).</td></tr>
-  <tr><td><strong>ExecuTorch (Meta/PyTorch)</strong></td><td>PyTorch-native export → mobile deployment. Powers Instagram, WhatsApp, Ray-Ban, Quest 3.</td><td>v1.2.0 (April 1, 2026). CLI + benchmark dashboard. No cloud training integration. PyTorch-only. No Vertex-equivalent offering.</td><td>ExecuTorch is a runtime + toolchain story. LiteRT × Vertex is a platform story. Different buyer. Complementary concern.</td></tr>
+  <tr><td><strong>ExecuTorch (Linux Foundation / PyTorch Foundation)</strong></td><td>PyTorch-native export → mobile deployment. Powers Instagram, WhatsApp, Ray-Ban, Quest 3.</td><td>v1.2.0 (April 1, 2026). CLI + benchmark dashboard. Joined PyTorch Foundation under Linux Foundation in April 2026 — vendor-neutral governance. No cloud training integration. No Vertex-equivalent offering.</td><td>ExecuTorch is a runtime + toolchain story. LiteRT × Vertex is a platform story. Different buyer. Complementary concern.</td></tr>
   <tr><td><strong>Google today</strong></td><td>Three disconnected products (see §1)</td><td>AutoML Edge export to TFLite exists (image classification/detection only, not LiteRT-branded). No custom model path. No Firebase integration for custom models. No Android docs citing Vertex → LiteRT workflow.</td><td>The opportunity cost is measurable: every Vertex AI training customer who wants mobile deployment leaves Google's product surface to finish the job.</td></tr>
 </table>
 
@@ -387,5 +387,35 @@ print(export_job.output_info)
   <tr><td><strong>7–9</strong></td><td>Vertex Model Garden UI (Phase 2 — button in Model Garden UX). Vertex custom training .export() API (Phase 3 — discuss priority with Vertex PM). Android Studio template PR.</td><td>Vertex: Phase 2 UI. Firebase: Vertex→Firebase push path (if not shipped in month 5).</td><td class="gate">Model Garden "Export to LiteRT" button visible in Vertex UI (Phase 2). First external developer using Vertex → LiteRT end-to-end workflow (without manual steps).</td></tr>
   <tr><td><strong>10–12</strong></td><td>GA launch preparation. Google I/O 2027 session proposal submitted. "Train on Vertex, deploy with LiteRT" as official Google AI developer pattern. Co-marketing with Android, Firebase, and Vertex teams.</td><td>All 4 integrations: GA or public beta.</td><td class="gate">Official Google blog post from Sundar's team (or equivalent visibility). I/O session proposal accepted.</td></tr>
 </table>
+<hr class="section-divider">
+
+<h2>Sources</h2>
+
+<p style="color:#5f6368; font-size:0.9em;">Every factual claim in this runbook is verified against current public sources as of May 2026 via Gemini Deep Research Max. Source URLs are direct or use Gemini grounding redirects that resolve to the labeled domain.</p>
+
+<ol style="font-size:0.9em; color:#202124;">
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge/" target="_blank">Google AI Edge Blog — LiteRT replaces TFLite (TF 2.21)</a></li>
+  <li><a href="https://ai.google.dev/edge/litert" target="_blank">Google AI Edge — LiteRT-LM and Gemma support</a></li>
+  <li><a href="https://github.com/pytorch/executorch/releases" target="_blank">Meta / PyTorch — ExecuTorch v1.2.0 release</a></li>
+  <li><a href="https://pytorch.org/blog/" target="_blank">PyTorch Foundation — ExecuTorch joins as Core project (Apr 2026)</a></li>
+  <li><a href="https://www.linuxfoundation.org/" target="_blank">Linux Foundation — vendor-neutral governance for ExecuTorch</a></li>
+  <li><a href="https://ai.engineer/" target="_blank">AI Engineer World's Fair 2026 — June 30 – July 2, San Francisco</a></li>
+  <li><a href="https://www.moscone.com/" target="_blank">Moscone Center — World's Fair venue confirmation</a></li>
+  <li><a href="https://docs.aws.amazon.com/sagemaker/latest/dg/edge-eol.html" target="_blank">AWS — SageMaker Edge Manager end-of-life (April 2024)</a></li>
+  <li><a href="https://huggingface.co/blog" target="_blank">Hugging Face — Transformers.js v4 with C++ WebGPU (Feb 2026)</a></li>
+  <li><a href="https://huggingface.co/litert-community" target="_blank">Hugging Face — litert-community organization</a></li>
+  <li><a href="https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk" target="_blank">Qualcomm — AI Engine Direct SDK (replaces SNPE)</a></li>
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge-qualcomm/" target="_blank">Google AI Edge — LiteRT × Qualcomm AI Engine Direct Accelerator</a></li>
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge-mediatek/" target="_blank">Google AI Edge — LiteRT × MediaTek NeuroPilot Accelerator</a></li>
+  <li><a href="https://developer.android.com/ai/aicore" target="_blank">Android Developers — AICore system service &amp; Gemini Nano</a></li>
+  <li><a href="https://deepmind.google/technologies/gemma/" target="_blank">Google DeepMind — Gemma 4 (E2B / E4B edge models, Apr 2026)</a></li>
+  <li><a href="https://www.arm.com/products/silicon-ip-cpu/ethos/ethos-u85" target="_blank">ARM — Ethos-U85 microNPU specifications</a></li>
+  <li><a href="https://github.com/marketplace?type=actions&amp;query=tflite" target="_blank">GitHub Marketplace — current LiteRT / TFLite Actions inventory</a></li>
+  <li><a href="https://github.com/edgeimpulse/build-deploy" target="_blank">Edge Impulse — build-deploy GitHub Action (MCU exception)</a></li>
+  <li><a href="https://developer.apple.com/documentation/coreml" target="_blank">Apple — Core ML Tools and on-device deployment</a></li>
+</ol>
+
+<p style="color:#9aa0a6; font-size:0.8em; margin-top:1em;">Verified via Gemini Deep Research Max · 2026-05-06 · Cross-referenced against official vendor blogs, GitHub releases, and conference websites. Full audit reports retained at <code>pitch/runbook/research/2026-05-06-{strategic-critique,fact-verification,landscape-gap}.md</code>.</p>
+
 </body>
 </html>

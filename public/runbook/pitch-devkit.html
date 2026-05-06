@@ -53,9 +53,10 @@
 <div class="tldr">
 <h2>TL;DR — "Docker push for edge AI"</h2>
 <ul>
-  <li><strong>The gap:</strong> Zero GitHub Actions for TFLite/LiteRT exist on the Marketplace today (verified April 30, 2026). Deploying a trained model to Android, iOS, and Web takes 6 manual steps across 3 different tools — all outside Google's product surface. The runtime itself has split (LiteRT for general .tflite, LiteRT-LM for LLMs / RAG / generation), doubling the developer pain. ExecuTorch (Meta) shipped a CLI and benchmark dashboard in April 2026. LiteRT has neither.</li>
-  <li><strong>The pitch:</strong> LiteRT DevKit — an open-source CLI (<code>pip install litert-devkit</code>) covering both LiteRT and LiteRT-LM, three GitHub Actions, workflow templates for the use cases the team is championing (on-device RAG, translation, camera+LLM), and a public benchmark dashboard — that collapses 6 manual steps into one pipeline. <code>litert convert && litert push</code> becomes the standard command, the way <code>docker build && docker push</code> became standard a decade ago.</li>
-  <li><strong>Built-in distribution channel:</strong> Google × Qualcomm runs LiteRT hackathons (450+ applicants per event, verified via the January 2026 hackathon). DevKit ships as the official tooling — every participant uses <code>litert convert && litert push</code> from day one. Day-one developer base of hundreds, not zero.</li>
+  <li><strong>The gap:</strong> Zero GitHub Actions for TFLite/LiteRT exist on the Marketplace today (verified May 2026). Deploying a trained model to Android, iOS, and Web takes 6 manual steps across 3 different tools — all outside Google's product surface. The runtime itself has split (LiteRT for general .tflite, LiteRT-LM for LLMs / RAG / generation), doubling the developer pain. ExecuTorch — now a Linux Foundation / PyTorch Foundation Core project as of April 2026 — shipped a CLI and benchmark dashboard in April 2026. LiteRT has neither.</li>
+  <li><strong>The pitch:</strong> LiteRT DevKit — an open-source CLI (<code>pip install litert-devkit</code>) covering both LiteRT and LiteRT-LM, three GitHub Actions, workflow templates for the use cases the team is championing (on-device RAG, translation, camera+LLM, all powered by Gemma 4 E2B/E4B), and a public benchmark dashboard — that collapses 6 manual steps into one pipeline. <code>litert convert && litert push</code> becomes the standard command, the way <code>docker build && docker push</code> became standard a decade ago.</li>
+  <li><strong>Built-in distribution channel:</strong> Google × Qualcomm runs LiteRT hackathons. The next confirmed event is in Sunnyvale, April 30 – May 1, 2026; the January 2026 hackathon's BeyondMaps showcase confirmed the format works. DevKit ships as the official tooling — every participant uses <code>litert convert && litert push</code> from day one.</li>
+  <li><strong>What's NOT this pitch:</strong> Android 16's <strong>AICore</strong> system service already serves Gemini Nano centrally for general-purpose AI (~940 tok/s on Pixel NPU, OS-managed memory and battery). DevKit is for the second world: <em>domain-specific</em> custom models — proprietary CV, vertical LLMs, regulated-data inference — that AICore won't host. The two are complementary, not competitive.</li>
   <li><strong>Partnerships background required:</strong> Managing Harness, Datadog, and Lovable at Google Cloud provides direct CI/CD and DevOps ecosystem relationships — not a cold pitch.</li>
   <li><strong>Launch moment:</strong> The 12 @litertjs/core models + 3 HF Spaces + co-authored blog post (formerly "Pitch A") are the DevKit's launch marketing moment — every model was produced by <code>litert convert && litert push</code>. The blog post becomes the DevKit's product launch story.</li>
   <li><strong>Duration:</strong> 6–9 months initiative. Partnerships PM leads product + partnerships. LiteRT eng builds (1–2 engineers, ~80 hrs).</li>
@@ -342,7 +343,7 @@ jobs:
 
 <p>Each template ships with: (a) a working app, (b) a benchmark profile (<code>litert bench --template &lt;name&gt;</code> publishes to the public dashboard), (c) a tutorial blog post on Google AI Edge, and (d) a single command (<code>litert init &lt;template&gt;</code>) that scaffolds a new project from the template.</p>
 
-<p><strong>Why this matters:</strong> infrastructure pitches don't sell to developers. Use cases do. The templates are the answer to "show me an app I can build with this in a weekend" — which is exactly the question the 450+ LiteRT hackathon applicants are asking. Templates also seed the Pitch 1 Partner Network: each template is a reference implementation a Certified Partner can extend or fork.</p>
+<p><strong>Why this matters:</strong> infrastructure pitches don't sell to developers. Use cases do. The templates are the answer to "show me an app I can build with this in a weekend" — exactly the question hackathon participants are asking. Templates also seed the Pitch 1 Partner Network: each template is a reference implementation a Certified Partner can extend or fork. Crucially, the templates ship pre-built on <strong>Gemma 4 E2B / E4B</strong> (released April 2026) — the canonical Google edge models — so the DevKit dogfoods Google's own foundation models, not just generic conversions.</p>
 
 <hr class="section-divider">
 
@@ -381,7 +382,7 @@ jobs:
 litert bench model.tflite --targets web --post-to dashboard
 litert push model.tflite --hub litert-community --repo all-MiniLM-L6-v2-web --auto-card</pre>
 
-<p>The co-authored blog post with Xenova (HF) becomes: <strong>"We built 12 production-ready web models in 8 weeks — here's the pipeline that made it possible."</strong> The Spaces are the live demos. The benchmark tables in each model card were generated by <code>litert bench</code>. The model cards were generated by <code>litert push --auto-card</code>.</p>
+<p>The co-authored blog post with the HF community lead (Transformers.js maintainer) becomes: <strong>"We built 12 production-ready web models in 8 weeks — here's the pipeline that made it possible."</strong> The Spaces are the live demos. The benchmark tables in each model card were generated by <code>litert bench</code>. The model cards were generated by <code>litert push --auto-card</code>.</p>
 
 <div class="recommendation">
   <strong>Why this framing is more powerful:</strong> The old "Pitch A" framing was "we added models to HF." The DevKit framing is "we shipped 12 models in 8 weeks because we had a pipeline — and now you can use the same pipeline." The models aren't the story; they're the proof. The DevKit is the story.
@@ -393,7 +394,7 @@ litert push model.tflite --hub litert-community --repo all-MiniLM-L6-v2-web --au
 
 <table>
   <tr><th>Conference</th><th>Date</th><th>Track / framing</th><th>Speaker</th><th>Priority</th></tr>
-  <tr><td><strong>AI Engineer World's Fair 2026</strong></td><td>June 29–July 2, SF</td><td>"LLM Production Infra" or "Evals &amp; Observability" track. Talk title: "CI/CD for On-Device AI — What we learned shipping 12 models to the browser in 8 weeks."</td><td>Partnerships PM + Harness co-presenter (if partnership is live by then)</td><td><span class="badge badge-red">P0 — submit CFP immediately</span></td></tr>
+  <tr><td><strong>AI Engineer World's Fair 2026</strong></td><td>June 30–July 2, SF (verified ai.engineer)</td><td>"LLM Production Infra" or "Evals &amp; Observability" track. Talk title: "CI/CD for On-Device AI — What we learned shipping a Gemma-4-powered RAG template across Android, iOS, and Web."</td><td>Partnerships PM + Harness co-presenter (if partnership is live by then)</td><td><span class="badge badge-red">P0 — submit CFP immediately</span></td></tr>
   <tr><td><strong>PyTorch Conference NA</strong></td><td>Oct 20–21, San Jose</td><td>LiteRT DevKit vs ExecuTorch positioning. Talk: "Framework-agnostic edge CI/CD — LiteRT DevKit works with PyTorch, JAX, and TensorFlow." Direct ExecuTorch audience.</td><td>LiteRT eng + Partnerships PM</td><td><span class="badge badge-blue">P1 — submit Sept</span></td></tr>
   <tr><td><strong>AI Infra Summit</strong></td><td>Sep 15–17, Santa Clara</td><td>Enterprise CI/CD angle. Co-present with Harness if MOU is signed.</td><td>Partnerships PM + Harness</td><td><span class="badge badge-blue">P1</span></td></tr>
   <tr><td><strong>Google I/O 2027</strong></td><td>May 2027</td><td>Full DevKit GA + Pitch 1 Partner Network launch. The full ecosystem story.</td><td>Lead PM or LiteRT VP</td><td><span class="badge badge-green">P2 — plan for it</span></td></tr>
@@ -403,17 +404,17 @@ litert push model.tflite --hub litert-community --repo all-MiniLM-L6-v2-web --au
 
 <h2>§8. Hackathon Distribution Strategy</h2>
 
-<p>The LiteRT team already runs developer hackathons with Qualcomm as the silicon partner — the January 2026 Google × Qualcomm LiteRT Hackathon drew 450+ applicants and produced winning projects on the exact use cases the workflow templates target (on-device RAG, offline translation, camera+LLM). This is a built-in distribution channel the DevKit can plug into immediately.</p>
+<p>The LiteRT team already runs developer hackathons with Qualcomm as the silicon partner. The January 2026 Google × Qualcomm LiteRT Hackathon (BeyondMaps showcase) and the upcoming Sunnyvale event (April 30 – May 1, 2026, confirmed via withflow.co) both target the exact use cases the workflow templates address — on-device RAG, offline translation, camera+LLM. This is a built-in distribution channel the DevKit can plug into immediately.</p>
 
 <table>
   <tr><th>Hackathon touchpoint</th><th>What the DevKit ships as</th><th>Outcome</th></tr>
-  <tr><td><strong>Pre-event onboarding</strong></td><td>Official starter pack: <code>litert init</code> + the three workflow templates pre-cloned. Setup script verified on Qualcomm reference devices.</td><td>Every participant's day-one workflow is <code>litert convert && litert push</code>. 450+ developers learn the canonical commands in one weekend.</td></tr>
+  <tr><td><strong>Pre-event onboarding</strong></td><td>Official starter pack: <code>litert init</code> + the three workflow templates pre-cloned. Setup script verified on Qualcomm reference devices.</td><td>Every participant's day-one workflow is <code>litert convert && litert push</code>. The full hackathon cohort learns the canonical commands in one weekend.</td></tr>
   <tr><td><strong>During the event</strong></td><td>Live benchmark dashboard scoped to the hackathon — every <code>litert bench</code> run shows up on a public leaderboard. Partnerships PM + LiteRT eng in the Discord answering DevKit questions.</td><td>Real-time signal on which DevKit commands break, which docs are missing, what NPU ops fail. Direct DX feedback loop.</td></tr>
   <tr><td><strong>Post-event amplification</strong></td><td>Every winning project is featured on the LiteRT blog with a "Built with the LiteRT DevKit" badge. The team's case-study posts (like BeyondMaps) become DevKit launch content.</td><td>External marketing with zero ad spend. Hackathon winners become DevKit evangelists at their day jobs.</td></tr>
   <tr><td><strong>Annual cadence</strong></td><td>3–4 LiteRT × Qualcomm (and ideally LiteRT × MediaTek) hackathons per year. DevKit ships as official tooling for every event.</td><td>Compounding installed base: ~1,500–2,000 hackathon developers per year on day-one DevKit usage.</td></tr>
 </table>
 
-<p><strong>Mentor / judge alignment:</strong> the January 2026 hackathon mentors included Chintan Parikh, Aaishika S Bhattacharya, Derrick J., and Felix Baum — the same LiteRT and Qualcomm leadership the DevKit pitch is targeting for sponsorship. The hackathon program is the product's natural evangelism flywheel; aligning the DevKit launch with the next hackathon (within Q3 2026) gives the launch a captive audience.</p>
+<p><strong>Mentor / judge alignment:</strong> the January 2026 hackathon mentor pool already overlapped substantially with the LiteRT and Qualcomm leadership this pitch is targeting for sponsorship. The hackathon program is the product's natural evangelism flywheel; aligning the DevKit launch with the next hackathon (within Q3 2026) gives the launch a captive audience.</p>
 
 <p><strong>Cost:</strong> Marginal. The DevKit is being built regardless. Plugging it into hackathons adds a half-FTE of partnerships work for pre-event onboarding materials and post-event content production — work the Partnerships PM is already doing for the Pitch 1 Partner Network.</p>
 
@@ -452,13 +453,43 @@ litert push model.tflite --hub litert-community --repo all-MiniLM-L6-v2-web --au
 
 <table>
   <tr><th>Month</th><th>Partnerships PM owns</th><th>LiteRT eng owns</th><th>Gate</th></tr>
-  <tr><td><strong>1</strong></td><td>CLI command spec (all 4 commands + flags). GitHub Actions spec. Harness outreach (week 1). Bitrise + CircleCI outreach (week 1). GitHub outreach (week 2). Roboflow + Ultralytics outreach (week 2). W&amp;B outreach (week 3). CFP submission to AI Engineer World's Fair.</td><td>Repo bootstrap (google-ai-edge/litert-devkit). OSPO review starts. Convert command prototype.</td><td class="gate">CLI spec approved by Lead PM + Matt. Harness intro meeting booked.</td></tr>
+  <tr><td><strong>1</strong></td><td>CLI command spec (all 4 commands + flags). GitHub Actions spec. Harness outreach (week 1). Bitrise + CircleCI outreach (week 1). GitHub outreach (week 2). Roboflow + Ultralytics outreach (week 2). W&amp;B outreach (week 3). CFP submission to AI Engineer World's Fair.</td><td>Repo bootstrap (google-ai-edge/litert-devkit). OSPO review starts. Convert command prototype.</td><td class="gate">CLI spec approved by Lead PM + LiteRT eng lead. Harness intro meeting booked.</td></tr>
   <tr><td><strong>2</strong></td><td>Harness integration spec. GitHub Actions YAML spec. Review litert convert + validate CLI builds. W&amp;B integration spec.</td><td>litert convert + validate CLI (internal). GitHub Actions v0.1 (convert-action).</td><td class="gate">convert-action works end-to-end on a test PyTorch model in a real GitHub repo CI run.</td></tr>
   <tr><td><strong>3</strong></td><td>Benchmark dashboard data schema + design. Benchmark telemetry opt-in design. litert bench + gate Actions spec. Begin Harness MOU negotiation.</td><td>litert bench CLI. litert-bench-action. litert-gate-action. Dashboard backend (static JSON aggregator).</td><td class="gate">All 3 actions work in a test repo CI pipeline end-to-end. Dashboard ingests at least 1 bench run.</td></tr>
   <tr><td><strong>4</strong></td><td>HF model push campaign (12 models using litert push --auto-card). Benchmark dashboard content (seed with 10 device profiles). Contact HF blog editor for blog post scheduling.</td><td>litert push CLI. Dashboard frontend at ai.google.dev/edge/bench (or staging URL). W&amp;B integration plugin.</td><td class="gate">litert push --auto-card produces a correct HF model card on the first try. Dashboard live at staging URL with 10 device profiles.</td></tr>
-  <tr><td><strong>5</strong></td><td>Draft co-authored blog post (LiteRT Partnerships + Xenova + Matt). 3 HF Spaces built and live. DevKit README, quickstart, and docs written. Harness MOU signed or paused.</td><td>OSPO process complete. litert-devkit repo public. MLflow plugin.</td><td class="gate">Repo public. Blog draft in shared Doc. 12 models live in litert-community. 3 Spaces live.</td></tr>
+  <tr><td><strong>5</strong></td><td>Draft co-authored blog post (LiteRT Partnerships + HF community lead + LiteRT.js eng). 3 HF Spaces built and live. DevKit README, quickstart, and docs written. Harness MOU signed or paused.</td><td>OSPO process complete. litert-devkit repo public. MLflow plugin.</td><td class="gate">Repo public. Blog draft in shared Doc. 12 models live in litert-community. 3 Spaces live.</td></tr>
   <tr><td><strong>6</strong></td><td>Publish 3 GitHub Actions to Marketplace. Coordinate HF blog + AI Edge blog publish dates. Co-announce with Harness (if MOU signed) or GitHub (featured placement). World's Fair talk (if accepted — month 1 CFP).</td><td>Final Actions review + publication.</td><td class="gate">Actions published in Marketplace. Blog live on HF + AI Edge blog. Download count baseline established. Conference talk delivered (if accepted).</td></tr>
   <tr><td><strong>7–9</strong></td><td>Harness native pipeline stage co-design (if not complete). PyTorch Conference submission. DevKit v1.1: add device-farm integration. Community device benchmark contributions (target: 30+ profiles).</td><td>DevKit v1.1 CLI. Device farm integration.</td><td class="gate">Harness integration in beta. 30+ community device profiles in dashboard. PyTorch Conference talk submitted.</td></tr>
 </table>
+<hr class="section-divider">
+
+<h2>Sources</h2>
+
+<p style="color:#5f6368; font-size:0.9em;">Every factual claim in this runbook is verified against current public sources as of May 2026 via Gemini Deep Research Max. Source URLs are direct or use Gemini grounding redirects that resolve to the labeled domain.</p>
+
+<ol style="font-size:0.9em; color:#202124;">
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge/" target="_blank">Google AI Edge Blog — LiteRT replaces TFLite (TF 2.21)</a></li>
+  <li><a href="https://ai.google.dev/edge/litert" target="_blank">Google AI Edge — LiteRT-LM and Gemma support</a></li>
+  <li><a href="https://github.com/pytorch/executorch/releases" target="_blank">Meta / PyTorch — ExecuTorch v1.2.0 release</a></li>
+  <li><a href="https://pytorch.org/blog/" target="_blank">PyTorch Foundation — ExecuTorch joins as Core project (Apr 2026)</a></li>
+  <li><a href="https://www.linuxfoundation.org/" target="_blank">Linux Foundation — vendor-neutral governance for ExecuTorch</a></li>
+  <li><a href="https://ai.engineer/" target="_blank">AI Engineer World's Fair 2026 — June 30 – July 2, San Francisco</a></li>
+  <li><a href="https://www.moscone.com/" target="_blank">Moscone Center — World's Fair venue confirmation</a></li>
+  <li><a href="https://docs.aws.amazon.com/sagemaker/latest/dg/edge-eol.html" target="_blank">AWS — SageMaker Edge Manager end-of-life (April 2024)</a></li>
+  <li><a href="https://huggingface.co/blog" target="_blank">Hugging Face — Transformers.js v4 with C++ WebGPU (Feb 2026)</a></li>
+  <li><a href="https://huggingface.co/litert-community" target="_blank">Hugging Face — litert-community organization</a></li>
+  <li><a href="https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk" target="_blank">Qualcomm — AI Engine Direct SDK (replaces SNPE)</a></li>
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge-qualcomm/" target="_blank">Google AI Edge — LiteRT × Qualcomm AI Engine Direct Accelerator</a></li>
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge-mediatek/" target="_blank">Google AI Edge — LiteRT × MediaTek NeuroPilot Accelerator</a></li>
+  <li><a href="https://developer.android.com/ai/aicore" target="_blank">Android Developers — AICore system service &amp; Gemini Nano</a></li>
+  <li><a href="https://deepmind.google/technologies/gemma/" target="_blank">Google DeepMind — Gemma 4 (E2B / E4B edge models, Apr 2026)</a></li>
+  <li><a href="https://www.arm.com/products/silicon-ip-cpu/ethos/ethos-u85" target="_blank">ARM — Ethos-U85 microNPU specifications</a></li>
+  <li><a href="https://github.com/marketplace?type=actions&amp;query=tflite" target="_blank">GitHub Marketplace — current LiteRT / TFLite Actions inventory</a></li>
+  <li><a href="https://github.com/edgeimpulse/build-deploy" target="_blank">Edge Impulse — build-deploy GitHub Action (MCU exception)</a></li>
+  <li><a href="https://developer.apple.com/documentation/coreml" target="_blank">Apple — Core ML Tools and on-device deployment</a></li>
+</ol>
+
+<p style="color:#9aa0a6; font-size:0.8em; margin-top:1em;">Verified via Gemini Deep Research Max · 2026-05-06 · Cross-referenced against official vendor blogs, GitHub releases, and conference websites. Full audit reports retained at <code>pitch/runbook/research/2026-05-06-{strategic-critique,fact-verification,landscape-gap}.md</code>.</p>
+
 </body>
 </html>

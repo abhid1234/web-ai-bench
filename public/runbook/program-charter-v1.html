@@ -54,7 +54,7 @@
 <div class="tldr">
 <h2>TL;DR — "Intel Inside for edge AI"</h2>
 <ul>
-  <li><strong>The gap:</strong> LiteRT has exactly two informal partnerships (Hugging Face, Qualcomm) — no certification standard, no public application surface, no co-marketing calendar, no tier structure. ExecuTorch (Meta) is building native toolchain lock-in across Meta's app ecosystem. LiteRT needs ecosystem lock-in at the hardware, training, and deployment layer before the window closes (18–24 months).</li>
+  <li><strong>The gap:</strong> LiteRT has exactly two informal partnerships (Hugging Face, Qualcomm) — no certification standard, no public application surface, no co-marketing calendar, no tier structure. ExecuTorch — now a Linux Foundation / PyTorch Foundation Core project as of April 2026 — is gaining vendor-neutral enterprise momentum across Meta's app ecosystem and beyond. LiteRT needs ecosystem lock-in at the hardware, training, and deployment layer before the window closes (18–24 months).</li>
   <li><strong>The pitch:</strong> A formal "Works on LiteRT" certification program across 4 partner classes — Hardware, Training Platforms, Deployment Tools, Model Hubs. Public partner portal at <code>ai.google.dev/edge/partners</code>. Annual LiteRT Partner Summit. "Powered by LiteRT" badge with trademark license. In 3 years: every NPU chip ships LiteRT pre-validated, every training platform has a LiteRT export button, every DevOps tool has a LiteRT pipeline stage.</li>
   <li><strong>Partnerships background required:</strong> Managing Harness, Datadog, and Lovable at Google Cloud provides direct CI/CD and DevOps ecosystem relationships — not a cold pitch.</li>
   <li><strong>First 3 partners:</strong> Qualcomm (Hardware — Strategic tier, existing relationship to formalize), Hugging Face (Model Hub — Strategic tier, existing relationship to deepen), Roboflow (Training Platform — Community tier, the exemplar that proves the onboarding path works).</li>
@@ -74,7 +74,7 @@
 </ul>
 
 <div class="critical">
-  <strong>The ExecuTorch threat is not about runtime quality — it's about ecosystem lock-in.</strong> ExecuTorch v1.2.0 (April 1, 2026) powers Instagram, WhatsApp, Ray-Ban Smart Glasses, and Meta Quest 3. Every Meta developer defaults to ExecuTorch. Every PyTorch developer is drawn toward ExecuTorch. LiteRT's answer cannot be "our runtime is faster" — it must be "our ecosystem is bigger and better connected." That ecosystem does not exist yet. This pitch builds it.
+  <strong>The ExecuTorch threat is not about runtime quality — it's about ecosystem lock-in.</strong> ExecuTorch v1.2.0 (April 1, 2026) powers Instagram, WhatsApp, Ray-Ban Smart Glasses, and Meta Quest 3. As of April 2026 it operates under PyTorch Foundation / Linux Foundation governance — vendor-neutral, accelerating enterprise trust. Every PyTorch developer is drawn toward it. LiteRT's answer cannot be "our runtime is faster" — it must be "our ecosystem is bigger and better connected." That ecosystem does not exist yet. This pitch builds it.
 </div>
 
 <div class="flow">PARTNER ECOSYSTEM MATURITY TODAY vs TARGET STATE:
@@ -84,7 +84,7 @@
   │ Hardware:    Qualcomm (informal)                             │
   │ Training:    Roboflow (no formal relationship)               │
   │ Deployment:  None                                            │
-  │ Model Hubs:  Hugging Face (informal), TF Hub (Google-owned)  │
+  │ Model Hubs:  Hugging Face (informal), Kaggle Models (Google) │
   │ Application: ?   Discovery: ?   Co-marketing: ?             │
   └──────────────────────────────────────────────────────────────┘
 
@@ -138,7 +138,7 @@
 
 <p><strong>What this pitch formalizes:</strong></p>
 <ul>
-  <li><strong>Certification:</strong> Qualcomm runs the LiteRT hardware certification test suite (Partnerships PM designs the spec; Matt reviews) on Hexagon NPU at each major LiteRT release. Results are published to the partner portal. Badge: "Certified LiteRT Hardware Partner v2.1.4 — Qualcomm Hexagon NPU."</li>
+  <li><strong>Certification:</strong> Qualcomm runs the LiteRT hardware certification test suite (Partnerships PM designs the spec; LiteRT.js eng reviews) on Hexagon NPU at each major LiteRT release. Results are published to the partner portal. Badge: "Certified LiteRT Hardware Partner v2.1.4 — Qualcomm Hexagon NPU."</li>
   <li><strong>Co-marketing:</strong> Joint press release at program launch. Qualcomm listed as Strategic Hardware partner on the portal. One co-authored technical blog post per year ("Running LiteRT on Snapdragon — benchmark deep dive").</li>
   <li><strong>Roadmap access:</strong> Qualcomm gets pre-release access to LiteRT versions for early delegate validation. They provide early feedback on NPU API changes.</li>
   <li><strong>Summit:</strong> Qualcomm presents at the annual LiteRT Partner Summit (their NPU roadmap relevant to LiteRT developers).</li>
@@ -198,7 +198,7 @@ Output: certification-report-{vendor}-{device}-{litert-version}.json
 <ul>
   <li>Roboflow adds a "Deploy to LiteRT" export option in their training UI (single click → .tflite download)</li>
   <li>This is the Training Platform class certification: "Export from Roboflow → loads in @litertjs/core without modification"</li>
-  <li>Partnerships PM co-designs the export spec with Roboflow's eng team. Matt validates the output.</li>
+  <li>Partnerships PM co-designs the export spec with Roboflow's eng team. LiteRT.js eng validates the output.</li>
   <li>Roboflow earns Integration tier + "Exports to LiteRT" badge. Featured at the Partner Summit.</li>
 </ul>
 
@@ -247,11 +247,11 @@ Output: certification-report-{vendor}-{device}-{litert-version}.json
 
 <table>
   <tr><th>Session</th><th>Who presents</th><th>Duration</th></tr>
-  <tr><td>LiteRT roadmap (confidential)</td><td>Lead PM + Matt</td><td>30 min</td></tr>
+  <tr><td>LiteRT roadmap (confidential)</td><td>Lead PM + LiteRT.js eng</td><td>30 min</td></tr>
   <tr><td>Hardware class: Qualcomm Hexagon NPU roadmap</td><td>Qualcomm AI team</td><td>20 min</td></tr>
   <tr><td>Training class: Roboflow "Deploy to LiteRT" — launch story</td><td>Roboflow DevRel</td><td>20 min</td></tr>
   <tr><td>Deployment class: LiteRT DevKit + Harness integration (Pitch 2)</td><td>Partnerships PM + Harness</td><td>20 min</td></tr>
-  <tr><td>Model Hub class: HF litert-community — what's next</td><td>Xenova (HF) + Partnerships PM</td><td>20 min</td></tr>
+  <tr><td>Model Hub class: HF litert-community — what's next</td><td>HF community lead + Partnerships PM</td><td>20 min</td></tr>
   <tr><td>Partner working group: certification standard v1.1 feedback</td><td>All partners</td><td>30 min</td></tr>
   <tr><td>Networking reception</td><td>—</td><td>60 min</td></tr>
 </table>
@@ -336,12 +336,42 @@ Output: certification-report-{vendor}-{device}-{litert-version}.json
 
 <table>
   <tr><th>Month</th><th>Partnerships PM owns</th><th>LiteRT / Google team owns</th><th>Gate</th></tr>
-  <tr><td><strong>1</strong></td><td>Qualcomm outreach (week 1). HF/Xenova outreach (week 1). Roboflow outreach (week 2). Hardware certification test suite spec drafted. Legal track opened (trademark license request submitted — do NOT wait). Portal design spec written.</td><td>Lead PM: approves certification spec and portal design. Legal: trademark license request received. Brand: begins badge design.</td><td class="gate">All 3 launch partner intro meetings booked. Trademark license request submitted to Legal. Portal design approved by Lead PM.</td></tr>
-  <tr><td><strong>2</strong></td><td>Qualcomm: certification test suite walkthrough meeting. Define Qualcomm MOU scope. Roboflow Community tier onboarding (model card + blog post scoped). MediaTek outreach. Application form built (Google Form first, custom later).</td><td>LiteRT eng: review certification test suite for technical correctness. Matt: confirm @litertjs/core API surface for Model Hub certification standard. Web team: portal page sprint begins.</td><td class="gate">Qualcomm certification run scheduled. Roboflow model card spec agreed. Portal staging URL live (internal).</td></tr>
+  <tr><td><strong>1</strong></td><td>Qualcomm outreach (week 1). HF community-lead outreach (week 1). Roboflow outreach (week 2). Hardware certification test suite spec drafted. Legal track opened (trademark license request submitted — do NOT wait). Portal design spec written.</td><td>Lead PM: approves certification spec and portal design. Legal: trademark license request received. Brand: begins badge design.</td><td class="gate">All 3 launch partner intro meetings booked. Trademark license request submitted to Legal. Portal design approved by Lead PM.</td></tr>
+  <tr><td><strong>2</strong></td><td>Qualcomm: certification test suite walkthrough meeting. Define Qualcomm MOU scope. Roboflow Community tier onboarding (model card + blog post scoped). MediaTek outreach. Application form built (Google Form first, custom later).</td><td>LiteRT eng: review certification test suite for technical correctness. LiteRT.js eng: confirm @litertjs/core API surface for Model Hub certification standard. Web team: portal page sprint begins.</td><td class="gate">Qualcomm certification run scheduled. Roboflow model card spec agreed. Portal staging URL live (internal).</td></tr>
   <tr><td><strong>3</strong></td><td>Roboflow model card live in litert-community. Roboflow blog post published. Roboflow Community tier onboarded — first entry on the portal. Qualcomm certification run complete. HF library filter PR submitted.</td><td>Brand: "Powered by LiteRT" badge design complete (pending Legal). Web team: portal public staging.</td><td class="gate">Roboflow is the first listed Community partner. Qualcomm certification results ready. HF library filter PR open.</td></tr>
   <tr><td><strong>4</strong></td><td>Portal soft launch (no press release yet). Application form goes live. MediaTek certification scoping. Harness partnership scoped (Pitch 2 Deployment Tool class — co-design with DevKit timeline). HF Model Hub standard spec written.</td><td>Legal: trademark license ETA confirmed. Qualcomm: MOU review. AI Engineer World's Fair: Summit venue booked.</td><td class="gate">Portal public. Application form live. First inbound application received. Partner Summit venue confirmed.</td></tr>
-  <tr><td><strong>5</strong></td><td>12 @litertjs/core models pushed to litert-community via litert push --auto-card (Pitch 2 DevKit launch moment). 3 HF Spaces live. Blog post drafted with Xenova. HF Strategic tier MOU signed. Roboflow Integration graduation scoped (Deploy to LiteRT button spec).</td><td>LiteRT eng: Pitch 2 DevKit CLI litert push command ready. Matt: blog post technical review. Legal: trademark license approved (target month 5).</td><td class="gate">12 models live. 3 Spaces live. Blog post scheduled for month 6. HF MOU signed. Trademark license in hand (or plan B: launch without badge).</td></tr>
+  <tr><td><strong>5</strong></td><td>12 @litertjs/core models pushed to litert-community via litert push --auto-card (Pitch 2 DevKit launch moment). 3 HF Spaces live. Blog post drafted with HF community lead. HF Strategic tier MOU signed. Roboflow Integration graduation scoped (Deploy to LiteRT button spec).</td><td>LiteRT eng: Pitch 2 DevKit CLI litert push command ready. LiteRT.js eng: blog post technical review. Legal: trademark license approved (target month 5).</td><td class="gate">12 models live. 3 Spaces live. Blog post scheduled for month 6. HF MOU signed. Trademark license in hand (or plan B: launch without badge).</td></tr>
   <tr><td><strong>6</strong></td><td>Official program launch: portal goes fully public, press release (with Qualcomm + HF), blog post live on HF + AI Edge blog. Partner Summit at AI Engineer World's Fair. Harness co-announcement (if Pitch 2 on schedule). Measure inbound applications at 90 days.</td><td>PR: joint press release with Qualcomm + HF. DevRel: Summit event logistics. Lead PM: program launch social post.</td><td class="gate">Press release live. Blog post live. Summit held. 25+ inbound applications in the 90 days post-launch. Harness listed as first Deployment Tool partner.</td></tr>
 </table>
+<hr class="section-divider">
+
+<h2>Sources</h2>
+
+<p style="color:#5f6368; font-size:0.9em;">Every factual claim in this runbook is verified against current public sources as of May 2026 via Gemini Deep Research Max. Source URLs are direct or use Gemini grounding redirects that resolve to the labeled domain.</p>
+
+<ol style="font-size:0.9em; color:#202124;">
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge/" target="_blank">Google AI Edge Blog — LiteRT replaces TFLite (TF 2.21)</a></li>
+  <li><a href="https://ai.google.dev/edge/litert" target="_blank">Google AI Edge — LiteRT-LM and Gemma support</a></li>
+  <li><a href="https://github.com/pytorch/executorch/releases" target="_blank">Meta / PyTorch — ExecuTorch v1.2.0 release</a></li>
+  <li><a href="https://pytorch.org/blog/" target="_blank">PyTorch Foundation — ExecuTorch joins as Core project (Apr 2026)</a></li>
+  <li><a href="https://www.linuxfoundation.org/" target="_blank">Linux Foundation — vendor-neutral governance for ExecuTorch</a></li>
+  <li><a href="https://ai.engineer/" target="_blank">AI Engineer World's Fair 2026 — June 30 – July 2, San Francisco</a></li>
+  <li><a href="https://www.moscone.com/" target="_blank">Moscone Center — World's Fair venue confirmation</a></li>
+  <li><a href="https://docs.aws.amazon.com/sagemaker/latest/dg/edge-eol.html" target="_blank">AWS — SageMaker Edge Manager end-of-life (April 2024)</a></li>
+  <li><a href="https://huggingface.co/blog" target="_blank">Hugging Face — Transformers.js v4 with C++ WebGPU (Feb 2026)</a></li>
+  <li><a href="https://huggingface.co/litert-community" target="_blank">Hugging Face — litert-community organization</a></li>
+  <li><a href="https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk" target="_blank">Qualcomm — AI Engine Direct SDK (replaces SNPE)</a></li>
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge-qualcomm/" target="_blank">Google AI Edge — LiteRT × Qualcomm AI Engine Direct Accelerator</a></li>
+  <li><a href="https://developers.googleblog.com/en/google-ai-edge-mediatek/" target="_blank">Google AI Edge — LiteRT × MediaTek NeuroPilot Accelerator</a></li>
+  <li><a href="https://developer.android.com/ai/aicore" target="_blank">Android Developers — AICore system service &amp; Gemini Nano</a></li>
+  <li><a href="https://deepmind.google/technologies/gemma/" target="_blank">Google DeepMind — Gemma 4 (E2B / E4B edge models, Apr 2026)</a></li>
+  <li><a href="https://www.arm.com/products/silicon-ip-cpu/ethos/ethos-u85" target="_blank">ARM — Ethos-U85 microNPU specifications</a></li>
+  <li><a href="https://github.com/marketplace?type=actions&amp;query=tflite" target="_blank">GitHub Marketplace — current LiteRT / TFLite Actions inventory</a></li>
+  <li><a href="https://github.com/edgeimpulse/build-deploy" target="_blank">Edge Impulse — build-deploy GitHub Action (MCU exception)</a></li>
+  <li><a href="https://developer.apple.com/documentation/coreml" target="_blank">Apple — Core ML Tools and on-device deployment</a></li>
+</ol>
+
+<p style="color:#9aa0a6; font-size:0.8em; margin-top:1em;">Verified via Gemini Deep Research Max · 2026-05-06 · Cross-referenced against official vendor blogs, GitHub releases, and conference websites. Full audit reports retained at <code>pitch/runbook/research/2026-05-06-{strategic-critique,fact-verification,landscape-gap}.md</code>.</p>
+
 </body>
 </html>

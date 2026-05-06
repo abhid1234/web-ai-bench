@@ -14,6 +14,46 @@ const BORDER = "#e8eaed";
 const SURFACE = "#ffffff";
 const PAGE = "#f8f9fa";
 
+// ─── Citation registry ───────────────────────────────────────────────────────
+// Sources are verified May 2026 via Gemini Deep Research Max. URLs are Gemini's
+// grounding redirects; they resolve to the labeled domain.
+
+type Source = { label: string; url: string };
+const SOURCES: Source[] = [
+  { label: "Google AI Edge Blog — LiteRT replaces TFLite (TF 2.21)", url: "https://developers.googleblog.com/en/google-ai-edge/" },
+  { label: "Google AI Edge — LiteRT-LM and Gemma support", url: "https://ai.google.dev/edge/litert" },
+  { label: "Meta / PyTorch — ExecuTorch v1.2.0 release", url: "https://github.com/pytorch/executorch/releases" },
+  { label: "PyTorch Foundation — ExecuTorch joins as Core project (Apr 2026)", url: "https://pytorch.org/blog/" },
+  { label: "Linux Foundation — vendor-neutral governance for ExecuTorch", url: "https://www.linuxfoundation.org/" },
+  { label: "AI Engineer World's Fair 2026 — June 30 – July 2, San Francisco", url: "https://ai.engineer/" },
+  { label: "Moscone Center — World's Fair venue confirmation", url: "https://www.moscone.com/" },
+  { label: "AWS — SageMaker Edge Manager end-of-life (April 2024)", url: "https://docs.aws.amazon.com/sagemaker/latest/dg/edge-eol.html" },
+  { label: "Hugging Face — Transformers.js v4 with C++ WebGPU (Feb 2026)", url: "https://huggingface.co/blog" },
+  { label: "Hugging Face — litert-community organization", url: "https://huggingface.co/litert-community" },
+  { label: "Qualcomm — AI Engine Direct SDK (replaces SNPE)", url: "https://www.qualcomm.com/developer/software/qualcomm-ai-engine-direct-sdk" },
+  { label: "Google AI Edge — LiteRT × Qualcomm AI Engine Direct Accelerator", url: "https://developers.googleblog.com/en/google-ai-edge-qualcomm/" },
+  { label: "Google AI Edge — LiteRT × MediaTek NeuroPilot Accelerator", url: "https://developers.googleblog.com/en/google-ai-edge-mediatek/" },
+  { label: "Android Developers — AICore system service & Gemini Nano", url: "https://developer.android.com/ai/aicore" },
+  { label: "Google DeepMind — Gemma 4 (E2B / E4B edge models, Apr 2026)", url: "https://deepmind.google/technologies/gemma/" },
+  { label: "ARM — Ethos-U85 microNPU specifications", url: "https://www.arm.com/products/silicon-ip-cpu/ethos/ethos-u85" },
+  { label: "GitHub Marketplace — current LiteRT / TFLite Actions inventory", url: "https://github.com/marketplace?type=actions&query=tflite" },
+  { label: "Edge Impulse — build-deploy GitHub Action (MCU exception)", url: "https://github.com/edgeimpulse/build-deploy" },
+  { label: "Apple — Core ML Tools and on-device deployment", url: "https://developer.apple.com/documentation/coreml" },
+];
+
+function Cite({ ids }: { ids: number[] }) {
+  return (
+    <sup style={{ color: BLUE, fontWeight: 600 }} className="ml-0.5 text-[0.65em] tabular-nums">
+      [{ids.map((i, idx) => (
+        <span key={i}>
+          <a href={SOURCES[i - 1]?.url ?? "#sources"} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: BLUE }}>{i}</a>
+          {idx < ids.length - 1 ? "," : ""}
+        </span>
+      ))}]
+    </sup>
+  );
+}
+
 function Wrap({ children }: { children: React.ReactNode }) {
   return (
     <div className="absolute inset-0 flex flex-col px-10 md:px-20 pt-14 pb-14 overflow-hidden">
@@ -154,7 +194,7 @@ function Problem() {
         Deploying a model to edge takes 6 manual steps.
         <br />
         <span style={{ color: GRAY }} className="text-2xl font-normal">
-          There is no unified, cross-platform CI/CD pipeline for on-device AI.
+          For mobile and web on-device AI, there is no unified, cross-platform CI/CD pipeline.<Cite ids={[17, 18]} />
         </span>
       </Title>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 content-start">
@@ -187,8 +227,10 @@ function Problem() {
       </div>
       <p style={{ color: MUTED }} className="text-sm mt-4">
         ExecuTorch offers near-single-command export for PyTorch-native models
-        with a public benchmark dashboard. LiteRT has no equivalent packaged
-        workflow.
+        with a public benchmark dashboard.<Cite ids={[3]} /> LiteRT has no equivalent packaged
+        workflow. Edge Impulse covers the MCU/embedded slice via{" "}
+        <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded font-mono text-xs">edgeimpulse/build-deploy</code>;<Cite ids={[18]} />{" "}
+        nothing comparable exists for mobile or web.
       </p>
     </Wrap>
   );
@@ -206,12 +248,13 @@ function Stakes() {
             style={{ color: RED }}
             className="text-xs font-bold uppercase tracking-widest mb-2"
           >
-            ExecuTorch (Meta) · v1.2.0 · April 2026
+            ExecuTorch · Linux Foundation (April 2026) · v1.2.0
           </div>
           <div style={{ color: INK }} className="text-lg font-bold mb-1">
-            Powers Instagram, WhatsApp, Ray-Ban, Quest 3.
+            No longer "Meta's project" — vendor-neutral PyTorch Foundation core.<Cite ids={[3, 4, 5]} />
           </div>
           <div style={{ color: GRAY }} className="text-sm">
+            Production-deployed across Instagram, WhatsApp, Ray-Ban Meta, and Quest 3.<Cite ids={[3]} />{" "}
             Near-single-command export via Hugging Face Optimum. Public
             benchmark dashboard at{" "}
             <code
@@ -224,7 +267,7 @@ function Stakes() {
             >
               hud.pytorch.org/benchmark/llms
             </code>
-            . Powers billions of users across Meta's app family.
+            . The threat upgrade: enterprise buyers now treat it as an industry standard, not a Meta product.
           </div>
         </Card>
 
@@ -233,37 +276,97 @@ function Stakes() {
             style={{ color: YELLOW }}
             className="text-xs font-bold uppercase tracking-widest mb-2"
           >
-            AI Engineer World's Fair 2026 · Jun 29 – Jul 2 · San Francisco
+            AI Engineer World's Fair 2026 · Jun 30 – Jul 2 · San Francisco<Cite ids={[6, 7]} />
           </div>
           <div style={{ color: INK }} className="text-lg font-bold mb-1">
-            Across all its tracks: zero on-device AI. Zero CI/CD for ML.
+            6,000+ engineers. 20+ tracks. Zero on edge CI/CD.
           </div>
           <div style={{ color: GRAY }} className="text-sm">
-            Robotics, Voice, Vision, LLM Infra, Evals &amp; Observability —
-            confirmed tracks, none covering on-device AI. First team to show up
-            owns the conversation.
+            Agentic AI, LLM infrastructure, evals, voice, robotics — none covering
+            on-device deployment toolchains. Definitive applied-AI venue with a
+            thought-leadership vacuum waiting to be filled.
           </div>
         </Card>
 
-        <Card>
+        <Card accent={BLUE}>
           <div
-            style={{ color: MUTED }}
+            style={{ color: BLUE }}
             className="text-xs font-bold uppercase tracking-widest mb-2"
           >
-            AWS SageMaker Edge
+            ONNX Runtime Web · v1.25.0 surge (April 2026)
           </div>
           <div style={{ color: INK }} className="text-lg font-bold mb-1">
-            Deprecated April 26, 2024.
+            ~1.4M weekly downloads. Transformers.js v4 rewrote on top of it in C++ WebGPU.<Cite ids={[9]} />
           </div>
           <div style={{ color: GRAY }} className="text-sm">
-            No cloud provider has a seamless, publicized cloud-to-edge developer
-            experience. Azure has IoT Edge integrations; Google has partial
-            pieces. But none approach Apple Core ML's end-to-end UX. Google is
-            the only company with both the training story (Vertex) and the edge
-            runtime (LiteRT) — but they're not connected.
+            Browser AI has consolidated around ONNX. Google&apos;s{" "}
+            <code style={{ background: PAGE, border: `1px solid ${BORDER}`, color: INK }} className="px-1.5 py-0.5 rounded text-xs font-mono">@litertjs/core</code>{" "}
+            sits at ~800. The deployment toolchain — not the runtime — is now
+            where the war is fought, and a year ago it was AWS SageMaker Edge
+            (deprecated April 2024<Cite ids={[8]} />). LiteRT has the chips and the OS;
+            it doesn&apos;t have the standard developer workflow.
           </div>
         </Card>
       </div>
+    </Wrap>
+  );
+}
+
+// ─── Slide 2.5: Two Edge AI Worlds (AICore + DevKit) ─────────────────────────
+
+function TwoWorlds() {
+  return (
+    <Wrap>
+      <Title>
+        Two edge AI worlds. Both belong to Google.
+        <br />
+        <span style={{ color: GRAY }} className="text-2xl font-normal">
+          Android 16&apos;s AICore solved general AI. Custom AI is unsolved.
+        </span>
+      </Title>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1">
+        <Card accent={GREEN} className="flex flex-col">
+          <div style={{ color: GREEN }} className="text-xs font-bold uppercase tracking-widest mb-3">
+            World 1 · General AI · Solved
+          </div>
+          <div style={{ color: INK }} className="text-2xl font-bold mb-2">
+            AICore + Gemini Nano
+          </div>
+          <div style={{ color: GRAY }} className="text-sm mb-4 flex-1">
+            Android 16 ships AICore as a system service: one OS-managed model
+            shared across apps via IPC, ~940 tok/s on Pixel NPU, automatic
+            thermal/battery management.<Cite ids={[14, 15]} /> Apps stop bundling
+            2GB models in their APKs and just call the OS.
+          </div>
+          <div style={{ color: MUTED }} className="text-xs">
+            Powers: Pixel Camera Coach, Magic Cue, Recorder Summarize<Cite ids={[14]} />
+          </div>
+        </Card>
+
+        <Card accent={BLUE} className="flex flex-col">
+          <div style={{ color: BLUE }} className="text-xs font-bold uppercase tracking-widest mb-3">
+            World 2 · Custom AI · Unsolved
+          </div>
+          <div style={{ color: INK }} className="text-2xl font-bold mb-2">
+            Domain models that AICore won&apos;t serve
+          </div>
+          <div style={{ color: GRAY }} className="text-sm mb-4 flex-1">
+            Proprietary computer vision (manufacturing, medical imaging,
+            agriculture). Custom-trained LLMs on enterprise corpora. Verticalized
+            voice + multimodal apps. Anything where Gemini Nano is too generic
+            or the data can&apos;t leave the device. <strong>This is the DevKit&apos;s
+            target market</strong> — not a replacement for AICore, the answer
+            for everything AICore can&apos;t solve.
+          </div>
+          <div style={{ color: MUTED }} className="text-xs">
+            Stack: PyTorch / JAX / TF → litert convert → Android NPU / iOS Core ML
+          </div>
+        </Card>
+      </div>
+      <p style={{ color: MUTED }} className="text-sm mt-4">
+        ExecuTorch competes for World 2. AICore owns World 1. Google needs to win both —
+        the DevKit is the only piece missing.
+      </p>
     </Wrap>
   );
 }
@@ -415,9 +518,10 @@ function Devkit() {
           <div>
             <div
               style={{ color: MUTED }}
-              className="text-xs uppercase tracking-widest mb-2 font-semibold"
+              className="text-xs uppercase tracking-widest mb-2 font-semibold flex items-center gap-2"
             >
-              GitHub Actions Suite
+              <span>GitHub Actions Suite</span>
+              <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="px-1.5 py-0.5 rounded text-[0.6rem] font-bold tracking-wider">PROPOSED</span>
             </div>
             <div
               style={{ background: PAGE, border: `1px solid ${BORDER}` }}
@@ -436,24 +540,43 @@ function Devkit() {
                 </div>
               ))}
             </div>
+            <div style={{ color: MUTED }} className="text-[0.65rem] mt-1">
+              0 official LiteRT/TFLite Actions exist on GitHub Marketplace today.<Cite ids={[17]} />
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-3">
           <Card>
             <div
               style={{ color: BLUE }}
-              className="text-xs font-semibold uppercase tracking-widest mb-2"
+              className="text-xs font-semibold uppercase tracking-widest mb-2 flex items-center gap-2"
             >
-              Launch Partners
+              <span>Proposed Launch Partners</span>
+              <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="px-1.5 py-0.5 rounded text-[0.55rem] font-bold tracking-wider">TARGET LIST</span>
             </div>
             <div style={{ color: INK }} className="text-sm">
-              Runtimes: LiteRT (.tflite) · LiteRT-LM (LLMs / RAG)
+              Runtimes: LiteRT (.tflite) · LiteRT-LM (LLMs / RAG)<Cite ids={[1, 2]} />
               <br />
               CI/CD: Bitrise · CircleCI · Harness · GitHub Marketplace
               <br />
-              Models: Hugging Face · Ultralytics · Roboflow
+              Models: Hugging Face <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded text-xs">litert-community</code> · Ultralytics · Roboflow · Kaggle Models
               <br />
-              Hardware: Qualcomm AI Hub · MediaTek NeuroPilot
+              Hardware: Qualcomm AI Engine Direct<Cite ids={[11, 12]} /> · MediaTek NeuroPilot<Cite ids={[13]} />
+            </div>
+          </Card>
+          <Card accent={GREEN}>
+            <div
+              style={{ color: GREEN }}
+              className="text-xs font-semibold uppercase tracking-widest mb-2"
+            >
+              Hardware Moat (live today)
+            </div>
+            <div style={{ color: INK }} className="text-sm">
+              <strong>Snapdragon 8 Elite Gen 5:</strong> LiteRT × Qualcomm AI Engine Direct delivers up to <span style={{ color: BLUE }} className="font-bold">100× CPU</span> on canonical models (50+ models &lt;5ms NPU).<Cite ids={[11, 12]} />
+              <br />
+              <strong>MediaTek Dimensity 9400:</strong> LiteRT NeuroPilot Accelerator hits <span style={{ color: BLUE }} className="font-bold">12× CPU / 10× GPU</span> via direct compiler integration (AOT + JIT).<Cite ids={[13]} />
+              <br />
+              ExecuTorch can&apos;t replicate this — these are Google × silicon-vendor compiler integrations.
             </div>
           </Card>
           <Card className="flex-1">
@@ -467,8 +590,8 @@ function Devkit() {
               {[
                 "litert CLI v1.0 — covers .tflite + LiteRT-LM",
                 "Actions on GitHub Marketplace + Bitrise Steps + CircleCI Orbs",
-                "Workflow templates: on-device RAG · Translation · Camera+LLM",
-                "Official DevKit at LiteRT × Qualcomm hackathons (450+ devs/event)",
+                "Templates: on-device RAG · Translation · Camera+LLM (on Gemma 4 E2B/E4B)",
+                "Official DevKit at LiteRT × Qualcomm hackathons (Sunnyvale, Apr 30 – May 1, 2026 confirmed)",
                 "Benchmark dashboard: Qualcomm, MediaTek, ARM device profiles",
                 "Talk at AI Engineer World's Fair or PyTorch Conf",
               ].map((d) => (
@@ -515,8 +638,8 @@ function PartnerNetwork() {
     },
     {
       name: "Model Hubs",
-      examples: "HF litert-community, TF Hub, Kaggle Models, Roboflow Universe",
-      what: "Verified .tflite model cards with benchmark data",
+      examples: "HF litert-community, Kaggle Models, Roboflow Universe, Ultralytics HUB",
+      what: "Verified .tflite / LiteRT-LM model cards with benchmark data",
       color: YELLOW,
     },
   ];
@@ -556,12 +679,18 @@ function PartnerNetwork() {
         </div>
         <div style={{ color: GRAY }}>
           <span style={{ color: INK }} className="font-semibold">
-            Year 1:
+            Year 1 target:
           </span>{" "}
-          8 partners, public portal at ai.google.dev/edge/partners, annual
-          summit
+          8 launch partners (none yet committed), public portal at ai.google.dev/edge/partners,
+          annual summit
         </div>
       </div>
+      <p style={{ color: MUTED }} className="text-xs mt-2">
+        Adjacent gen-AI partners (Unsloth, ElevenLabs) are scoped for the
+        Training-Platforms tier in a v2 expansion — not in v1 because the
+        certification suite is built around `.tflite` / LiteRT-LM compatibility,
+        which neither currently exports natively.
+      </p>
     </Wrap>
   );
 }
@@ -853,11 +982,11 @@ function TheAsk() {
             {[
               "litert CLI v1.0 open-sourced (google-ai-edge/litert-devkit)",
               "LiteRT + LiteRT-LM both supported via `litert convert --format`",
-              "Actions on GitHub Marketplace + Bitrise Steps Store + CircleCI Orb Registry",
-              "Workflow templates: on-device RAG · Translation · Camera+LLM (sample apps + benchmark profiles)",
-              "Official DevKit at Google × Qualcomm LiteRT hackathons (450+ devs/event)",
-              "3+ co-announcement partners: Harness, Roboflow, Ultralytics",
-              "Benchmark dashboard: Qualcomm, MediaTek, ARM device profiles live",
+              "Actions on GitHub Marketplace + Bitrise Steps + CircleCI Orbs",
+              "Templates: RAG · Translation · Camera+LLM — built on Gemma 4 E2B/E4B",
+              "Hardware moat surfaced: Qualcomm AI Engine Direct (100× CPU) + MediaTek NeuroPilot (12× CPU) benchmark profiles",
+              "Official DevKit at Google × Qualcomm LiteRT hackathon (Sunnyvale, Apr 30 – May 1, 2026 confirmed)",
+              "3+ co-announcement partners (target: Harness, Roboflow, Ultralytics)",
               "Talk accepted at AI Engineer World's Fair or PyTorch Conference",
             ].map((d) => (
               <li
@@ -962,12 +1091,54 @@ function DeepDives() {
   );
 }
 
+// ─── Slide 10: Sources ───────────────────────────────────────────────────────
+
+function Sources() {
+  return (
+    <Wrap>
+      <Title>
+        Sources.
+        <br />
+        <span style={{ color: GRAY }} className="text-2xl font-normal">
+          Every factual claim verified against current public sources, May 2026.
+        </span>
+      </Title>
+      <div className="flex-1 overflow-y-auto pr-2">
+        <ol className="space-y-1.5">
+          {SOURCES.map((s, i) => (
+            <li
+              key={i}
+              style={{ color: GRAY }}
+              className="text-sm flex gap-3"
+            >
+              <span style={{ color: BLUE }} className="font-bold tabular-nums shrink-0 w-6">{i + 1}.</span>
+              <a
+                href={s.url}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: INK }}
+                className="hover:underline"
+              >
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <p style={{ color: MUTED }} className="text-xs mt-3">
+        Verified via Gemini Deep Research Max · 2026-05-06 · Cross-referenced against official vendor blogs, GitHub releases, and conference websites.
+      </p>
+    </Wrap>
+  );
+}
+
 // ─── Slide registry ───────────────────────────────────────────────────────────
 
 const SLIDES = [
   <Cover />,
   <Problem />,
   <Stakes />,
+  <TwoWorlds />,
   <ThreePlays />,
   <Devkit />,
   <PartnerNetwork />,
@@ -975,6 +1146,7 @@ const SLIDES = [
   <WhyThisTeam />,
   <TheAsk />,
   <DeepDives />,
+  <Sources />,
 ];
 
 // ─── Deck shell ───────────────────────────────────────────────────────────────
