@@ -447,6 +447,8 @@ function Devkit() {
               Launch Partners
             </div>
             <div style={{ color: INK }} className="text-sm">
+              Runtimes: LiteRT (.tflite) · LiteRT-LM (LLMs / RAG)
+              <br />
               CI/CD: Bitrise · CircleCI · Harness · GitHub Marketplace
               <br />
               Models: Hugging Face · Ultralytics · Roboflow
@@ -463,9 +465,10 @@ function Devkit() {
             </div>
             <ul className="space-y-2">
               {[
-                "litert CLI v1.0 open-sourced",
+                "litert CLI v1.0 — covers .tflite + LiteRT-LM",
                 "Actions on GitHub Marketplace + Bitrise Steps + CircleCI Orbs",
-                "3+ co-announcement partners across CI/CD, model hubs, hardware",
+                "Workflow templates: on-device RAG · Translation · Camera+LLM",
+                "Official DevKit at LiteRT × Qualcomm hackathons (450+ devs/event)",
                 "Benchmark dashboard: Qualcomm, MediaTek, ARM device profiles",
                 "Talk at AI Engineer World's Fair or PyTorch Conf",
               ].map((d) => (
@@ -849,11 +852,13 @@ function TheAsk() {
           <ul className="space-y-2 flex-1">
             {[
               "litert CLI v1.0 open-sourced (google-ai-edge/litert-devkit)",
+              "LiteRT + LiteRT-LM both supported via `litert convert --format`",
               "Actions on GitHub Marketplace + Bitrise Steps Store + CircleCI Orb Registry",
+              "Workflow templates: on-device RAG · Translation · Camera+LLM (sample apps + benchmark profiles)",
+              "Official DevKit at Google × Qualcomm LiteRT hackathons (450+ devs/event)",
               "3+ co-announcement partners: Harness, Roboflow, Ultralytics",
               "Benchmark dashboard: Qualcomm, MediaTek, ARM device profiles live",
               "Talk accepted at AI Engineer World's Fair or PyTorch Conference",
-              "3 Certified Partner Network signed LOIs",
             ].map((d) => (
               <li
                 key={d}

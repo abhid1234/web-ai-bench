@@ -53,8 +53,9 @@
 <div class="tldr">
 <h2>TL;DR — "Docker push for edge AI"</h2>
 <ul>
-  <li><strong>The gap:</strong> Zero GitHub Actions for TFLite/LiteRT exist on the Marketplace today (verified April 30, 2026). Deploying a trained model to Android, iOS, and Web takes 6 manual steps across 3 different tools — all outside Google's product surface. ExecuTorch (Meta) shipped a CLI and benchmark dashboard in April 2026. LiteRT has neither.</li>
-  <li><strong>The pitch:</strong> LiteRT DevKit — an open-source CLI (<code>pip install litert-devkit</code>), three GitHub Actions, and a public benchmark dashboard — that collapses 6 manual steps into one pipeline. <code>litert convert && litert push</code> becomes the standard command, the way <code>docker build && docker push</code> became standard a decade ago.</li>
+  <li><strong>The gap:</strong> Zero GitHub Actions for TFLite/LiteRT exist on the Marketplace today (verified April 30, 2026). Deploying a trained model to Android, iOS, and Web takes 6 manual steps across 3 different tools — all outside Google's product surface. The runtime itself has split (LiteRT for general .tflite, LiteRT-LM for LLMs / RAG / generation), doubling the developer pain. ExecuTorch (Meta) shipped a CLI and benchmark dashboard in April 2026. LiteRT has neither.</li>
+  <li><strong>The pitch:</strong> LiteRT DevKit — an open-source CLI (<code>pip install litert-devkit</code>) covering both LiteRT and LiteRT-LM, three GitHub Actions, workflow templates for the use cases the team is championing (on-device RAG, translation, camera+LLM), and a public benchmark dashboard — that collapses 6 manual steps into one pipeline. <code>litert convert && litert push</code> becomes the standard command, the way <code>docker build && docker push</code> became standard a decade ago.</li>
+  <li><strong>Built-in distribution channel:</strong> Google × Qualcomm runs LiteRT hackathons (450+ applicants per event, verified via the January 2026 hackathon). DevKit ships as the official tooling — every participant uses <code>litert convert && litert push</code> from day one. Day-one developer base of hundreds, not zero.</li>
   <li><strong>Partnerships background required:</strong> Managing Harness, Datadog, and Lovable at Google Cloud provides direct CI/CD and DevOps ecosystem relationships — not a cold pitch.</li>
   <li><strong>Launch moment:</strong> The 12 @litertjs/core models + 3 HF Spaces + co-authored blog post (formerly "Pitch A") are the DevKit's launch marketing moment — every model was produced by <code>litert convert && litert push</code>. The blog post becomes the DevKit's product launch story.</li>
   <li><strong>Duration:</strong> 6–9 months initiative. Partnerships PM leads product + partnerships. LiteRT eng builds (1–2 engineers, ~80 hrs).</li>
@@ -328,6 +329,21 @@ jobs:
   <tr><td><strong>BrowserStack / AWS Device Farm</strong></td><td>Device farm API integration for <code>litert bench --device-farm browserstack</code>. Dispatches benchmark jobs to real Android/iOS devices, collects results, formats report.</td><td>Same <code>litert bench</code> command — add <code>--device-farm browserstack</code> flag. Credentials set as CI environment variables.</td><td>BrowserStack / Device Farm get a new ML use case for their platform.</td></tr>
 </table>
 
+<h3>Component 5 — Workflow Templates (the use cases the LiteRT team is championing)</h3>
+
+<p>The DevKit ships with three opinionated, end-to-end starter templates — each is a GitHub repository (<code>google-ai-edge/litert-template-*</code>) with a working sample app, a pre-wired benchmark profile, and a one-command setup. These mirror the categories of project that win at LiteRT hackathons (the January 2026 Google × Qualcomm hackathon's top entries were on-device RAG, offline translation, and camera+LLM apps — see <em>BeyondMaps</em> as the canonical example).</p>
+
+<table>
+  <tr><th>Template</th><th>What it is</th><th>Stack</th><th>Hackathon-grade outcome in one weekend</th></tr>
+  <tr><td><code>litert-template-rag</code></td><td>On-device RAG over a downloadable knowledge pack — embedding + cosine retrieval + LiteRT-LM generation, all offline.</td><td>LiteRT-LM (Gemma 2B INT4) · sentence-transformers ONNX · SQLite vector store · Android sample</td><td>Travel companion, doc Q&A, offline support agent — the BeyondMaps category.</td></tr>
+  <tr><td><code>litert-template-translate</code></td><td>Bidirectional offline translation using LiteRT-LM — no API keys, no network.</td><td>LiteRT-LM (NLLB-200 distilled INT8) · Android + iOS samples · auto language detection</td><td>Travel translator, accessibility apps, education in low-bandwidth regions.</td></tr>
+  <tr><td><code>litert-template-vision-llm</code></td><td>Camera frame → ML Kit OCR → LiteRT-LM explanation/summary. Demonstrates the ML Kit + LiteRT-LM hand-off pattern.</td><td>ML Kit OCR · LiteRT-LM (Gemma 2B INT4) · Android sample · CameraX integration</td><td>Menu translator, sign reader, document scanner with summarization, study aid.</td></tr>
+</table>
+
+<p>Each template ships with: (a) a working app, (b) a benchmark profile (<code>litert bench --template &lt;name&gt;</code> publishes to the public dashboard), (c) a tutorial blog post on Google AI Edge, and (d) a single command (<code>litert init &lt;template&gt;</code>) that scaffolds a new project from the template.</p>
+
+<p><strong>Why this matters:</strong> infrastructure pitches don't sell to developers. Use cases do. The templates are the answer to "show me an app I can build with this in a weekend" — which is exactly the question the 450+ LiteRT hackathon applicants are asking. Templates also seed the Pitch 1 Partner Network: each template is a reference implementation a Certified Partner can extend or fork.</p>
+
 <hr class="section-divider">
 
 <h2>§4. Why Partnerships PM is the Right Person</h2>
@@ -385,6 +401,24 @@ litert push model.tflite --hub litert-community --repo all-MiniLM-L6-v2-web --au
 
 <hr class="section-divider">
 
+<h2>§8. Hackathon Distribution Strategy</h2>
+
+<p>The LiteRT team already runs developer hackathons with Qualcomm as the silicon partner — the January 2026 Google × Qualcomm LiteRT Hackathon drew 450+ applicants and produced winning projects on the exact use cases the workflow templates target (on-device RAG, offline translation, camera+LLM). This is a built-in distribution channel the DevKit can plug into immediately.</p>
+
+<table>
+  <tr><th>Hackathon touchpoint</th><th>What the DevKit ships as</th><th>Outcome</th></tr>
+  <tr><td><strong>Pre-event onboarding</strong></td><td>Official starter pack: <code>litert init</code> + the three workflow templates pre-cloned. Setup script verified on Qualcomm reference devices.</td><td>Every participant's day-one workflow is <code>litert convert && litert push</code>. 450+ developers learn the canonical commands in one weekend.</td></tr>
+  <tr><td><strong>During the event</strong></td><td>Live benchmark dashboard scoped to the hackathon — every <code>litert bench</code> run shows up on a public leaderboard. Partnerships PM + LiteRT eng in the Discord answering DevKit questions.</td><td>Real-time signal on which DevKit commands break, which docs are missing, what NPU ops fail. Direct DX feedback loop.</td></tr>
+  <tr><td><strong>Post-event amplification</strong></td><td>Every winning project is featured on the LiteRT blog with a "Built with the LiteRT DevKit" badge. The team's case-study posts (like BeyondMaps) become DevKit launch content.</td><td>External marketing with zero ad spend. Hackathon winners become DevKit evangelists at their day jobs.</td></tr>
+  <tr><td><strong>Annual cadence</strong></td><td>3–4 LiteRT × Qualcomm (and ideally LiteRT × MediaTek) hackathons per year. DevKit ships as official tooling for every event.</td><td>Compounding installed base: ~1,500–2,000 hackathon developers per year on day-one DevKit usage.</td></tr>
+</table>
+
+<p><strong>Mentor / judge alignment:</strong> the January 2026 hackathon mentors included Chintan Parikh, Aaishika S Bhattacharya, Derrick J., and Felix Baum — the same LiteRT and Qualcomm leadership the DevKit pitch is targeting for sponsorship. The hackathon program is the product's natural evangelism flywheel; aligning the DevKit launch with the next hackathon (within Q3 2026) gives the launch a captive audience.</p>
+
+<p><strong>Cost:</strong> Marginal. The DevKit is being built regardless. Plugging it into hackathons adds a half-FTE of partnerships work for pre-event onboarding materials and post-event content production — work the Partnerships PM is already doing for the Pitch 1 Partner Network.</p>
+
+<hr class="section-divider">
+
 <h2>§9. Business Outcomes</h2>
 
 <table>
@@ -397,6 +431,9 @@ litert push model.tflite --hub litert-community --repo all-MiniLM-L6-v2-web --au
   <tr><td>@litertjs/core models in HF litert-community (Web Models)</td><td>0</td><td>12 (via litert push --auto-card)</td><td>25+</td></tr>
   <tr><td>Conference talk accepted (major AI/DevOps conf)</td><td>0</td><td>1 (AI Engineer World's Fair — if submitted)</td><td>2 (World's Fair + PyTorch Conf)</td></tr>
   <tr><td>LiteRT GitHub stars</td><td>~2,300</td><td>3,500+</td><td>6,000+</td></tr>
+  <tr><td>Workflow templates published (RAG · Translate · Vision+LLM)</td><td>0</td><td>3 (all three live with sample apps + benchmark profiles)</td><td>3 + 2 community-contributed templates</td></tr>
+  <tr><td>LiteRT-LM coverage in DevKit (<code>--format litert-lm</code>)</td><td>0</td><td>GA in CLI v1.0</td><td>GA + LiteRT-LM benchmark profiles in dashboard</td></tr>
+  <tr><td>Hackathon developers using DevKit day-one</td><td>0</td><td>500+ (one Google × Qualcomm hackathon)</td><td>1,500+ (3+ hackathons / year)</td></tr>
 </table>
 
 <h2>§10. Risks and Mitigations</h2>
