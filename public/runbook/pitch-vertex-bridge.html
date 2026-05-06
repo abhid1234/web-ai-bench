@@ -254,6 +254,34 @@ print(export_job.output_info)
 
 <p><strong>The engineering ask on Firebase's side is minimal:</strong> Add a documented API endpoint that accepts a GCS URI from Vertex and registers it in Firebase ML hosting. The hosting infrastructure already exists. This is a plumbing PR, not a new product.</p>
 
+<div class="critical">
+<strong>Risk: Firebase declines.</strong> Firebase AI Logic's 2025 pivot to cloud Gemini APIs means TFLite hosting may not be a priority. The toughest reviewer question for this pitch is "What's your fallback if Firebase says no to the OTA leg?" — and the deck must answer it before the meeting, not in it.
+</div>
+
+<h4>Plan B — Bypass Firebase entirely, two paths</h4>
+
+<p>If the Firebase PM declines or stalls beyond the 60-day SLA, the cloud-to-edge bridge does not collapse — it routes around Firebase using infrastructure Google already operates.</p>
+
+<table>
+  <tr><th>Path</th><th>Architecture</th><th>What ships</th><th>Trade-off vs Firebase</th></tr>
+  <tr>
+    <td><strong>B1 — GCS + Cloud CDN + WorkManager</strong></td>
+    <td>Vertex training job pushes <code>.tflite</code> to a versioned <code>gs://</code> bucket fronted by Cloud CDN. Open-source Android library (extends Play Core / WorkManager) fetches authenticated model updates in the background, validates SHA, swaps atomically.</td>
+    <td>Library: <code>com.google.ai.edge:litert-modelfetch</code> on Maven Central. Vertex Model Garden UI gains a "Configure GCS endpoint" option in the Export-to-LiteRT modal. Reference iOS implementation via URLSession + background tasks.</td>
+    <td>Loses Firebase Console UI for non-technical model managers. Gains: no dependency on Firebase team prioritization; works for non-Firebase Android apps; same OTA + rollback semantics.</td>
+  </tr>
+  <tr>
+    <td><strong>B2 — Vertex Model Registry as signed REST endpoint</strong></td>
+    <td>Vertex Model Registry directly exposes a <code>GET /v1/projects/{p}/models/{m}/litert?token=...</code> REST endpoint returning the latest <code>.tflite</code>. Mobile clients hit it directly with short-lived authenticated tokens (Workload Identity Federation or service account JWT).</td>
+    <td>One Vertex API addition (signed-URL endpoint). Open-source Android + iOS reference clients. No new Firebase work, no new infra.</td>
+    <td>Authentication is on the Vertex team, not Firebase. Slightly heavier client lift than Firebase SDK. Bypasses Firebase Console entirely — fine for engineering-led mobile teams, harder for marketing-led ones.</td>
+  </tr>
+</table>
+
+<p><strong>Deck framing:</strong> Slide 6 surfaces this fallback so the first reviewer question (almost certainly "what if Firebase says no?") gets a one-line answer, not a stall. The full architecture lives here in the runbook for the follow-up technical conversation.</p>
+
+<p><strong>Decision rule:</strong> If Firebase PM commits to a sprint by month 3 (per the month-by-month plan), proceed with Integration Point 2. If they decline or push out beyond the gate, ship Plan B1 in months 4–5 (lighter Vertex/Android coordination, no Firebase dependency). Plan B2 is the longer-tail option if even the Android library has stakeholder friction.</p>
+
 <hr>
 
 <h3>Integration Point 3 — Android Developer Docs + Studio Integration</h3>

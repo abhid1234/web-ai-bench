@@ -820,6 +820,23 @@ function VertexBridge() {
               LiteRT.
             </div>
           </Card>
+          <Card accent={YELLOW}>
+            <div
+              style={{ color: YELLOW }}
+              className="text-xs font-semibold uppercase tracking-widest mb-2"
+            >
+              Fallback if Firebase declines
+            </div>
+            <div style={{ color: GRAY }} className="text-sm">
+              Firebase pivoted to cloud Gemini APIs in 2025; on-device TFLite
+              hosting may not get prioritized. Plan B keeps the bridge alive:
+              <span style={{ color: INK }} className="font-semibold"> GCS + Cloud CDN</span> as
+              the artifact store + an open-source Android lib (Play Core / WorkManager)
+              for authenticated background fetch. Or expose <span style={{ color: INK }} className="font-semibold">Vertex Model
+              Registry as a signed REST endpoint</span> mobile clients hit directly. Either
+              path bypasses Firebase without losing OTA updates or version control.
+            </div>
+          </Card>
         </div>
       </div>
     </Wrap>
