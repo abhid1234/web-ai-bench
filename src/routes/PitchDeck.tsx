@@ -312,6 +312,263 @@ function Stakes() {
   );
 }
 
+// ─── Slide 2.4: Market map — on-device AI tooling × Google 1P overlay ────────
+
+type Cell = { vendors: string[]; google?: string[]; gap?: boolean };
+type StageRow = { stage: string; full: string; cells: [Cell, Cell, Cell] }; // [Incumbents, Challengers, AI-Native]
+
+// Vendor lists synthesized from Deep Research Max market-map job (2026-05-06,
+// runbook/research/2026-05-06-market-map.md). Google products (in `google`)
+// overlay the natural-incumbent cell. Gap cells = no Google product OR Google
+// is meaningfully behind the leader and the category is operationally critical.
+const MARKET_STAGES: StageRow[] = [
+  {
+    stage: "TRAIN",
+    full: "Author + fine-tune",
+    cells: [
+      { vendors: ["AWS SageMaker", "Azure ML", "HF AutoTrain"], google: ["Vertex AI", "TF/JAX/Keras"] },
+      { vendors: ["Ultralytics", "Roboflow", "Edge Impulse", "W&B"] },
+      { vendors: ["Unsloth", "MLX", "LlamaFactory", "Axolotl"], google: ["Gemma 4 E2B/E4B"] },
+    ],
+  },
+  {
+    stage: "CONVERT",
+    full: "→ edge format",
+    cells: [
+      { vendors: ["coremltools 10", "ONNX exporter"] },
+      { vendors: ["ExecuTorch AOT Autograd", "Optimum CLI"], google: ["litert-torch", "AI Edge Torch"] },
+      { vendors: ["MLC-LLM", "llama.cpp GGUF"] },
+    ],
+  },
+  {
+    stage: "QUANTIZE",
+    full: "INT8 / INT4",
+    cells: [
+      { vendors: ["NVIDIA TensorRT", "Intel OpenVINO", "Apple palettization"], gap: true },
+      { vendors: ["Qualcomm AIMET", "MediaTek Quantizer"] },
+      { vendors: ["AutoGPTQ", "AWQ", "HQQ", "GGUF quantizers"] },
+    ],
+  },
+  {
+    stage: "BENCH",
+    full: "Cross-device perf",
+    cells: [
+      { vendors: ["MLPerf Mobile", "Qualcomm AI Hub"], gap: true },
+      { vendors: ["hud.pytorch.org", "HF HW Benchmarks", "Edge Impulse Profiler"] },
+      { vendors: ["Vercel Edge Bench", "Liquid AI LEAP"] },
+    ],
+  },
+  {
+    stage: "PUSH",
+    full: "Model registry",
+    cells: [
+      { vendors: ["Hugging Face Hub", "AWS S3"], google: ["Kaggle Models (2,300+)", "Vertex Model Registry"] },
+      { vendors: ["Roboflow Universe", "Ultralytics HUB"] },
+      { vendors: ["Ollama Hub", "Replicate Edge"] },
+    ],
+  },
+  {
+    stage: "CI/CD",
+    full: "Pipeline gates",
+    cells: [
+      { vendors: ["GitHub Actions", "GitLab CI", "CodePipeline"], gap: true },
+      { vendors: ["CircleCI Orbs", "Harness", "Bitrise ML Steps"], gap: true },
+      { vendors: ["Edge Impulse build-deploy", "Vercel handlers", "RunAnywhere"], gap: true },
+    ],
+  },
+  {
+    stage: "OTA",
+    full: "Hosted delivery",
+    cells: [
+      { vendors: ["Apple App Store", "AWS IoT Greengrass"], google: ["Firebase Remote Config*"] },
+      { vendors: ["Vercel Edge Config", "Cloudflare Workers AI"], gap: true },
+      { vendors: ["RunAnywhere OTA", "ClearBlade", "Avassa"] },
+    ],
+  },
+  {
+    stage: "MOBILE",
+    full: "Native runtime",
+    cells: [
+      { vendors: ["Apple Core ML 10", "Qualcomm AI Engine Direct", "MediaTek NeuroPilot"], google: ["LiteRT v2.21", "LiteRT-LM", "MediaPipe", "AICore"] },
+      { vendors: ["ExecuTorch v1.2 (LF)", "ONNX Runtime Mobile"] },
+      { vendors: ["llama.cpp", "MLC-LLM", "Liquid AI LEAP"] },
+    ],
+  },
+  {
+    stage: "WEB AI",
+    full: "Browser inference",
+    cells: [
+      { vendors: ["WebGL"], google: ["TensorFlow.js (legacy)"] },
+      { vendors: ["ONNX Runtime Web (1.4M/wk)", "MediaPipe Web", "WebNN", "WebGPU"], gap: true },
+      { vendors: ["Transformers.js v4 (C++ WebGPU)"], google: ["@litertjs/core (~800/wk)"] },
+    ],
+  },
+  {
+    stage: "HW NPU",
+    full: "Silicon + delegates",
+    cells: [
+      { vendors: ["Apple Neural Engine", "NVIDIA Jetson", "Snapdragon Hexagon"] },
+      { vendors: ["MediaTek APU 9400", "ARM Ethos-U85"], google: ["Pixel Tensor G5/G6"] },
+      { vendors: ["Hailo-8", "SiMa.ai", "Liquid AI HW"] },
+    ],
+  },
+  {
+    stage: "OBSERVE",
+    full: "Edge telemetry",
+    cells: [
+      { vendors: ["Datadog", "Splunk", "CloudWatch"], gap: true },
+      { vendors: ["LogicMonitor", "ClearBlade", "Advian"], gap: true },
+      { vendors: ["RunAnywhere Analytics", "Lumana", "Apple Health Telemetry"], gap: true },
+    ],
+  },
+];
+
+const MARKET_TIERS = [
+  { name: "Incumbents", color: BLUE, bg: BLUE + "08" },
+  { name: "Challengers", color: YELLOW, bg: YELLOW + "12" },
+  { name: "AI-Native 2.0", color: GREEN, bg: GREEN + "0d" },
+];
+
+function MarketCellPill({ text, isGoogle }: { text: string; isGoogle?: boolean }) {
+  return (
+    <span
+      style={{
+        background: isGoogle ? BLUE + "22" : "transparent",
+        color: isGoogle ? BLUE : INK,
+        border: isGoogle ? `1px solid ${BLUE}55` : "none",
+        fontWeight: isGoogle ? 700 : 400,
+      }}
+      className="inline-block rounded px-1 py-px text-[0.55rem] leading-tight"
+    >
+      {text}
+    </span>
+  );
+}
+
+function MarketMap() {
+  return (
+    <Wrap>
+      <Title>
+        The on-device AI tooling market.
+        <br />
+        <span style={{ color: GRAY }} className="text-2xl font-normal">
+          Google 1P overlay (blue) · gaps (red).
+        </span>
+      </Title>
+      <div className="flex-1 overflow-x-auto -mx-2 px-2">
+        <table className="w-full" style={{ borderCollapse: "separate", borderSpacing: 0, minWidth: 1200, tableLayout: "fixed" }}>
+          <thead>
+            <tr>
+              <th
+                style={{ background: SURFACE, borderBottom: `2px solid ${INK}`, color: MUTED, width: 80 }}
+                className="text-[0.55rem] uppercase tracking-widest font-bold p-1.5 text-left"
+              >
+                Tier ↓
+              </th>
+              {MARKET_STAGES.map((s) => (
+                <th
+                  key={s.stage}
+                  style={{ background: SURFACE, borderBottom: `2px solid ${INK}`, color: INK }}
+                  className="text-[0.62rem] font-bold uppercase tracking-wider p-1.5 text-left"
+                >
+                  <div>{s.stage}</div>
+                  <div style={{ color: MUTED }} className="text-[0.5rem] font-normal normal-case mt-0.5">
+                    {s.full}
+                  </div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {MARKET_TIERS.map((tier, tierIdx) => (
+              <tr key={tier.name}>
+                <th
+                  style={{
+                    background: tier.bg,
+                    borderRight: `2px solid ${tier.color}`,
+                    color: tier.color,
+                  }}
+                  className="text-[0.62rem] uppercase tracking-wider font-bold p-1.5 text-left whitespace-nowrap align-top"
+                >
+                  {tier.name}
+                </th>
+                {MARKET_STAGES.map((s) => {
+                  const cell = s.cells[tierIdx];
+                  const hasGoogle = !!cell.google?.length;
+                  const isGap = cell.gap && !hasGoogle;
+                  return (
+                    <td
+                      key={s.stage + tier.name}
+                      style={{
+                        background: hasGoogle ? BLUE + "0d" : isGap ? RED + "08" : SURFACE,
+                        borderTop: `1px solid ${BORDER}`,
+                        borderRight: `1px solid ${BORDER}`,
+                        borderLeft: hasGoogle
+                          ? `3px solid ${BLUE}`
+                          : isGap
+                          ? `3px dashed ${RED}`
+                          : `1px solid ${BORDER}`,
+                      }}
+                      className="p-1.5 align-top"
+                    >
+                      {isGap && (
+                        <div
+                          style={{ color: RED, fontWeight: 700 }}
+                          className="text-[0.5rem] uppercase tracking-widest mb-1"
+                        >
+                          GAP
+                        </div>
+                      )}
+                      {hasGoogle && (
+                        <div className="flex flex-wrap gap-0.5 mb-1">
+                          {cell.google!.map((g) => (
+                            <MarketCellPill key={g} text={g} isGoogle />
+                          ))}
+                        </div>
+                      )}
+                      <div className="flex flex-wrap gap-0.5">
+                        {cell.vendors.map((v) => (
+                          <MarketCellPill key={v} text={v} />
+                        ))}
+                      </div>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex items-center gap-4 mt-3 text-xs">
+        <div className="flex items-center gap-1.5" style={{ color: GRAY }}>
+          <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="rounded px-1.5 py-px text-[0.6rem] font-bold">1P</span>
+          Google product fills cell
+        </div>
+        <div className="flex items-center gap-1.5" style={{ color: GRAY }}>
+          <span style={{ color: RED, fontWeight: 700 }} className="text-[0.6rem] uppercase tracking-widest">GAP</span>
+          No Google product / leader is a competitor
+        </div>
+        <div style={{ color: MUTED }} className="ml-auto text-[0.65rem]">
+          Reference format: Sequoia / Harness developer-toolchain map · Vendor census via Gemini Deep Research Max, May 2026<Cite ids={[3, 9, 11, 13, 14, 15]} />
+        </div>
+      </div>
+      <p style={{ color: MUTED }} className="text-xs mt-2">
+        <strong style={{ color: INK }}>Strategic read:</strong> Google leads at the extremes —{" "}
+        <span style={{ color: BLUE }}>silicon</span> (Pixel Tensor) +{" "}
+        <span style={{ color: BLUE }}>OS runtime</span> (LiteRT, AICore) +{" "}
+        <span style={{ color: BLUE }}>foundation models</span> (Gemma 4) — but the operational middle is hollowed out.
+        Five red columns:{" "}
+        <span style={{ color: RED }}>QUANTIZE</span> (no 1P quantizer),{" "}
+        <span style={{ color: RED }}>BENCH</span> (no public dashboard like hud.pytorch.org),{" "}
+        <span style={{ color: RED }}>CI/CD</span> (zero Marketplace Actions),{" "}
+        <span style={{ color: RED }}>OTA</span> (Firebase pivoted to Gemini APIs),{" "}
+        <span style={{ color: RED }}>OBSERVE</span> (no edge-AI telemetry).
+        The DevKit pitch closes 3 of 5; the remaining 2 are addressable via Pitch 1 (Partner cert) and Pitch 3 (Vertex bridge).
+      </p>
+    </Wrap>
+  );
+}
+
 // ─── Slide 2.5: Two Edge AI Worlds (AICore + DevKit) ─────────────────────────
 
 function TwoWorlds() {
@@ -1155,6 +1412,7 @@ const SLIDES = [
   <Cover />,
   <Problem />,
   <Stakes />,
+  <MarketMap />,
   <TwoWorlds />,
   <ThreePlays />,
   <Devkit />,
