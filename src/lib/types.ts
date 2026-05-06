@@ -37,6 +37,7 @@ export interface DeviceInfo {
   deviceMemoryGB?: number;
   webnnAvailable: boolean;
   webgpuAvailable: boolean;
+  webnnDevice?: "npu" | "gpu" | "cpu" | "unknown";
 }
 
 export interface RunResult {

@@ -13,8 +13,20 @@ export function RunResultCard({ run }: { run: RunResult }) {
       }}
     >
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <BackendBadge backend={run.backend} />
+          {run.backend === "webnn" && run.device.webnnDevice && run.device.webnnDevice !== "unknown" && (
+            <span
+              className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
+              style={
+                run.device.webnnDevice === "npu"
+                  ? { backgroundColor: "var(--color-primary-container)", color: "var(--color-primary)" }
+                  : { backgroundColor: "var(--color-surface-container-high)", color: "var(--color-on-surface-variant)" }
+              }
+            >
+              {run.device.webnnDevice === "npu" ? "⚡ NPU" : run.device.webnnDevice.toUpperCase()}
+            </span>
+          )}
           <StatusDot status={run.status} />
           <span
             className="text-xs font-semibold uppercase tracking-wider"

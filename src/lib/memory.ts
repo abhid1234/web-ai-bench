@@ -22,3 +22,26 @@ export function memoryDelta(beforeMB: number | null, afterMB: number | null): nu
   if (beforeMB === null || afterMB === null) return null;
   return afterMB - beforeMB;
 }
+
+const SKIP_DEMO_KEY = "vab.skipLiveDemo";
+
+export function shouldSkipLiveDemo(): boolean {
+  try {
+    if (sessionStorage.getItem(SKIP_DEMO_KEY) === "1") {
+      sessionStorage.removeItem(SKIP_DEMO_KEY);
+      return true;
+    }
+  } catch {
+    // sessionStorage may be blocked
+  }
+  return false;
+}
+
+export function freeMemoryAndReload(): void {
+  try {
+    sessionStorage.setItem(SKIP_DEMO_KEY, "1");
+  } catch {
+    // continue regardless
+  }
+  window.location.reload();
+}

@@ -1,22 +1,34 @@
-import { useState, useMemo, useCallback } from "react";
-import type { Backend, ModelEntry, RunResult } from "../lib/types";
-import { MODELS } from "../lib/catalog";
-import { detectAvailableBackends, getDeviceInfo } from "../lib/device";
-import { runAllBackends } from "../lib/harness";
-import { saveRun } from "../lib/persistence";
-import { buildSubmissionUrl } from "../lib/github-issue";
-import { BackendBadge } from "../components/BackendBadge";
-import { RunResultCard } from "../components/RunResultCard";
-import { formatSize } from "../lib/format";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import type { Backend, ModelEntry, RunResult } from "../../lib/types";
+import { MODELS } from "../../lib/catalog";
+import { detectAvailableBackends, getDeviceInfo, detectWebNNDevice } from "../../lib/device";
+import { runAllBackends } from "../../lib/harness";
+import { getHeapMB, freeMemoryAndReload } from "../../lib/memory";
+import { saveRun } from "../../lib/persistence";
+import { buildSubmissionUrl } from "../../lib/github-issue";
+import { BackendBadge } from "../BackendBadge";
+import { RunResultCard } from "../RunResultCard";
+import { formatSize } from "../../lib/format";
 
-export function Component() {
+export function BenchLab() {
   const [selectedId, setSelectedId] = useState<string>(MODELS[0].id);
   const [running, setRunning] = useState(false);
   const [results, setResults] = useState<RunResult[]>([]);
   const [eventLog, setEventLog] = useState<string[]>([]);
 
-  const device = useMemo(() => getDeviceInfo(), []);
+  const [device, setDevice] = useState(() => getDeviceInfo());
   const availableBackends = useMemo(() => detectAvailableBackends(), []);
+
+  useEffect(() => {
+    detectWebNNDevice().then((webnnDevice) => setDevice((prev) => ({ ...prev, webnnDevice })));
+  }, []);
+
+  const [heapMB, setHeapMB] = useState<number | null>(() => getHeapMB());
+  useEffect(() => {
+    const id = setInterval(() => setHeapMB(getHeapMB()), 2000);
+    return () => clearInterval(id);
+  }, []);
+
   const selectedModel = useMemo<ModelEntry>(
     () => MODELS.find((m) => m.id === selectedId) ?? MODELS[0],
     [selectedId],
@@ -33,7 +45,6 @@ export function Component() {
     appendLog(`Starting bench for ${selectedModel.name}`);
     appendLog(`Backends to test: ${availableBackends.join(" + ")}`);
 
-    const finalResults: RunResult[] = [];
     try {
       for await (const result of runAllBackends(selectedModel, { backends: availableBackends })) {
         if (result.status === "running") {
@@ -52,10 +63,7 @@ export function Component() {
             const without = prev.filter((r) => r.backend !== result.backend);
             return [...without, result];
           });
-          finalResults.push(result);
-          await saveRun(result).catch(() => {
-            // best-effort
-          });
+          await saveRun(result).catch(() => {});
         }
       }
       appendLog("All backends complete.");
@@ -81,16 +89,7 @@ export function Component() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto flex flex-col gap-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--color-on-surface)" }}>
-          Live Bench
-        </h1>
-        <p className="text-sm" style={{ color: "var(--color-on-surface-variant)" }}>
-          Pick a model. Run it across every backend your browser supports. See the side-by-side.
-        </p>
-      </div>
-
+    <div className="flex flex-col gap-4">
       {/* Device card */}
       <div
         className="rounded-xl p-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs"
@@ -117,9 +116,66 @@ export function Component() {
           <span className="font-semibold uppercase tracking-wider text-[10px]">Reported RAM</span>
           <span>{device.deviceMemoryGB ? `${device.deviceMemoryGB} GB` : "—"}</span>
         </div>
+        {device.webnnAvailable && device.webnnDevice && (
+          <div className="flex items-center gap-2">
+            <span className="font-semibold uppercase tracking-wider text-[10px]">WebNN routes to</span>
+            <span
+              className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
+              style={
+                device.webnnDevice === "npu"
+                  ? { backgroundColor: "var(--color-primary-container)", color: "var(--color-primary)" }
+                  : { backgroundColor: "var(--color-surface-container-high)", color: "var(--color-on-surface-variant)" }
+              }
+            >
+              {device.webnnDevice === "npu" ? "⚡ NPU" : device.webnnDevice.toUpperCase()}
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Model picker + Run button */}
+      {/* Memory card */}
+      <div
+        className="rounded-xl p-4 flex flex-wrap items-center justify-between gap-3"
+        style={{
+          backgroundColor: "var(--color-surface)",
+          border: "1px solid var(--color-outline-variant)",
+        }}
+      >
+        <div>
+          <div
+            className="text-[10px] uppercase tracking-wider font-semibold"
+            style={{ color: "var(--color-on-surface-variant)" }}
+          >
+            Browser memory in use
+          </div>
+          <div
+            className="text-2xl font-bold tabular-nums"
+            style={{ color: "var(--color-on-surface)" }}
+          >
+            {heapMB != null ? `${Math.round(heapMB)} MB` : "n/a"}
+            <span
+              className="text-xs font-normal ml-2"
+              style={{ color: "var(--color-on-surface-variant)" }}
+            >
+              {heapMB != null ? "(updates every 2s)" : "(Chromium-only API)"}
+            </span>
+          </div>
+        </div>
+        <button
+          onClick={freeMemoryAndReload}
+          className="px-6 py-3 rounded-lg text-base font-bold tracking-wide cursor-pointer hover:opacity-90 active:scale-95 transition-all shadow-md hover:shadow-lg"
+          style={{
+            backgroundColor: "var(--color-primary)",
+            color: "var(--color-on-primary)",
+            border: "none",
+          }}
+          title="Reloads the page to fully release WebGPU/WebNN memory. Saved runs in the matrix are kept."
+        >
+          🧹 Free Browser Memory
+        </button>
+      </div>
+
+      {/* Picker */}
       <div
         className="rounded-xl p-5"
         style={{ backgroundColor: "var(--color-surface)", border: "1px solid var(--color-outline-variant)" }}
@@ -158,16 +214,13 @@ export function Component() {
           </button>
         </div>
         {selectedModel.notes && (
-          <p
-            className="text-xs leading-relaxed"
-            style={{ color: "var(--color-on-surface-variant)" }}
-          >
+          <p className="text-xs leading-relaxed" style={{ color: "var(--color-on-surface-variant)" }}>
             {selectedModel.notes}
           </p>
         )}
       </div>
 
-      {/* Results grid */}
+      {/* Results */}
       {sortedResults.length > 0 && (
         <div className="grid md:grid-cols-3 gap-4">
           {sortedResults.map((r) => (
@@ -176,7 +229,7 @@ export function Component() {
         </div>
       )}
 
-      {/* Submit button */}
+      {/* Submit */}
       {submitUrl && !running && (
         <div className="flex justify-center">
           <a

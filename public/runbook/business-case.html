@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quantified Business Case — LiteRT Strategic Pitches</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 13px; padding: 40px; max-width: 1000px; color: #202124; }
+  h1 { font-size: 22px; color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 8px; }
+  h2 { font-size: 16px; color: #1a73e8; margin-top: 28px; }
+  h3 { font-size: 14px; color: #333; margin-top: 20px; }
+  .meta { color: #666; font-size: 12px; margin-bottom: 24px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 12px; }
+  th { background: #1a73e8; color: white; text-align: left; padding: 7px 10px; }
+  td { border: 1px solid #ddd; padding: 7px 10px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8f9fa; }
+  ul, ol { padding-left: 20px; }
+  li { margin-bottom: 4px; }
+  .highlight { background: #e8f0fe; border-left: 4px solid #1a73e8; padding: 10px 14px; margin: 12px 0; }
+  .recommendation { background: #e6f4ea; border-left: 4px solid #188038; padding: 10px 14px; margin: 12px 0; }
+  .warning { background: #fff3cd; border-left: 4px solid #f9ab00; padding: 10px 14px; margin: 12px 0; }
+  .critical { background: #fce8e6; border-left: 4px solid #d93025; padding: 10px 14px; margin: 12px 0; }
+  .winner-1 { background: #e8f0fe; }
+  .winner-2 { background: #e6f4ea; }
+  .winner-3 { background: #fce8e6; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+  .companion { background: #f8f9fa; border: 1px solid #ddd; padding: 10px 14px; font-size: 11px; color: #666; margin-top: 32px; }
+  .score { font-weight: bold; font-size: 16px; }
+  .pitch-label { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; }
+  .p1 { background: #e8f0fe; color: #1a73e8; }
+  .p2 { background: #e6f4ea; color: #188038; }
+  .p3 { background: #fce8e6; color: #d93025; }
+</style>
+</head>
+<body>
+
+<h1>LiteRT Strategic Initiative — Quantified Business Case</h1>
+
+
+
+
+<h2>§1. The market we're sizing into</h2>
+
+<h3>Web ML runtime landscape (April 30, 2026 — verified)</h3>
+<table>
+  <tr><th>Runtime</th><th>Weekly npm downloads</th><th>GitHub stars</th><th>Heritage</th></tr>
+  <tr><td>onnxruntime-web (Microsoft)</td><td>~1,434,524</td><td>19,868</td><td>ONNX format, broadest coverage</td></tr>
+  <tr><td>@huggingface/transformers</td><td>~672,527</td><td>15,853</td><td>Pipeline API on top of ONNX Runtime</td></tr>
+  <tr><td>@mlc-ai/web-llm</td><td>~39,923</td><td>17,765</td><td>LLM-focused, WebGPU-first</td></tr>
+  <tr><td>@mediapipe/tasks-genai (Google sibling)</td><td>~7,477</td><td>34,800 (mediapipe repo)</td><td>Pre-built CV/audio task APIs</td></tr>
+  <tr><td><strong>@litertjs/core (Google)</strong></td><td><strong>~811/wk (unverified — npm stats returned 403 on Apr 30)</strong></td><td><strong>~2,300 (Apr 30, 2026)</strong></td><td>.tflite cross-platform runtime; v2.4.0</td></tr>
+</table>
+
+<div class="warning">
+  <strong>Key reading:</strong> @litertjs/core is at ~0.06% of ORT-Web's footprint. This is not a technology gap — LiteRT v2.1.4 (April 13, 2026) is the officially recommended runtime in Android docs and has industry-leading NPU support. The diagnosis is awareness + ecosystem + operationalization, not runtime quality.
+</div>
+
+<h3>On-device AI CI/CD landscape (April 30, 2026 — verified)</h3>
+<table>
+  <tr><th>Tool / Platform</th><th>Edge ML CI/CD capability</th><th>Implication</th></tr>
+  <tr><td>GitHub Actions Marketplace</td><td>0 actions for TFLite / LiteRT (verified Apr 30)</td><td>Total whitespace — first mover wins</td></tr>
+  <tr><td>Harness CI/CD</td><td>No ML-specific features — pure application DevOps</td><td>Partner opportunity: first ML CI module</td></tr>
+  <tr><td>Edge Impulse</td><td>Has <code>edgeimpulse/build-deploy@v1</code> — MCU/embedded only, small community</td><td>Only CI/CD competitor; scope is narrow</td></tr>
+  <tr><td>ExecuTorch (Meta)</td><td>v1.2.0 (Apr 1, 2026). One-command export + nightly benchmark dashboard. Powers Instagram/WhatsApp/Ray-Ban/Quest 3.</td><td>Primary competitive threat on toolchain</td></tr>
+  <tr><td>MLflow / W&amp;B</td><td>Train-side model management; no edge deployment pipeline</td><td>Integration partner opportunity for Pitch 2</td></tr>
+</table>
+
+<h3>Cloud-to-edge deployment landscape (April 30, 2026 — verified)</h3>
+<table>
+  <tr><th>Competitor</th><th>Cloud-to-edge pipeline</th><th>Status</th></tr>
+  <tr><td>AWS SageMaker Edge</td><td>Had a managed edge deployment pipeline</td><td><strong>DEPRECATED April 24, 2024.</strong> Market exited.</td></tr>
+  <tr><td>Azure IoT Edge + Azure ML</td><td>Generic containerized model deployment to edge devices</td><td>Active but not mobile/web-native; no LiteRT analog</td></tr>
+  <tr><td>Apple Core ML + Xcode</td><td>iOS/macOS only. End-to-end from training to App Store deployment.</td><td>Best-in-class — the model Google should match</td></tr>
+  <tr><td><strong>Google Vertex AI → LiteRT</strong></td><td>Does NOT exist. 3 disconnected pipelines: Vertex, Firebase, LiteRT. No one-step path.</td><td><strong>The gap Pitch 3 closes.</strong></td></tr>
+</table>
+
+<h2>§2. The three strategic pitches</h2>
+<table>
+  <tr><th>Pitch</th><th>VP Story</th><th>the PM's Unique Angle</th><th>Scope</th></tr>
+  <tr>
+    <td><span class="pitch-label p1">Pitch 1</span><br><strong>LiteRT Certified Partner Network</strong></td>
+    <td>"Intel Inside for edge AI." In 3 years: every NPU chip ships LiteRT pre-validated, every training platform has a LiteRT export button, every DevOps tool has a LiteRT CI stage. Developers pick LiteRT because everything they already use is certified to work with it.</td>
+    <td>Runs T1 ISV partnerships at Google Cloud (Lovable, Datadog, Harness). Has designed and executed partner programs at this tier. </td>
+    <td>6-month initiative. 4 partner classes (Hardware, Training, Deployment, Model Hubs). Formal 3-tier program with public portal at ai.google.dev/edge/partners.</td>
+  </tr>
+  <tr>
+    <td><span class="pitch-label p2">Pitch 2</span><br><strong>LiteRT DevKit — Edge AI CI/CD</strong></td>
+    <td>"Docker push for edge AI." Any model, any CI system, any device, one command: <code>litert convert && litert push</code>. LiteRT becomes the standard workflow for model-to-device deployment — same inflection that made <code>docker build && docker push</code> universal a decade ago.</td>
+    <td>Managed Harness (leading CI/CD platform) and Datadog (leading observability) partnerships at Google Cloud. Understands the DevOps buyer and what makes developer tooling go viral. Can walk into Harness/GitHub conversations as a peer.</td>
+    <td>6–9 month initiative. Open-source CLI + 3 GitHub Actions + public benchmark dashboard. DevOps partner co-announcing at launch (Harness or GitHub).</td>
+  </tr>
+  <tr>
+    <td><span class="pitch-label p3">Pitch 3</span><br><strong>LiteRT × Vertex AI Bridge</strong></td>
+    <td>"Google should be the only platform where you go from 'fine-tune a model' to 'deploy on 3 billion Android devices' with a single workflow." Apple has this. AWS had it and gave up (deprecated Apr 2024). Google is the only cloud-native that can still build this — and only LiteRT connects Vertex to Android.</td>
+    <td>Sr. Strategic Partnerships Manager at Google Cloud. Already works with Vertex AI customers. Can bridge LiteRT team, Vertex AI, Firebase, and Android as a credible cross-org PM. A pure LiteRT engineer cannot do this.</td>
+    <td>9–12 month initiative. 4 integration points: Vertex Model Garden "Deploy to LiteRT" button, Vertex training job .export(format='litert'), Firebase ML + LiteRT integration, Android AI partnership.</td>
+  </tr>
+</table>
+
+<h2>§3. OKR-mapped metrics</h2>
+<p><strong>Suggested Objective:</strong> Make LiteRT the default on-device AI platform — from training to deployment to community.</p>
+<table>
+  <tr><th>KR</th><th>Baseline (Apr 30, 2026)</th><th>Year-1 target</th><th>Pitch 1</th><th>Pitch 2</th><th>Pitch 3</th></tr>
+  <tr><td>KR1 Certified partners with named tier</td><td>0 formal</td><td>8–12</td><td>High — program IS the vehicle</td><td>Med — Harness/GitHub as launch partners</td><td>Med — Vertex/Firebase as internal partners</td></tr>
+  <tr><td>KR2 @litertjs/core weekly downloads</td><td>~811/wk (unverified)</td><td>8,000+/wk</td><td>Med (partner co-marketing reach)</td><td>High (DevKit drives adoption flywheel)</td><td>Low-Med (cloud-to-edge users)</td></tr>
+  <tr><td>KR3 GitHub Actions for LiteRT in Marketplace</td><td>0</td><td>3</td><td>Low</td><td>High — Pitch 2 ships the 3 actions</td><td>None</td></tr>
+  <tr><td>KR4 @litertjs/core models in HF Web Models</td><td>0 (16 models exist — all LiteRT-LM/Gemma, different product)</td><td>12+</td><td>Med (HF as Model Hub partner class)</td><td>High — HF push is a DevKit launch artifact</td><td>Low</td></tr>
+  <tr><td>KR5 Inbound partnership applications</td><td>0</td><td>25+</td><td>High — program creates the funnel</td><td>Med (DevKit creates community pull)</td><td>Low (enterprise-only)</td></tr>
+  <tr><td>KR6 Public benchmark dashboard</td><td>None</td><td>1 live</td><td>None</td><td>High — Pitch 2 ships the dashboard</td><td>None</td></tr>
+  <tr><td>KR7 Vertex AI → LiteRT integration points</td><td>0</td><td>2 in preview</td><td>None</td><td>Low</td><td>High — Pitch 3's core output</td></tr>
+  <tr><td>KR8 LiteRT GitHub stars</td><td>~2,300 (Apr 30, 2026)</td><td>4,000+</td><td>Med</td><td>High (DevKit + CLI halo)</td><td>Low</td></tr>
+  <tr><td>KR9 Conference moments (talk / keynote)</td><td>&lt;2 (2025)</td><td>3+</td><td>1 (partner summit)</td><td>2 (AI Engineer World's Fair + PyTorch Conf)</td><td>1 (Vertex/enterprise track)</td></tr>
+</table>
+
+<h2>§4. ROI math</h2>
+
+<h3>Investment per pitch (initiative scope)</h3>
+<table>
+  <tr><th>Pitch</th><th>Partnerships PM-hours (initiative)</th><th>LiteRT-eng hours</th><th>Cross-functional time</th><th>Initiative duration</th></tr>
+  <tr><td><span class="pitch-label p1">Pitch 1</span></td><td>~240 (8 hrs/wk × 30 wks)</td><td>~20 (technical reviews, cert testing)</td><td>~120 (legal, brand, PR, DevRel, web team)</td><td><strong>6 months</strong></td></tr>
+  <tr><td><span class="pitch-label p2">Pitch 2</span></td><td>~300 (8 hrs/wk × 36 wks)</td><td>~80 (DevKit build — LiteRT Partnerships leads, eng builds)</td><td>~60 (Harness/GitHub partner coordination, DevRel)</td><td><strong>6–9 months</strong></td></tr>
+  <tr><td><span class="pitch-label p3">Pitch 3</span></td><td>~400 (8 hrs/wk × 48 wks)</td><td>~40 (Vertex/Firebase API design)</td><td>~300 (Vertex PM, Firebase ML PM, Android AI PM)</td><td><strong>9–12 months</strong></td></tr>
+</table>
+
+<h3>Year-1 measurable impact</h3>
+<table>
+  <tr><th>Pitch</th><th>Primary year-1 deliverable</th><th>Hard metric to walk into the VP review with</th></tr>
+  <tr class="winner-1"><td><span class="pitch-label p1">Pitch 1</span></td><td>Partner portal live at ai.google.dev/edge/partners; 3+ certified launch partners; 25+ inbound applications</td><td><strong>25+ inbound applications within 90 days of launch</strong> — proves organic pull from the ecosystem</td></tr>
+  <tr class="winner-2"><td><span class="pitch-label p2">Pitch 2</span></td><td>litert CLI v1.0 open-sourced; 3 GitHub Actions in Marketplace; 1 DevOps platform co-announcing; benchmark dashboard live with 10+ device profiles</td><td><strong>3 GitHub Actions published, 1 DevOps partner co-launch, CLI GitHub stars</strong> — entirely verifiable, entirely attributable</td></tr>
+  <tr class="winner-3"><td><span class="pitch-label p3">Pitch 3</span></td><td>Vertex Model Garden "Deploy to LiteRT" button for 10 models; Vertex training .export(format='litert') in preview; Firebase+LiteRT integration in public beta</td><td><strong>Vertex → LiteRT integration cited in earnings or I/O keynote</strong> — highest visibility, highest risk</td></tr>
+</table>
+
+<h3>Compounding flywheel (year-3 view)</h3>
+<table>
+  <tr><th>Pitch</th><th>Year-1</th><th>Year-2</th><th>Year-3</th><th>The defensible moat</th></tr>
+  <tr><td><span class="pitch-label p1">Pitch 1 (Partner Network)</span></td><td>6–10 partners, 25+ applications</td><td>15–25 partners, hardware certification standard emerging</td><td>30+ partners — NPU vendors ship pre-validated; training platforms add LiteRT export button</td><td>Ecosystem lock-in: developers pick LiteRT because Harness, Qualcomm, HF, Kaggle, Roboflow all "just work" with it</td></tr>
+  <tr><td><span class="pitch-label p2">Pitch 2 (DevKit)</span></td><td>CLI v1.0, 3 Actions, 1 partner, dashboard live</td><td>CLI v2.0, community-contributed benchmarks, 3+ DevOps partners, standardized convert→validate→push workflow</td><td>Industry-standard CI/CD for edge AI — cited in enterprise ML tooling decisions the way <code>docker push</code> is cited</td><td>Workflow lock-in: once the litert CLI is the standard conversion tool, everything upstream (training, fine-tuning, quantization) routes through it</td></tr>
+  <tr><td><span class="pitch-label p3">Pitch 3 (Vertex Bridge)</span></td><td>2 integration points in preview</td><td>All 4 integration points GA; Firebase + LiteRT co-marketed at I/O</td><td>Vertex AI → LiteRT → Android becomes Google's differentiated end-to-end AI stack — a moat Apple has and AWS abandoned</td><td>Platform lock-in: enterprise ML teams who train on Vertex have zero friction deploying to Android — unlike any competitor</td></tr>
+</table>
+
+<h2>§5. Strategic value (non-quantified)</h2>
+<table>
+  <tr><th>Dimension</th><th>Pitch 1 (Partner Network)</th><th>Pitch 2 (DevKit)</th><th>Pitch 3 (Vertex Bridge)</th></tr>
+  <tr><td>VP legibility</td><td>High — partner programs are VP-native vocabulary</td><td>High — "Docker push for edge AI" lands in one sentence</td><td><strong>Very High</strong> — Vertex is Google Cloud's flagship; bridging it to Android is a Board-level story</td></tr>
+  <tr><td>the PM's unique advantage</td><td><strong>High</strong> — LiteRT Partnerships built T1 ISV programs at Google Cloud; no LiteRT PM has this background</td><td><strong>Very High</strong> — LiteRT Partnerships managed Harness and Datadog; CI/CD is native territory</td><td>High — LiteRT Partnerships is at Google Cloud; he can walk into Vertex PM conversations as a credible bridge</td></tr>
+  <tr><td>Year-1 hard metric</td><td>High — partner count and inbound applications are clean</td><td><strong>High</strong> — CLI stars, Actions published, benchmark device count are all verifiable</td><td>Medium — integration points in preview are meaningful but slower to ship</td></tr>
+  <tr><td>Cross-team complexity</td><td>Medium — Legal, Brand, PR, DevRel touches</td><td>Low–Medium — primarily Partnerships PM-led with LiteRT eng support</td><td><strong>Very High</strong> — Vertex AI, Firebase, Android, LiteRT: 4 org dependencies</td></tr>
+  <tr><td>Risk of being recalled mid-project</td><td>Low — each partner signed is a shipped artifact</td><td><strong>Low</strong> — CLI and Actions ship independently; each is its own milestone</td><td>Medium — org dependencies can slip; each integration point is a separate negotiation</td></tr>
+  <tr><td>ExecuTorch competitive countermove</td><td>High — ExecuTorch has no partner program; LiteRT's would be first</td><td><strong>High</strong> — ExecuTorch has near-single-command export but no GitHub Actions, no benchmark dashboard, no partner CI integrations</td><td>High — ExecuTorch has no cloud training story; Pitch 3 pairs cloud with edge in a way ExecuTorch cannot match</td></tr>
+</table>
+
+<h2>§6. Decision matrix</h2>
+<table>
+  <tr><th>Criterion (weight)</th><th>Pitch 1</th><th>Pitch 2</th><th>Pitch 3</th></tr>
+  <tr><td>VP legibility (×2)</td><td>8</td><td>8</td><td class="winner-3"><strong>10</strong></td></tr>
+  <tr><td>the PM's unique advantage (×2)</td><td>8</td><td class="winner-2"><strong>10</strong></td><td>8</td></tr>
+  <tr><td>Year-1 measurable outcome (×2)</td><td>8</td><td class="winner-2"><strong>9</strong></td><td>6</td></tr>
+  <tr><td>Cross-team complexity (lower = better, ×1)</td><td class="winner-1"><strong>7</strong></td><td class="winner-2"><strong>7</strong></td><td>3</td></tr>
+  <tr><td>Risk of recall mid-project (lower = better, ×1)</td><td class="winner-1"><strong>8</strong></td><td class="winner-2"><strong>8</strong></td><td>5</td></tr>
+  <tr><td>Competitive moat (×1)</td><td>7</td><td>8</td><td class="winner-3"><strong>9</strong></td></tr>
+  <tr><td><strong>Weighted total</strong></td><td><span class="score">103</span></td><td><span class="score">109</span></td><td><span class="score">98</span></td></tr>
+</table>
+
+<div class="highlight">
+  <strong>Correct reading:</strong> Pitch 2 (DevKit) wins on pure data — the PM's CI/CD background makes it the highest-differentiation play and the year-1 metrics are fully attributable. Pitch 3 (Vertex Bridge) has the highest VP ceiling but the highest execution risk from org dependencies. Pitch 1 (Partner Network) is the safest with the most compounding value.
+</div>
+
+<h2>§7. Conference opportunity — AI Engineer World's Fair 2026</h2>
+<div class="critical">
+  <strong>Key finding (verified April 30, 2026):</strong> The largest AI engineering conference of 2026 — AI Engineer World's Fair, June 29–July 2, San Francisco — covers tracks including Robotics, Voice, Vision, LLM Production Infra, Evals &amp; Observability, Coding Agents, RAG, Security… and <strong>zero tracks for on-device inference, browser ML, WebGPU, or edge AI CI/CD.</strong>
+</div>
+<table>
+  <tr><th>Pitch</th><th>Conference play</th><th>Other conferences</th></tr>
+  <tr><td><span class="pitch-label p1">Pitch 1</span></td><td>Partner Summit co-located with or adjacent to World's Fair (SF, late June). Timing is perfect.</td><td>Google I/O 2027 — natural program expansion announcement venue</td></tr>
+  <tr><td><span class="pitch-label p2">Pitch 2</span></td><td>Submit talk to "LLM Production Infra" or "Evals &amp; Observability" track framed as "CI/CD for On-Device AI" — LiteRT Partnerships or Harness co-speaker presents. First major AI eng conference moment for LiteRT.</td><td>PyTorch Conference (Oct 20–21, San Jose) — ExecuTorch will be featured; DevKit shows up as the "works with any framework" alternative. AI Infra Summit (Sep 15–17, Santa Clara).</td></tr>
+  <tr><td><span class="pitch-label p3">Pitch 3</span></td><td>"AI in Enterprise" track at World's Fair — Vertex AI → LiteRT story targeting enterprise ML teams.</td><td>Google I/O 2027 — Vertex Bridge GA announcement; Firebase + LiteRT joint session</td></tr>
+</table>
+
+<h2>§8. The MediaPipe wrinkle (positioning reminder)</h2>
+<div class="warning">
+  Google's own MediaPipe project has 34,800 stars and active 2026 releases. @mediapipe/tasks-genai at ~7,477 weekly downloads — 9× @litertjs/core.<br><br>
+  <strong>The honest distinction:</strong> MediaPipe = pre-built task pipelines (you bring an image, MediaPipe gives you bounding boxes from curated models). LiteRT-LM = Gemma LLM inference in-browser via MediaPipe. @litertjs/core = general-purpose .tflite runtime (you bring your .tflite, runtime gives you tensors, works for any model type).<br><br>
+  <strong>Every pitch artifact must name this distinction.</strong> The Web Models collection on litert-community currently reinforces the wrong perception — 16 models, all Gemma/LiteRT-LM, 0 @litertjs/core.
+</div>
+
+<h2>§9. Recommended paths</h2>
+<table>
+  <tr><th>Scenario</th><th>Recommended pitch</th><th>Rationale</th></tr>
+  <tr><td>Lead PM has GM support + wants max cross-org signal</td><td><strong>Pitch 3 + Pitch 1 combined</strong></td><td>Pitch 3 is the vision; Pitch 1 is the ecosystem motion that makes the vision real. Pitch 3 needs Pitch 1's partner network to operationalize the integrations.</td></tr>
+  <tr><td>Starting fresh, want independent impact quickly</td><td><strong>Pitch 2 first</strong></td><td>Ship DevKit, prove traction (CLI stars, Actions installs, benchmark data), use that credential to walk into the Pitch 3 conversation. Pitch 2 also creates the tooling that makes Pitch 1's hardware certification standard viable.</td></tr>
+  <tr><td>6-month initiative, partner-program track</td><td><strong>Pitch 1</strong></td><td>
+  <tr><td>Initiative at risk of being recalled mid-project</td><td><strong>Pitch 2</strong></td><td>Every CLI release and every GitHub Action published is a shipped artifact that survives even if this initiative ends early.</td></tr>
+</table>
+
+<div class="recommendation">
+  <strong>If starting today with no org constraints: Pitch 2 first.</strong><br>
+  Six-month window. Ship the DevKit (CLI + 3 Actions + dashboard). Launch partner set spans CI/CD (Harness, Bitrise, CircleCI), model ecosystems (Roboflow, Ultralytics, Hugging Face), and hardware (Qualcomm AI Hub, MediaTek NeuroPilot) — every major segment has a clear reason to say yes. The CLI and dashboard become the technical proof of concept that makes Pitches 1 and 3 easier to fund in year 2.<br><br>
+  <strong>The full 3-pitch arc:</strong> Pitch 2 (prove credibility with tooling + DevOps partnerships) → Pitch 1 (scale credibility into a certified ecosystem) → Pitch 3 (use the ecosystem to justify Vertex integration investment). Each pitch builds the case for the next.
+</div>
+</body>
+</html>

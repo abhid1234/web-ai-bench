@@ -1,14 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Backend, RunResult, Task } from "../lib/types";
-import { MODELS, SEEDED_RUNS } from "../lib/catalog";
-import { getAllRuns } from "../lib/persistence";
-import { BackendBadge } from "../components/BackendBadge";
-import { formatMs, formatSize } from "../lib/format";
+import type { Backend, RunResult, Task } from "../../lib/types";
+import { MODELS, SEEDED_RUNS } from "../../lib/catalog";
+import { getAllRuns, clearRuns } from "../../lib/persistence";
+import { detectAvailableBackends } from "../../lib/device";
+import { BACKEND_LABELS, BACKEND_UNAVAILABLE_SHORT } from "../../lib/backend-help";
+import { BackendBadge } from "../BackendBadge";
+import { formatMs, formatSize } from "../../lib/format";
 
 const BACKENDS: Backend[] = ["webnn", "webgpu", "wasm"];
 const TASKS: Task[] = ["embed", "classify", "vision-classify", "multimodal-embed", "asr", "generate"];
 
-export function Component() {
+export function MatrixLab() {
   const [localRuns, setLocalRuns] = useState<RunResult[]>([]);
   const [taskFilter, setTaskFilter] = useState<Task | "all">("all");
   const [selected, setSelected] = useState<RunResult | null>(null);
@@ -19,9 +21,17 @@ export function Component() {
       .catch(() => setLocalRuns([]));
   }, []);
 
+  function handleClearLocalRuns() {
+    clearRuns().then(() => setLocalRuns([]));
+  }
+
+  const unavailableBackends = useMemo<Backend[]>(() => {
+    const available = new Set(detectAvailableBackends());
+    return BACKENDS.filter((b) => !available.has(b));
+  }, []);
+
   const allRuns = useMemo<RunResult[]>(() => [...SEEDED_RUNS, ...localRuns], [localRuns]);
 
-  // Index latest result per (modelId, backend)
   const latest = useMemo(() => {
     const map = new Map<string, RunResult>();
     for (const run of allRuns) {
@@ -40,35 +50,67 @@ export function Component() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto flex flex-col gap-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--color-on-surface)" }}>
-          Compatibility Matrix
-        </h1>
-        <p className="text-sm" style={{ color: "var(--color-on-surface-variant)" }}>
-          Every model × backend cell. Click a cell for the full run record. Mixes seeded data
-          ({SEEDED_RUNS.length}) with your local runs ({localRuns.length}).
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-xs" style={{ color: "var(--color-on-surface-variant)" }}>
+          {SEEDED_RUNS.length} seeded runs · {localRuns.length} local runs
         </p>
+        <button
+          onClick={handleClearLocalRuns}
+          disabled={localRuns.length === 0}
+          className="text-xs px-3 py-1 rounded-full disabled:opacity-40 disabled:cursor-not-allowed"
+          style={{
+            backgroundColor: "var(--color-danger-container)",
+            color: "var(--color-danger)",
+            border: "1px solid var(--color-danger)40",
+          }}
+        >
+          Clear local runs
+        </button>
       </div>
 
-      {/* Task filter chips */}
+      {unavailableBackends.length > 0 && (
+        <div
+          className="rounded-lg p-4 flex flex-col gap-2"
+          style={{
+            backgroundColor: "var(--color-surface-container)",
+            border: "1px dashed var(--color-outline-variant)",
+          }}
+        >
+          <div className="flex items-center gap-2 flex-wrap">
+            <span
+              className="text-[10px] uppercase tracking-wider font-semibold"
+              style={{ color: "var(--color-on-surface-variant)" }}
+            >
+              Heads up
+            </span>
+            {unavailableBackends.map((b) => (
+              <BackendBadge key={b} backend={b} size="sm" />
+            ))}
+            <span className="text-xs font-semibold" style={{ color: "var(--color-on-surface)" }}>
+              not available in your browser
+            </span>
+          </div>
+          <ul className="text-xs space-y-1 leading-relaxed" style={{ color: "var(--color-on-surface-variant)" }}>
+            {unavailableBackends.map((b) => (
+              <li key={b}>
+                <span className="font-semibold">{BACKEND_LABELS[b]}:</span> {BACKEND_UNAVAILABLE_SHORT[b]}
+              </li>
+            ))}
+          </ul>
+          <div className="text-xs" style={{ color: "var(--color-outline)" }}>
+            Cells in those column(s) show data submitted by other devices — they don't reflect your hardware.
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-wrap gap-2">
-        <FilterChip
-          label="All tasks"
-          active={taskFilter === "all"}
-          onClick={() => setTaskFilter("all")}
-        />
+        <FilterChip label="All tasks" active={taskFilter === "all"} onClick={() => setTaskFilter("all")} />
         {TASKS.map((t) => (
-          <FilterChip
-            key={t}
-            label={t}
-            active={taskFilter === t}
-            onClick={() => setTaskFilter(t)}
-          />
+          <FilterChip key={t} label={t} active={taskFilter === t} onClick={() => setTaskFilter(t)} />
         ))}
       </div>
 
-      {/* Matrix table */}
       <div
         className="rounded-xl overflow-x-auto"
         style={{ backgroundColor: "var(--color-surface)", border: "1px solid var(--color-outline-variant)" }}
@@ -76,10 +118,16 @@ export function Component() {
         <table className="w-full text-sm" style={{ minWidth: "640px" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid var(--color-outline-variant)" }}>
-              <th className="text-left px-4 py-3 text-[10px] uppercase tracking-wider font-semibold" style={{ color: "var(--color-on-surface-variant)" }}>
+              <th
+                className="text-left px-4 py-3 text-[10px] uppercase tracking-wider font-semibold"
+                style={{ color: "var(--color-on-surface-variant)" }}
+              >
                 Model
               </th>
-              <th className="text-left px-4 py-3 text-[10px] uppercase tracking-wider font-semibold" style={{ color: "var(--color-on-surface-variant)" }}>
+              <th
+                className="text-left px-4 py-3 text-[10px] uppercase tracking-wider font-semibold"
+                style={{ color: "var(--color-on-surface-variant)" }}
+              >
                 Task
               </th>
               {BACKENDS.map((b) => (
@@ -118,25 +166,19 @@ export function Component() {
       </div>
 
       <p className="text-xs" style={{ color: "var(--color-outline)" }}>
-        Empty cells haven&rsquo;t been benchmarked yet. Run them on the{" "}
-        <a href="/" className="underline">Bench</a> page and click &ldquo;Submit my run&rdquo; to seed the public dataset.
+        Empty cells haven't been benchmarked yet. Head to{" "}
+        <a href="/learn/run" className="underline">
+          Lesson 5
+        </a>{" "}
+        to run them and submit your results.
       </p>
 
-      {/* Detail modal */}
       {selected && <RunDetailModal run={selected} onClose={() => setSelected(null)} />}
     </div>
   );
 }
 
-function FilterChip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
+function FilterChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -174,6 +216,7 @@ function MatrixCell({ run, onClick }: { run: RunResult | undefined; onClick: () 
     );
   }
   const isPass = run.status === "pass";
+  const isNPU = run.backend === "webnn" && run.device?.webnnDevice === "npu";
   return (
     <button
       onClick={onClick}
@@ -185,6 +228,11 @@ function MatrixCell({ run, onClick }: { run: RunResult | undefined; onClick: () 
       }}
     >
       {isPass ? formatMs(run.inferP50Ms) : "FAIL"}
+      {isNPU && (
+        <span className="ml-1 text-[9px]" title="NPU-accelerated">
+          ⚡
+        </span>
+      )}
     </button>
   );
 }
@@ -208,11 +256,7 @@ function RunDetailModal({ run, onClose }: { run: RunResult; onClose: () => void 
               {run.modelId}
             </span>
           </div>
-          <button
-            onClick={onClose}
-            className="text-2xl"
-            style={{ color: "var(--color-on-surface-variant)" }}
-          >
+          <button onClick={onClose} className="text-2xl" style={{ color: "var(--color-on-surface-variant)" }}>
             ×
           </button>
         </div>

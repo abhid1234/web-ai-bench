@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pitch 3 — LiteRT × Vertex AI: Close the Cloud-to-Edge Gap</title>
+<style>
+  :root {
+    --blue: #1a73e8; --blue-light: #e8f0fe;
+    --red: #d93025; --red-light: #fce8e6;
+    --green: #188038; --green-light: #e6f4ea;
+    --gold: #f9ab00; --gold-light: #fff3cd;
+    --gray: #666; --gray-light: #f8f9fa; --border: #ddd;
+  }
+  body { font-family: Arial, sans-serif; font-size: 13px; padding: 40px; max-width: 1000px; color: #202124; line-height: 1.5; }
+  h1 { font-size: 22px; color: var(--blue); border-bottom: 3px solid var(--blue); padding-bottom: 10px; }
+  h2 { font-size: 16px; color: var(--blue); margin-top: 32px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+  h3 { font-size: 14px; color: #333; margin-top: 20px; }
+  h4 { font-size: 13px; color: #555; margin-top: 16px; margin-bottom: 4px; }
+  .meta { color: var(--gray); font-size: 12px; margin-bottom: 24px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 12px; }
+  th { background: var(--blue); color: white; text-align: left; padding: 8px 10px; }
+  td { border: 1px solid var(--border); padding: 7px 10px; vertical-align: top; }
+  tr:nth-child(even) td { background: var(--gray-light); }
+  ul, ol { padding-left: 22px; }
+  li { margin-bottom: 5px; }
+  pre { background: #f5f5f5; padding: 14px; border-radius: 4px; font-size: 12px; font-family: 'Courier New', monospace; white-space: pre-wrap; overflow-x: auto; border-left: 3px solid var(--border); }
+  pre.code { border-left-color: var(--blue); }
+  pre.email { border-left-color: var(--gold); background: var(--gold-light); }
+  .tldr { background: var(--blue-light); border-left: 4px solid var(--blue); padding: 14px 18px; margin: 16px 0; }
+  .tldr h2 { border: none; margin-top: 0; padding: 0; font-size: 15px; }
+  .highlight { background: var(--blue-light); border-left: 4px solid var(--blue); padding: 10px 14px; margin: 12px 0; }
+  .warning { background: var(--gold-light); border-left: 4px solid var(--gold); padding: 10px 14px; margin: 12px 0; }
+  .critical { background: var(--red-light); border-left: 4px solid var(--red); padding: 10px 14px; margin: 12px 0; }
+  .recommendation { background: var(--green-light); border-left: 4px solid var(--green); padding: 10px 14px; margin: 12px 0; }
+  .fact { font-size: 11px; color: var(--gray); font-style: italic; }
+  .flow { background: #fafafa; border: 1px solid var(--border); padding: 16px; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre-wrap; margin: 12px 0; line-height: 1.7; }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 11px; font-weight: bold; }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .section-divider { border: none; border-top: 2px solid var(--blue-light); margin: 32px 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  .companion { background: var(--gray-light); border: 1px solid var(--border); padding: 10px 14px; font-size: 11px; color: var(--gray); margin-top: 40px; }
+  .gate { font-weight: bold; color: var(--red); font-size: 11px; }
+  .ip-header { background: #34495e; color: white; }
+</style>
+</head>
+<body>
+
+<h1>Pitch 3 — LiteRT × Vertex AI: Close the Cloud-to-Edge Gap</h1>
+
+
+<div class="tldr">
+<h2>TL;DR — "Google's cloud-to-edge gap costs us developers every day"</h2>
+<ul>
+  <li><strong>The gap:</strong> Google has world-class cloud training (Vertex AI), world-class on-device runtime (LiteRT), and the world's largest mobile platform (Android). None of these talk to each other for custom models. A developer who trains on Vertex today manually performs 6 steps entirely outside Google's product surface before their model runs on Android.</li>
+  <li><strong>The pitch:</strong> Build 4 integration points that connect Vertex AI → Firebase → Android/iOS/Web → LiteRT into a single workflow. The target state: a developer clicks "Export to LiteRT" in Vertex Model Garden and 10 minutes later their model is live in their mobile app.</li>
+  <li><strong>The market moment:</strong> AWS SageMaker Edge was deprecated in April 2024 — the market's largest cloud-to-edge player exited. Apple has this end-to-end for iOS (Core ML + Xcode + App Store). No Android equivalent exists anywhere. Google can own this market.</li>
+  <li><strong>Partnerships background required:</strong> Managing Harness, Datadog, and Lovable at Google Cloud provides direct CI/CD and DevOps ecosystem relationships — not a cold pitch.</li>
+  <li><strong>Duration:</strong> 9–12 months. Highest strategic leverage of the three pitches. Start with Kaggle (internal, zero politics) to prove the concept before approaching Vertex and Firebase PMs.</li>
+</ul>
+</div>
+
+<h2>§1. The Problem (Verified)</h2>
+
+<p>Three completely disconnected Google products, each with a different PM, different roadmap, different developer experience:</p>
+
+<div class="flow">CURRENT STATE — three isolated pipelines, zero connection points for custom models:
+
+  ┌─────────────────────────────────────┐
+  │  VERTEX AI                          │
+  │  Train, fine-tune, host in cloud    │
+  │  AutoML Edge → TFLite (image only)  │
+  │  Custom models: no edge export path │
+  └─────────────────────────────────────┘
+           │
+           │ ← "Download weights" — developer leaves Google's product surface here
+           ▼
+  ┌─────────────────────────────────────┐
+  │  DEVELOPER'S LAPTOP / LOCAL ENV     │
+  │  litert-torch convert (manual)      │
+  │  quantize (manual)                  │
+  │  test on device (manual)            │
+  └─────────────────────────────────────┘
+           │
+           │ ← still outside Google's product surface
+           ▼
+  ┌─────────────────────────────────────┐
+  │  FIREBASE AI LOGIC (rebranded 2025) │
+  │  Pivoted to Gemini API              │
+  │  TFLite hosting: exists but         │
+  │  undocumented, not connected to     │
+  │  Vertex, not actively developed     │
+  └─────────────────────────────────────┘
+           │
+           │ ← separate SDK, separate developer journey
+           ▼
+  ┌─────────────────────────────────────┐
+  │  LITERT (Android / iOS / Web)       │
+  │  On-device inference                │
+  │  Completely separate product        │
+  │  No Vertex integration              │
+  │  No Firebase integration            │
+  └─────────────────────────────────────┘</div>
+
+<div class="flow">TARGET STATE — one integrated workflow, all within Google's product surface:
+
+  Vertex AI fine-tune → "Export to LiteRT" button → auto-convert + quantize
+       → Firebase ML hosts model → Firebase SDK → Android/iOS/Web app
+       → LiteRT SDK loads model → inference on device
+
+  Every arrow = a product surface Google owns.
+  Zero manual steps in a terminal window outside Google products.</div>
+
+<div class="critical">
+  <strong>The Apple benchmark:</strong> Apple Core ML achieves exactly this for iOS — a developer trains in Create ML or any framework, converts to Core ML format, integrates via Xcode, ships through App Store. The pipeline is so seamless that Core ML adoption is strong <em>despite</em> Apple Silicon being a closed ecosystem. LiteRT's runtime is technically superior to Core ML, but Apple's developer workflow is 5× less friction. This pitch closes that gap — and LiteRT covers Android, iOS, and Web, not just one platform.
+</div>
+
+<h2>§2. Competitive Landscape (Verified)</h2>
+
+<table>
+  <tr><th>Competitor</th><th>Cloud-to-Edge Story</th><th>Current Status (April 2026)</th><th>Implication</th></tr>
+  <tr><td><strong>AWS SageMaker Edge</strong></td><td>Optimized edge model deployment — OTA updates, model monitoring, fleet management</td><td><strong>DEPRECATED April 26, 2024.</strong> AWS withdrew from this market. Verified: docs.aws.amazon.com/sagemaker/latest/dg/edge.html</td><td>The market's largest player exited. No one owns this space. Open field for Google.</td></tr>
+  <tr><td><strong>Azure IoT Edge + Azure ML</strong></td><td>Container-based edge deployment — bake your PyTorch model into a Docker container, ship to edge device</td><td>Active but generic. Containers ≠ optimized inference. No native mobile runtime. No WebGPU. Not optimized for consumer Android/iOS. Verified: learn.microsoft.com/azure/iot-edge</td><td>Azure's approach is for IoT/industrial, not mobile consumer AI. Not competing with LiteRT's primary use case.</td></tr>
+  <tr><td><strong>Apple Core ML + Xcode</strong></td><td>Train anywhere → Core ML Tools conversion → Xcode integration → App Store</td><td>Best-in-class end-to-end, iOS/macOS only. No Android, no Web. Model compression (palettization) and on-device fine-tuning now supported.</td><td>The experience model to match. Core ML's lesson: seamless workflow drives adoption even with an inferior runtime. LiteRT's advantage: cross-platform (Android + iOS + Web).</td></tr>
+  <tr><td><strong>ExecuTorch (Meta/PyTorch)</strong></td><td>PyTorch-native export → mobile deployment. Powers Instagram, WhatsApp, Ray-Ban, Quest 3.</td><td>v1.2.0 (April 1, 2026). CLI + benchmark dashboard. No cloud training integration. PyTorch-only. No Vertex-equivalent offering.</td><td>ExecuTorch is a runtime + toolchain story. LiteRT × Vertex is a platform story. Different buyer. Complementary concern.</td></tr>
+  <tr><td><strong>Google today</strong></td><td>Three disconnected products (see §1)</td><td>AutoML Edge export to TFLite exists (image classification/detection only, not LiteRT-branded). No custom model path. No Firebase integration for custom models. No Android docs citing Vertex → LiteRT workflow.</td><td>The opportunity cost is measurable: every Vertex AI training customer who wants mobile deployment leaves Google's product surface to finish the job.</td></tr>
+</table>
+
+<hr class="section-divider">
+
+<h2>§3. The Kaggle-First Strategy</h2>
+
+<p>Kaggle is Google-owned (Google LLC), has 50M+ registered users, and its model hub is already a training output surface for ML practitioners — many of whom want to deploy to Android or Web. Starting with Kaggle is the right move for 3 reasons:</p>
+
+<ol>
+  <li><strong>Zero cross-org politics.</strong> Kaggle is Google. No Vertex AI PM or Firebase PM needs to approve the first integration. The Kaggle PM is the single decision-maker.</li>
+  <li><strong>Proves the concept.</strong> A "Deploy to LiteRT" button on Kaggle Models demonstrates that the Vertex integration idea works before Partnerships PM walks into the Vertex AI PM conversation asking for a roadmap commitment.</li>
+  <li><strong>Large developer reach immediately.</strong> Kaggle's 50M users include many who train small CV and NLP models and want them on Android — exactly the LiteRT audience. The button appears in their existing workflow with zero new adoption barrier.</li>
+</ol>
+
+<div class="flow">KAGGLE-FIRST PROOF CONCEPT:
+
+  Developer trains CV model in Kaggle Notebook
+       → Model appears in Kaggle Models hub
+       → "Deploy to LiteRT" button appears on eligible models
+            (eligibility: model outputs are shapes compatible with LiteRT)
+       → Clicks button → Kaggle runs litert convert on backend
+       → Downloads .tflite + auto-generated model card
+       → (Phase 2) pushes to litert-community via litert push
+
+  This is integration point 4 from the full pitch — but it ships first,
+  in month 2–3, to prove the end-to-end concept before approaching Vertex PM.</div>
+
+<div class="recommendation">
+  <strong>Negotiation sequence:</strong> Ship Kaggle "Deploy to LiteRT" button (month 2–3) → use Kaggle adoption data in the Vertex PM meeting (month 4) → "Here's what happens when we add this button to Kaggle. The same button in Vertex Model Garden would hit 10× the developer audience."
+</div>
+
+<hr class="section-divider">
+
+<h2>§4. The Four Integration Points — Detailed Design</h2>
+
+<h3>Integration Point 1 — Vertex Model Garden "Export to LiteRT"</h3>
+
+<p><strong>Current state:</strong> Vertex AutoML has a TFLite export option for image classification and object detection — but it is not branded as LiteRT, not surfaced for partner or custom models, and not connected to any Firebase or litert-community workflow. Verified: cloud.google.com/vertex-ai/docs/export/export-edge-model</p>
+
+<p><strong>Target state:</strong> Every compatible model in Vertex Model Garden — partner fine-tuned models, Gemma variants, custom training jobs — has an "Export to LiteRT" action that:</p>
+
+<div class="flow">MODEL GARDEN UI ADDITION:
+
+  [Model Card: sentence-transformers/all-MiniLM-L6-v2]
+  ┌────────────────────────────────────────────┐
+  │  Deploy options:                           │
+  │  [Deploy to endpoint]  [Export to LiteRT] ←── NEW BUTTON
+  └────────────────────────────────────────────┘
+
+  On click → modal:
+    ✓ Auto-convert (runs litert-torch on Vertex backend — no local install)
+    ✓ Choose quantization: FP32 / FP16 / INT8 (with accuracy delta preview)
+    ✓ Benchmark preview: estimated latency on Pixel 8, iPhone 15, Chrome M3
+    ✓ Output options:
+        → Download .tflite
+        → Push to litert-community (OAuth with HF)
+        → Push to Firebase ML (if Firebase project linked)
+    ✓ Auto-generate model card with benchmark data</div>
+
+<p><strong>Phase delivery:</strong></p>
+<ul>
+  <li><strong>Phase 1 (month 4–5):</strong> Backend only — Vertex API accepts <code>.export(format='litert')</code> as a parameter on existing AutoML Edge export. No UI change. Accessible via Python SDK and gcloud CLI.</li>
+  <li><strong>Phase 2 (month 6–8):</strong> Model Garden UI button. Quantization modal. Benchmark preview pane.</li>
+  <li><strong>Phase 3 (month 9–12):</strong> Vertex custom training jobs — <code>model.export(format='litert')</code> after any custom training job.</li>
+</ul>
+
+<h4>Python SDK design (Phase 1 target API):</h4>
+<pre class="code">from google.cloud import aiplatform
+
+# After training or fine-tuning a model on Vertex
+model = aiplatform.Model(model_name="projects/.../models/...")
+
+# Export to LiteRT (.tflite) — new in Phase 1
+export_job = model.export_model(
+    export_format_id="litert",
+    artifact_destination="gs://my-bucket/exports/",
+    quantization="int8",           # or: "fp16", "none"
+    validate=True,                 # run accuracy gate post-conversion
+    tolerance=0.02,                # max allowed accuracy drop
+)
+
+export_job.wait()
+print(export_job.output_info)
+# {
+#   "tflite_uri": "gs://my-bucket/exports/model.tflite",
+#   "model_size_mb": 22.7,
+#   "ref_accuracy": 0.923,
+#   "tflite_accuracy": 0.918,
+#   "benchmark": {
+#     "web_webgpu_ms": 18,
+#     "android_gpu_ms": 12
+#   }
+# }</pre>
+
+<hr>
+
+<h3>Integration Point 2 — Firebase ML + LiteRT Model Hosting</h3>
+
+<p><strong>Current state:</strong> Firebase AI Logic (rebranded May 2025 from Firebase ML) pivoted to the Gemini API for GenAI use cases. TFLite model hosting still exists and works — but it's undocumented in new Firebase docs, not connected to Vertex, and not actively marketed. Verified: firebase.google.com/products/firebase-ai-logic</p>
+
+<p><strong>What Partnerships PM is NOT asking Firebase to build:</strong> A new ML platform. Firebase has pivoted; don't fight it.</p>
+
+<p><strong>What Partnerships PM IS asking Firebase to do:</strong> Expose a documented path for LiteRT custom model hosting — essentially a GCS bucket with OTA update semantics — that Vertex can push to directly.</p>
+
+<div class="flow">FIREBASE + LITERT INTEGRATION DESIGN:
+
+  CURRENT (hidden, undocumented):
+  Developer manually uploads .tflite to Firebase Console → FirebaseML.getInstance()
+     .getRemoteModel(customModel) → model available OTA in app
+
+  TARGET (documented, Vertex-connected):
+
+  Option A — Vertex-push path:
+    Vertex export_model(format='litert') + firebase_project=my-project
+    → Firebase ML hosts the .tflite automatically
+    → No manual upload, no Firebase Console required
+    → OTA update in app next time user opens app
+
+  Option B — Manual push path (for developers not on Vertex):
+    litert push model.tflite --hub firebase --project my-firebase-project
+    → Same result as Option A
+    → Works for any .tflite, not just Vertex-trained
+
+  IN-APP SDK (unchanged — this already works):
+    val model = FirebaseRemoteModel("my-custom-litert-model")
+    val interpreter = LiteRTInterpreter.create(model)</pre>
+
+<p><strong>The engineering ask on Firebase's side is minimal:</strong> Add a documented API endpoint that accepts a GCS URI from Vertex and registers it in Firebase ML hosting. The hosting infrastructure already exists. This is a plumbing PR, not a new product.</p>
+
+<hr>
+
+<h3>Integration Point 3 — Android Developer Docs + Studio Integration</h3>
+
+<p><strong>Current state:</strong> Android developer docs (developer.android.com/ai) already recommend LiteRT as the custom inference runtime. But the docs assume developers arrive with a .tflite file — there is no "where do I get a model?" or "how did I train and convert it?" context. The Vertex → LiteRT workflow is completely absent from Android docs.</p>
+
+<p><strong>Target state (3 deliverables, each independent):</strong></p>
+
+<ul>
+  <li><strong>Official use case pattern in Android docs:</strong> A new guide titled "Train on Vertex AI, deploy with LiteRT on Android." This requires a Technical Writer and an Android DevRel — not an Android engineer. The content is: "here's the Vertex Python snippet, here's litert convert, here's the Firebase OTA update, here's the LiteRT Android SDK call." Partnerships PM writes the draft; Android DevRel reviews and publishes. Engineering ask on Android team: 0 hours.</li>
+  <li><strong>Android Studio LiteRT DevKit template:</strong> A new Android Studio project template ("On-Device ML with LiteRT") that ships with the litert-bench-action pre-configured in the repo's GitHub Actions workflow. The template is a static project scaffold — it doesn't require Android Studio source code changes, just a new template file contributed to the Android Studio template gallery.</li>
+  <li><strong>Google Play "Verified for On-Device AI" listing badge (stretch goal):</strong> A discovery mechanism for apps that use LiteRT + verified model. Not required for Pitch 3 success — flag as a Phase 3 idea for the Android partnership conversation.</li>
+</ul>
+
+<hr>
+
+<h3>Integration Point 4 — Kaggle Models "Deploy to LiteRT" Button</h3>
+
+<p><strong>This is the first integration to ship.</strong> See §3 for the rationale. Design:</p>
+
+<div class="flow">KAGGLE MODELS PAGE — UI CHANGE:
+
+  Model card for "mobilenet-v3-small-100-224"
+  ┌─────────────────────────────────────────────┐
+  │  Tasks: Image Classification                │
+  │  Framework: TensorFlow / SavedModel         │
+  │                                             │
+  │  [Download]  [Open in Colab]  [→ LiteRT] ←── NEW BUTTON
+  └─────────────────────────────────────────────┘
+
+  On click → side panel:
+    Quantization: [FP32] [FP16] [INT8]
+    Target: [Web] [Android] [iOS] [All]
+    Output:
+      ○ Download .tflite
+      ○ Add to my litert-community collection
+    [Convert and Download]
+
+  Backend: Kaggle runs litert convert via a Kaggle kernel
+           (same environment as model training — no external API call needed)
+           Conversion result appears as a new "Formats" tab on the model card.</div>
+
+<p><strong>Eligibility logic</strong> (which models get the button):</p>
+<ul>
+  <li>TensorFlow SavedModel or Keras .h5 format (direct .tflite conversion path)</li>
+  <li>PyTorch models with litert-torch support (image classification, text embedding, object detection)</li>
+  <li>Model output shape is compatible with known LiteRT task types (auto-detected)</li>
+  <li>Model size &lt; 2GB (practical size limit for web target)</li>
+</ul>
+
+<hr class="section-divider">
+
+<h2>§5. Developer User Stories</h2>
+
+<p>Three users who are currently underserved — and how this pitch fixes their journey:</p>
+
+<table>
+  <tr><th>Developer persona</th><th>Current journey (broken)</th><th>Journey with this pitch</th></tr>
+  <tr><td><strong>ML engineer at a startup</strong><br>Trains on Vertex (affordable GPUs), wants app on Android.</td><td>Trains on Vertex → downloads weights → installs litert-torch locally → converts → sideloads APK for manual test → uploads to Firebase Console → ships. 1–3 days per model update. Entirely outside Google.</td><td>Trains on Vertex → clicks "Export to LiteRT" → Firebase hosts automatically → Android app gets OTA update. Under 15 minutes. All within Google.</td></tr>
+  <tr><td><strong>ML researcher on Kaggle</strong><br>Wins Kaggle competition, wants to show a live demo.</td><td>Downloads model → manually converts → hosts somewhere → builds demo app from scratch. Most Kaggle winners never ship a live product because the path is too long.</td><td>Kaggle "Deploy to LiteRT" button → downloads .tflite → drops into litert-community/sentence-similarity-litertjs Space → live in-browser demo in 30 minutes using Pitch 2's HF Spaces pattern.</td></tr>
+  <tr><td><strong>Enterprise ML team</strong><br>Fine-tunes Gemma on Vertex for a customer service use case, wants it in a mobile app.</td><td>Same broken flow as startup — but with compliance requirements that make the manual steps more painful (data residency, model audit trail). Firebase TFLite hosting is the right answer for OTA updates, but the Vertex connection doesn't exist.</td><td>Vertex fine-tune Gemma → Export to LiteRT (INT8, Android target) → Firebase ML hosts with audit trail → Flutter app loads via LiteRT SDK. Every step logged in Vertex + Firebase for compliance.</td></tr>
+</table>
+
+<hr class="section-divider">
+
+<h2>§6. Why Partnerships PM is the Right Person</h2>
+
+<table>
+  <tr><th>Requirement</th><th>Why Partnerships PM qualifies</th><th>Why a LiteRT engineer cannot do this</th></tr>
+  <tr><td>Vertex AI stakeholder relationships</td><td>Partnerships PM is a Sr. Strategic Partnerships Manager at Google Cloud. He works with Vertex AI customers (Lovable, Datadog, Harness) and has relationships with Google Cloud product teams including Vertex. Not a cold introduction.</td><td>LiteRT is an AI Edge team product. LiteRT engineers don't have Vertex AI PM relationships and would approach the conversation as outsiders to the Google Cloud org.</td></tr>
+  <tr><td>Firebase stakeholder access</td><td>Firebase is a Google Cloud product. the PM's org overlaps. </td><td>LiteRT engineer approaching Firebase PM would appear as a competing product team, not a partner.</td></tr>
+  <tr><td>Customer evidence for the Vertex PM meeting</td><td>Partnerships PM can surface real Vertex AI customer pain points directly from his ISV partnerships. "My customers at Lovable and Harness train on Vertex and cannot get to Android without leaving Google" is a far more compelling argument than a deck. </td><td>A LiteRT PM would rely on hypothetical developer journeys. Partnerships PM can show verified customer evidence from his own partnership conversations.</td></tr>
+  <tr><td>Cross-org coordination (4 teams)</td><td>the PM's job at Google Cloud is exactly this — coordinating across product teams to build joint GTM motions.  The Pitch 3 coordination model is identical to his day job.</td><td>A LiteRT PM can drive decisions within the AI Edge org. They cannot credibly negotiate across Vertex, Firebase, Android, and Kaggle simultaneously without executive backing.</td></tr>
+</table>
+
+<hr class="section-divider">
+
+<h2>§7. Internal Alignment Strategy</h2>
+
+<h3>Why this fails without GM support on day 1</h3>
+
+<div class="critical">
+  Pitch 3 has 4 product team dependencies: Vertex AI, Firebase, Android, Kaggle. Each has their own OKRs. None of them will add a LiteRT integration to their roadmap because Partnerships PM asked nicely. They need a reason — either executive pressure (GM/VP tells them to prioritize it) or a business case compelling enough to move their OKRs. The Kaggle-first strategy (§3) is designed to build the business case before Partnerships PM walks into those rooms. But the room itself needs the GM to open the door.
+</div>
+
+<h3>Stakeholder approach — sequenced, not simultaneous</h3>
+<table>
+  <tr><th>Month</th><th>Who</th><th>Approach</th><th>Ask</th></tr>
+  <tr><td>1</td><td>Lead PM + GM (AI Edge)</td><td>Internal alignment meeting. Present the business case and the 4-team dependency map. Get GM to agree to sponsor cross-team coordination meetings.</td><td>GM sends a cross-org email introducing Partnerships PM and the project to Vertex AI, Firebase, and Android leads.</td></tr>
+  <tr><td>1–2</td><td>Kaggle PM</td><td>Direct conversation — same org, no politics. Kaggle PM is the easiest yes. Present the "Deploy to LiteRT" button spec.</td><td>Kaggle PM adds the button to their next sprint (month 2–3 ship target).</td></tr>
+  <tr><td>2–3</td><td>Firebase ML PM</td><td>After GM intro. Frame as "we're not asking you to build anything new — we want to document and wire the existing TFLite hosting path to Vertex." Low ask, high leverage for both teams.</td><td>Firebase PM adds Vertex → Firebase push path to backlog for month 5–6.</td></tr>
+  <tr><td>3–4</td><td>Vertex AI PM (Model Garden)</td><td>After Kaggle button ships and Kaggle adoption data is available. Walk in with evidence: "X developers used 'Deploy to LiteRT' on Kaggle in the first 30 days. The same button in Model Garden would hit 10× the audience." The Kaggle data is the Vertex pitch.</td><td>Vertex PM adds "Export to LiteRT" to Model Garden roadmap (Phase 1 backend-only, month 5–6).</td></tr>
+  <tr><td>4–5</td><td>Android DevRel / Docs team</td><td>Lowest political friction — Android docs is a content request, not an engineering request. Send a GitHub PR to developer.android.com with the "Train on Vertex, deploy with LiteRT" guide written and ready to merge.</td><td>Android DevRel reviews and merges the docs PR. Zero engineering hours on their side.</td></tr>
+</table>
+
+<h2>§9. Business Outcomes</h2>
+
+<table>
+  <tr><th>Metric</th><th>Baseline (Apr 30, 2026)</th><th>6-month target</th><th>12-month target</th></tr>
+  <tr><td>Kaggle Models with "Deploy to LiteRT" button</td><td>0</td><td>Button live on 50+ eligible Kaggle Models</td><td>Button on all eligible Kaggle Models (~200+). Usage data used in Vertex PM pitch.</td></tr>
+  <tr><td>Vertex model.export(format='litert') API</td><td>Does not exist</td><td>Private preview (Phase 1 backend-only)</td><td>Public preview in Vertex Python SDK</td></tr>
+  <tr><td>Firebase → LiteRT custom model hosting (documented)</td><td>Exists but undocumented; no Vertex connection</td><td>Documented use case on firebase.google.com/docs</td><td>Vertex → Firebase push path live in public beta</td></tr>
+  <tr><td>Android developer.android.com/ai guide citing Vertex→LiteRT</td><td>0 such guides</td><td>"Train on Vertex, deploy with LiteRT on Android" guide published</td><td>Guide featured in Android developer newsletter</td></tr>
+  <tr><td>@litertjs/core weekly npm downloads (web end of pipeline)</td><td>~800/wk</td><td>3,000+/wk</td><td>8,000+/wk</td></tr>
+  <tr><td>LiteRT GitHub stars</td><td>~2,300</td><td>4,000+</td><td>6,000+</td></tr>
+  <tr><td>Google I/O 2027 announcement</td><td>None planned</td><td>Internal deck approved</td><td>Announced at I/O 2027 as official Google workflow</td></tr>
+</table>
+
+<h2>§10. Risks and Mitigations</h2>
+
+<table>
+  <tr><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr>
+  <tr><td>Vertex AI PM deprioritizes LiteRT export (different OKRs)</td><td>High</td><td>Kaggle-first: don't approach Vertex until Kaggle data exists. When Partnerships PM walks into the Vertex meeting with 30-day adoption data from Kaggle, the conversation shifts from "should we do this?" to "how big is the opportunity?" GM intro also changes the political calculus.</td></tr>
+  <tr><td>Firebase ML PM declines (fully Gemini-focused)</td><td>Med</td><td>Frame as "document what already works" not "build something new." If Firebase PM declines, ship the Firebase→LiteRT tutorial as a Google AI Edge blog post and link it from Firebase docs via a PR — no Firebase PM approval needed.</td></tr>
+  <tr><td>Android docs PR stalls in review</td><td>Low</td><td>Android developer docs accepts community PRs. If official PR stalls, publish the guide on Google AI Edge blog and submit a cross-link PR to Android docs — much easier to merge than a full guide.</td></tr>
+  <tr><td>Initiative scope too large (9–12 months is long)</td><td>Med</td><td>Scope to Kaggle + Vertex Phase 1 + Firebase docs only. Android docs tutorial is a stretch goal. Kaggle alone is a shippable, measurable outcome for a 6-month initiative.</td></tr>
+  <tr><td>Kaggle PM is unresponsive or deprioritizes</td><td>Low</td><td>Kaggle is Google — escalate via Lead PM + GM if Kaggle PM doesn't engage within 2 weeks. This is an internal product decision, not an external partnership.</td></tr>
+  <tr><td>Firebase TFLite hosting is actually deprecated (not just undocumented)</td><td>Low-Med</td><td>Verify with Firebase PM in the first meeting — does TFLite hosting still work and get security patches? If fully deprecated, drop Firebase integration and focus on Kaggle + Vertex + Android docs.</td></tr>
+</table>
+
+<h2>§11. Month-by-Month Execution Plan</h2>
+
+<table>
+  <tr><th>Month</th><th>Partnerships PM owns</th><th>Partner team owns</th><th>Gate</th></tr>
+  <tr><td><strong>1</strong></td><td>Lead PM + GM alignment meeting. Cross-org email drafted. Kaggle PM intro meeting (first week). Firebase PM intro meeting. Vertex AI PM intro (after GM email). Android DevRel intro. Internal "State of Google's cloud-to-edge pipeline" doc written.</td><td>GM sends cross-org intro email.</td><td class="gate">GM buy-in confirmed. All 4 meetings booked within month 1. Kaggle PM engagement confirmed (yes or no to the button).</td></tr>
+  <tr><td><strong>2</strong></td><td>Kaggle "Deploy to LiteRT" button spec (full UI + backend design). Submit to Kaggle PM for sprint planning. Firebase integration spec: what the Vertex → Firebase API endpoint accepts.</td><td>Kaggle: button scoping + sprint planning. Firebase PM: decides to prioritize or not.</td><td class="gate">Kaggle PM commits to sprint. Firebase PM direction confirmed. If Firebase declines, go to Plan B (blog post + docs PR).</td></tr>
+  <tr><td><strong>3</strong></td><td>Kaggle button launches (coordinate marketing — blog post, social). Collect Kaggle adoption data (clicks, downloads, error rates). Begin drafting Android docs guide ("Train on Vertex, deploy with LiteRT").</td><td>Kaggle: button ships. Firebase: Phase 1 backend spec (if committed).</td><td class="gate">Kaggle button live. First 30 days of adoption data collected. Android docs guide drafted.</td></tr>
+  <tr><td><strong>4</strong></td><td>Vertex AI PM meeting — present Kaggle adoption data as business case. Walk through Phase 1 spec (litert export format in SDK). Android docs guide submitted as PR to developer.android.com.</td><td>Vertex: Phase 1 scope decision + sprint commitment. Android: PR review.</td><td class="gate">Vertex PM commits to Phase 1 sprint. Android docs PR merged or clear ETA. Kaggle 30-day data shows > 500 "Deploy to LiteRT" clicks.</td></tr>
+  <tr><td><strong>5</strong></td><td>Vertex Phase 1 engineering support (Partnerships PM provides spec, reviews PRs). Firebase documentation co-authored (if Firebase PM committed). Design Vertex Model Garden UI (Phase 2 spec — modal, quantization options, benchmark preview).</td><td>Vertex: .export(format='litert') implementation. Firebase: API endpoint + docs (if committed).</td><td class="gate">Vertex API available in private preview (Partnerships PM is first user). Firebase docs PR merged (or Plan B published).</td></tr>
+  <tr><td><strong>6</strong></td><td>Public blog post: "Train on Vertex AI, run on 3 billion Android devices with LiteRT." Coordinate with Vertex + Firebase for co-publishing. Measure LiteRT downloads from Vertex referrals. Prepare Google I/O 2027 deck (early).</td><td>Vertex: Phase 1 in public preview. Firebase: integration co-marketed.</td><td class="gate">Blog post live on all three blogs (AI Edge + Vertex + Firebase). Vertex API in public preview with SDK docs. Referral downloads measured.</td></tr>
+  <tr><td><strong>7–9</strong></td><td>Vertex Model Garden UI (Phase 2 — button in Model Garden UX). Vertex custom training .export() API (Phase 3 — discuss priority with Vertex PM). Android Studio template PR.</td><td>Vertex: Phase 2 UI. Firebase: Vertex→Firebase push path (if not shipped in month 5).</td><td class="gate">Model Garden "Export to LiteRT" button visible in Vertex UI (Phase 2). First external developer using Vertex → LiteRT end-to-end workflow (without manual steps).</td></tr>
+  <tr><td><strong>10–12</strong></td><td>GA launch preparation. Google I/O 2027 session proposal submitted. "Train on Vertex, deploy with LiteRT" as official Google AI developer pattern. Co-marketing with Android, Firebase, and Vertex teams.</td><td>All 4 integrations: GA or public beta.</td><td class="gate">Official Google blog post from Sundar's team (or equivalent visibility). I/O session proposal accepted.</td></tr>
+</table>
+</body>
+</html>

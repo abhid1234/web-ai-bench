@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pitch 2 — LiteRT DevKit: Edge AI CI/CD Pipeline</title>
+<style>
+  :root {
+    --blue: #1a73e8; --blue-light: #e8f0fe;
+    --red: #d93025; --red-light: #fce8e6;
+    --green: #188038; --green-light: #e6f4ea;
+    --gold: #f9ab00; --gold-light: #fff3cd;
+    --gray: #666; --gray-light: #f8f9fa; --border: #ddd;
+  }
+  body { font-family: Arial, sans-serif; font-size: 13px; padding: 40px; max-width: 1000px; color: #202124; line-height: 1.5; }
+  h1 { font-size: 22px; color: var(--blue); border-bottom: 3px solid var(--blue); padding-bottom: 10px; }
+  h2 { font-size: 16px; color: var(--blue); margin-top: 32px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+  h3 { font-size: 14px; color: #333; margin-top: 20px; }
+  h4 { font-size: 13px; color: #555; margin-top: 16px; margin-bottom: 4px; }
+  .meta { color: var(--gray); font-size: 12px; margin-bottom: 24px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 12px; }
+  th { background: var(--blue); color: white; text-align: left; padding: 8px 10px; }
+  td { border: 1px solid var(--border); padding: 7px 10px; vertical-align: top; }
+  tr:nth-child(even) td { background: var(--gray-light); }
+  ul, ol { padding-left: 22px; }
+  li { margin-bottom: 5px; }
+  pre { background: #f5f5f5; padding: 14px; border-radius: 4px; font-size: 12px; font-family: 'Courier New', monospace; white-space: pre-wrap; overflow-x: auto; border-left: 3px solid var(--border); }
+  pre.cmd { border-left-color: var(--blue); }
+  pre.yaml { border-left-color: var(--green); }
+  pre.email { border-left-color: var(--gold); background: var(--gold-light); }
+  .tldr { background: var(--blue-light); border-left: 4px solid var(--blue); padding: 14px 18px; margin: 16px 0; }
+  .tldr h2 { border: none; margin-top: 0; padding: 0; font-size: 15px; }
+  .highlight { background: var(--blue-light); border-left: 4px solid var(--blue); padding: 10px 14px; margin: 12px 0; }
+  .warning { background: var(--gold-light); border-left: 4px solid var(--gold); padding: 10px 14px; margin: 12px 0; }
+  .critical { background: var(--red-light); border-left: 4px solid var(--red); padding: 10px 14px; margin: 12px 0; }
+  .recommendation { background: var(--green-light); border-left: 4px solid var(--green); padding: 10px 14px; margin: 12px 0; }
+  .fact { font-size: 11px; color: var(--gray); font-style: italic; }
+  .flow { background: #fafafa; border: 1px solid var(--border); padding: 16px; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre-wrap; margin: 12px 0; line-height: 1.6; }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 11px; font-weight: bold; }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .section-divider { border: none; border-top: 2px solid var(--blue-light); margin: 32px 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  .companion { background: var(--gray-light); border: 1px solid var(--border); padding: 10px 14px; font-size: 11px; color: var(--gray); margin-top: 40px; }
+  .gate { font-weight: bold; color: var(--red); font-size: 11px; }
+</style>
+</head>
+<body>
+
+<h1>Pitch 2 — LiteRT DevKit: Edge AI CI/CD Pipeline</h1>
+
+
+<div class="tldr">
+<h2>TL;DR — "Docker push for edge AI"</h2>
+<ul>
+  <li><strong>The gap:</strong> Zero GitHub Actions for TFLite/LiteRT exist on the Marketplace today (verified April 30, 2026). Deploying a trained model to Android, iOS, and Web takes 6 manual steps across 3 different tools — all outside Google's product surface. ExecuTorch (Meta) shipped a CLI and benchmark dashboard in April 2026. LiteRT has neither.</li>
+  <li><strong>The pitch:</strong> LiteRT DevKit — an open-source CLI (<code>pip install litert-devkit</code>), three GitHub Actions, and a public benchmark dashboard — that collapses 6 manual steps into one pipeline. <code>litert convert && litert push</code> becomes the standard command, the way <code>docker build && docker push</code> became standard a decade ago.</li>
+  <li><strong>Partnerships background required:</strong> Managing Harness, Datadog, and Lovable at Google Cloud provides direct CI/CD and DevOps ecosystem relationships — not a cold pitch.</li>
+  <li><strong>Launch moment:</strong> The 12 @litertjs/core models + 3 HF Spaces + co-authored blog post (formerly "Pitch A") are the DevKit's launch marketing moment — every model was produced by <code>litert convert && litert push</code>. The blog post becomes the DevKit's product launch story.</li>
+  <li><strong>Duration:</strong> 6–9 months initiative. Partnerships PM leads product + partnerships. LiteRT eng builds (1–2 engineers, ~80 hrs).</li>
+</ul>
+</div>
+
+<h2>§1. The Problem</h2>
+
+<p>A developer who fine-tunes a model on Vertex AI or trains in PyTorch and wants to deploy it to Android, iOS, and Web must perform every step manually today:</p>
+
+<div class="flow">CURRENT WORKFLOW (6 manual steps, 3 tools, 0 Google product surface after step 1):
+
+  Step 1: Export weights from training job
+           → downloads to local disk
+
+  Step 2: Convert to .tflite
+           → litert-torch convert (standalone CLI, not in any CI system)
+           → or: python -c "import tf; tf.lite.TFLiteConverter..."
+           → no standard command, no error messages that make sense
+
+  Step 3: Quantize (FP32 → INT8 for performance)
+           → LiteRT Model Optimizer (separate standalone tool)
+           → not wired to CI, no accuracy gate
+
+  Step 4: Validate accuracy post-quantization
+           → NOTHING EXISTS. Developer eyeballs it or runs custom script.
+
+  Step 5: Benchmark latency across platforms
+           → Manual: sideload APK, run on physical device, read logcat
+           → No cross-platform comparison, no automated report
+
+  Step 6: Push to model registry / app
+           → git + S3 / manual HF upload / separate app store deploy
+           → no model versioning, no rollback, no lineage
+
+RESULT: A 6-step process that takes 1–3 days per model update,
+        is error-prone, and cannot be run in CI.</div>
+
+<div class="critical">
+  <strong>The ExecuTorch threat is live.</strong> ExecuTorch v1.2.0 (released April 1, 2026) ships with:
+  <code>optimum-cli export executorch model_id --task text-generation</code> — single command PyTorch → ExecuTorch.
+  A public nightly benchmark dashboard at pytorch.org/executorch — automated cross-device perf tracking.
+  Production deployment in Meta's apps: Instagram, WhatsApp, Ray-Ban Smart Glasses, Meta Quest 3.
+  <strong>LiteRT's tooling window is 12–18 months before "ExecuTorch has better tooling" becomes entrenched developer perception.</strong>
+</div>
+
+<div class="warning">
+  <strong>The only existing edge CI/CD competitor is Edge Impulse</strong> — which ships <code>edgeimpulse/build-deploy@v1</code> (GitHub Action) for MCU/embedded .tflite. Small community, MCU-focused, not applicable to Android/iOS/Web. The enterprise CI/CD market (GitHub Actions, Harness, GitLab CI) has exactly 0 LiteRT or TFLite coverage. Verified April 30, 2026.
+</div>
+
+<h2>§2. Market Gap (Verified April 30, 2026)</h2>
+
+<table>
+  <tr><th>Platform</th><th>ML/Edge CI/CD support today</th><th>The opportunity</th></tr>
+  <tr><td><strong>GitHub Actions Marketplace</strong></td><td>0 actions for TFLite or LiteRT. CML (cml.dev) handles cloud ML CI. Edge Impulse action handles embedded only. No mobile/web ML CI action exists.</td><td>First-party Google-branded LiteRT actions — <code>google-ai-edge/litert-convert-action</code>, etc. Prime real estate on the largest developer platform (100M+ users).</td></tr>
+  <tr><td><strong>Harness CI</strong></td><td>No ML-specific features — pure application DevOps (Test Intelligence, Cache Intelligence, Feature Flags). Zero model testing, zero edge deployment awareness.</td><td>First enterprise CI/CD platform with a native LiteRT pipeline stage. Harness gets first-mover advantage in ML CI — a market their 30%+ enterprise engineering customers are moving into.</td></tr>
+  <tr><td><strong>Bitrise</strong></td><td>No LiteRT or ML model CI features. Bitrise is the #1 CI/CD platform for iOS/Android (400+ mobile-optimized steps). Every Android app team is a potential user of a <code>litert-validate</code> step.</td><td>Native <code>litert-convert</code> and <code>litert-bench</code> Bitrise Steps — published to the Bitrise Step Library. First mobile CI/CD platform with on-device ML model validation built in. Bitrise reaches 100K+ mobile app teams.</td></tr>
+  <tr><td><strong>CircleCI</strong></td><td>No LiteRT/TFLite support. CircleCI invested heavily in AI/ML CI in 2024 (GPU resource classes, Eval Orb for LLM evaluation). Closest non-GitHub CI/CD platform to the AI/ML community.</td><td><code>litert-convert</code> and <code>litert-bench</code> Orbs published to CircleCI Orb Registry. CircleCI gets an edge ML CI use case to go alongside their cloud LLM eval story. Case study on CircleCI AI blog.</td></tr>
+  <tr><td><strong>W&amp;B (Weights &amp; Biases)</strong></td><td>Edge metrics only via Edge Impulse integration — not native. No LiteRT or TFLite support. W&amp;B owns the training side but has nothing for post-conversion tracking.</td><td>Native W&amp;B integration for LiteRT benchmark runs — <code>litert bench --log-wandb</code>. W&amp;B gets an edge deployment story. LiteRT gets experiment tracking.</td></tr>
+  <tr><td><strong>Roboflow</strong></td><td>Native YOLOv8/v11 → TFLite export via Ultralytics integration. Roboflow is the de-facto CV platform (dataset annotation + training + deployment). Already supports ARM, Jetson, Raspberry Pi deployment.</td><td>"Deploy to LiteRT" button in Roboflow's Deploy UI. Models exported via Roboflow get LiteRT certification badge. Roboflow Universe becomes a source of certified LiteRT models.</td></tr>
+  <tr><td><strong>Ultralytics (YOLO ecosystem)</strong></td><td>YOLOv11 (Sept 2024) has native TFLite export with INT8 quantization. YOLO is the de-facto standard for edge object detection. Ultralytics is the most-starred ML repo on GitHub.</td><td>LiteRT certification for YOLOv11 TFLite models — first-class benchmark data on the LiteRT dashboard. Google contributes TFLite export improvements upstream. YOLOv11 becomes the showcase model for DevKit launch.</td></tr>
+  <tr><td><strong>Edge Impulse</strong></td><td>Has <code>edgeimpulse/build-deploy@v1</code> GitHub Action for MCU/embedded .tflite. Bring-Your-Own-Model (BYOM) supports TFLite natively. #1 platform for microcontroller and IoT ML deployment.</td><td>LiteRT × Edge Impulse integration guide — LiteRT models deployable to Edge Impulse Studio; Edge Impulse models validated via <code>litert-gate</code>. Opens the embedded/robotics developer segment.</td></tr>
+  <tr><td><strong>MLflow</strong></td><td>Cloud ML model tracking only. No mobile/edge deployment capabilities. Cannot store or serve .tflite models natively.</td><td>MLflow plugin for LiteRT model tracking and conversion lineage — <code>litert push --hub mlflow</code>.</td></tr>
+  <tr><td><strong>ExecuTorch (PyTorch)</strong></td><td>CLI + benchmark dashboard (v1.2.0, April 2026). PyTorch-native only. No GitHub Actions. Works only for PyTorch models.</td><td>LiteRT DevKit covers PyTorch, JAX, and TensorFlow. Broader model coverage = broader ecosystem. LiteRT's positioning: "works with everything," vs ExecuTorch's "works with PyTorch."</td></tr>
+</table>
+
+<hr class="section-divider">
+
+<h2>§3. What LiteRT DevKit Is — Component Design</h2>
+
+<h3>Component 1 — <code>litert</code> CLI</h3>
+<p>A single installable command-line tool. Entry point for the entire developer workflow.</p>
+<pre class="cmd">pip install litert-devkit        # installs the CLI
+litert --version                  # 1.0.0
+litert --help                     # lists all commands</pre>
+
+<h4>Command: <code>litert convert</code></h4>
+<pre class="cmd">litert convert &lt;model_path&gt; [flags]
+
+Flags:
+  --format          tflite (default), litert-lm
+  --quantize        none (default), int8, float16, dynamic
+  --target          web, android, ios, all (default: all)
+  --output          output file path (default: &lt;model&gt;.tflite)
+  --validate        run accuracy validation after conversion (requires --ref)
+  --ref             reference model for accuracy comparison
+  --tolerance       max allowed accuracy drop (default: 0.02 = 2%)
+
+Examples:
+  litert convert model.pt --quantize int8 --validate --ref model.pt
+  litert convert model.pt --format tflite --target web --output model_web.tflite</pre>
+
+<h4>Command: <code>litert validate</code></h4>
+<pre class="cmd">litert validate &lt;model.tflite&gt; [flags]
+
+Flags:
+  --ref             original model (PyTorch / SavedModel) for numerical comparison
+  --dataset         evaluation dataset path (.tfrecord, .csv, directory)
+  --metric          accuracy, f1, mse, cosine-sim (auto-detected from model task)
+  --tolerance       max allowed metric drop from ref (default: 0.02)
+  --output          JSON report path (default: stdout)
+
+Example:
+  litert validate model.tflite --ref model.pt --dataset val/ --tolerance 0.01
+
+Output:
+  {
+    "status": "pass",
+    "ref_accuracy": 0.923,
+    "tflite_accuracy": 0.918,
+    "delta": -0.005,
+    "tolerance": 0.01,
+    "within_tolerance": true
+  }</pre>
+
+<h4>Command: <code>litert bench</code></h4>
+<pre class="cmd">litert bench &lt;model.tflite&gt; [flags]
+
+Flags:
+  --targets         web, android, ios, desktop (comma-separated, default: all)
+  --backend         webgpu, wasm, gpu-delegate, nnapi, cpu (default: auto)
+  --device-farm     browserstack, aws-device-farm, local (default: local)
+  --runs            number of inference runs per backend (default: 100)
+  --output          json, markdown, html (default: markdown)
+  --post-to         github-pr, dashboard (appends to public benchmark dashboard)
+  --log-wandb       log results to Weights &amp; Biases run
+
+Example:
+  litert bench model.tflite --targets web,android --post-to github-pr
+
+Output (markdown, pasted as PR comment):
+  | Backend      | Median latency | P95 latency | Accuracy |
+  |------------- |----------------|-------------|----------|
+  | WebGPU       | 18ms           | 24ms        | 91.8%    |
+  | WASM/XNNPack | 71ms           | 89ms        | 91.8%    |
+  | Android GPU  | 12ms           | 19ms        | 91.8%    |
+  | Android NPU  | 8ms            | 11ms        | 91.7%    |</pre>
+
+<h4>Command: <code>litert push</code></h4>
+<pre class="cmd">litert push &lt;model.tflite&gt; [flags]
+
+Flags:
+  --hub             litert-community (default), mlflow, wandb, gcs
+  --repo            HF repo name (e.g. all-MiniLM-L6-v2-web)
+  --auto-card       auto-generate model card from bench results + model metadata
+  --version         semantic version tag (default: auto-increment)
+  --private         private repo (default: public)
+  --benchmark-data  path to bench JSON to embed in model card
+
+Example:
+  litert push model.tflite --hub litert-community --repo mobilenet-v3-web --auto-card
+
+What auto-card generates:
+  - Model card YAML header (license, tags, pipeline_tag, library_name: litert)
+  - Benchmark table from most recent litert bench run
+  - Usage code snippet (@litertjs/core for web, LiteRT SDK for Android/iOS)
+  - Conversion provenance (source model, quantization method, LiteRT version used)</pre>
+
+<hr>
+
+<h3>Component 2 — GitHub Actions Suite</h3>
+<p>Three pre-built, published actions under <code>google-ai-edge/</code> on the GitHub Marketplace. A developer adds them to their repo in <strong>under 10 minutes</strong>.</p>
+
+<h4>Full workflow example (drop this into <code>.github/workflows/litert.yml</code>):</h4>
+<pre class="yaml">name: LiteRT CI
+
+on:
+  pull_request:
+    paths:
+      - 'model/**'
+      - 'training/**'
+
+jobs:
+  litert-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Step 1: Convert the trained model to .tflite
+      - uses: google-ai-edge/litert-convert-action@v1
+        with:
+          model: model.pt                     # path to source model
+          quantize: int8                      # quantization level
+          output: model.tflite                # output path
+          validate: true                      # run accuracy validation
+          tolerance: 0.02                     # max 2% accuracy drop allowed
+
+      # Step 2: Benchmark across platforms (posts results as PR comment)
+      - uses: google-ai-edge/litert-bench-action@v1
+        with:
+          model: model.tflite
+          targets: web,android               # which platforms to bench
+          device-farm: browserstack          # or: aws-device-farm, local
+          post-to: github-pr                 # posts markdown table as PR comment
+          post-to-dashboard: true            # opt-in to public benchmark dashboard
+
+      # Step 3: Gate the merge on accuracy + latency thresholds
+      - uses: google-ai-edge/litert-gate-action@v1
+        with:
+          model: model.tflite
+          min_accuracy: 0.985               # block if accuracy falls below this
+          max_latency_ms_web: 50            # block if WebGPU latency exceeds this
+          max_latency_ms_android: 30        # block if Android GPU exceeds this</pre>
+
+<div class="highlight">
+  <strong>What this looks like on a PR:</strong> The <code>litert-bench-action</code> posts a formatted comment with a benchmark table. The <code>litert-gate-action</code> posts a green checkmark (pass) or red X (fail) with the specific metric that caused the failure. The PR cannot be merged if the gate fails — same pattern as code coverage gates or type check gates.
+</div>
+
+<h4>GitHub Marketplace listing design:</h4>
+<table>
+  <tr><th>Action</th><th>Marketplace name</th><th>Category</th><th>Logo</th></tr>
+  <tr><td><code>litert-convert-action</code></td><td>LiteRT Model Converter</td><td>Utilities</td><td>Google AI Edge brand mark</td></tr>
+  <tr><td><code>litert-bench-action</code></td><td>LiteRT Benchmark</td><td>Testing</td><td>Google AI Edge brand mark</td></tr>
+  <tr><td><code>litert-gate-action</code></td><td>LiteRT Quality Gate</td><td>Code Quality</td><td>Google AI Edge brand mark</td></tr>
+</table>
+
+<hr>
+
+<h3>Component 3 — Public Benchmark Dashboard</h3>
+<p>URL: <code>ai.google.dev/edge/bench</code> (or <code>litert.dev/bench</code> if a domain is available).</p>
+
+<h4>Data model (populated from <code>litert-bench-action</code> opt-in telemetry):</h4>
+<pre class="cmd">{
+  "model": "all-MiniLM-L6-v2",
+  "model_hub_url": "hf.co/litert-community/all-MiniLM-L6-v2-web",
+  "tflite_size_mb": 22.7,
+  "quantization": "int8",
+  "litert_version": "2.1.4",
+  "benchmarks": [
+    {
+      "platform": "web",
+      "backend": "webgpu",
+      "device": "MacBook Pro M3",
+      "browser": "Chrome 138",
+      "median_ms": 18,
+      "p95_ms": 24,
+      "accuracy_delta": -0.005
+    },
+    {
+      "platform": "android",
+      "backend": "gpu-delegate",
+      "device": "Pixel 8",
+      "android_version": "15",
+      "median_ms": 12,
+      "p95_ms": 19,
+      "accuracy_delta": -0.005
+    }
+  ],
+  "submitted_at": "2026-05-01T14:23:00Z",
+  "submitted_by": "github.com/myorg/myrepo"
+}</pre>
+
+<h4>Dashboard UI design (not a live page — describes what gets built):</h4>
+<ul>
+  <li>Filter by: model name, platform (web/android/ios), backend (WebGPU/WASM/GPU/NPU), device class, LiteRT version</li>
+  <li>Comparison view: select 2+ models to compare latency and accuracy side-by-side</li>
+  <li>Leaderboard: fastest models per task type per device class</li>
+  <li>Community contribution model: anyone with <code>litert-bench-action</code> + opt-in telemetry contributes to the dashboard</li>
+  <li>ExecuTorch positioning: if ExecuTorch builds a public dashboard (they have a nightly one), this is the cross-framework comparison layer</li>
+</ul>
+
+<hr>
+
+<h3>Component 4 — Platform Integrations</h3>
+<table>
+  <tr><th>Platform</th><th>Integration design</th><th>Developer workflow</th><th>Partner value</th></tr>
+  <tr><td><strong>Harness CI</strong></td><td>Native LiteRT pipeline stage in Harness CI. Partnerships PM designs the integration spec; Harness engineers implement under partnership MOU.</td><td>Drag-and-drop "LiteRT Convert" step in Harness pipeline UI — no YAML required. Same UX as existing Harness "Run Tests" stage.</td><td>Harness gets first ML CI/CD module. Positions them in a market where 30%+ of their enterprise customers are building ML features.</td></tr>
+  <tr><td><strong>Hugging Face Hub</strong></td><td><code>litert push --hub litert-community</code>. Auto-generates model card with benchmark table. Pushes .tflite + card in one command.</td><td>Replaces: HF CLI + manual card writing + copy-paste benchmark numbers. The 12 Pitch A models are all pushed this way — the blog post is the DevKit's launch story.</td><td>HF gets more high-quality model cards with standardized benchmark data — improves Hub quality signal.</td></tr>
+  <tr><td><strong>W&amp;B</strong></td><td><code>litert bench --log-wandb</code> logs benchmark results as a W&amp;B experiment run. Enables cross-run comparison over time (did quantization change latency across 5 model versions?).</td><td>W&amp;B run shows: model metadata, conversion flags used, benchmark results per platform, accuracy delta vs FP32 reference.</td><td>W&amp;B gets an edge deployment story they currently lack. LiteRT becomes their recommended edge tracking tool in W&amp;B docs.</td></tr>
+  <tr><td><strong>MLflow</strong></td><td>MLflow plugin (<code>litert-mlflow</code> package) registers .tflite artifacts with metadata in MLflow model registry. Conversion lineage tracked as MLflow run tags.</td><td><code>import litert_mlflow; litert_mlflow.log_conversion(model, run_id)</code> — one line to log conversion results alongside training experiment.</td><td>MLflow extends from cloud-only tracking into edge model lifecycle.</td></tr>
+  <tr><td><strong>BrowserStack / AWS Device Farm</strong></td><td>Device farm API integration for <code>litert bench --device-farm browserstack</code>. Dispatches benchmark jobs to real Android/iOS devices, collects results, formats report.</td><td>Same <code>litert bench</code> command — add <code>--device-farm browserstack</code> flag. Credentials set as CI environment variables.</td><td>BrowserStack / Device Farm get a new ML use case for their platform.</td></tr>
+</table>
+
+<hr class="section-divider">
+
+<h2>§4. Why Partnerships PM is the Right Person</h2>
+
+<table>
+  <tr><th>Requirement</th><th>Why Partnerships PM qualifies</th><th>Why a LiteRT PM cannot do this</th></tr>
+  <tr><td>Harness relationship</td><td>Partnerships PM managed the Harness partnership at Google Cloud.  This is not a cold outreach.</td><td>A LiteRT PM would need a warm introduction through Google Cloud partnerships — a 2–4 week delay before the first real conversation.</td></tr>
+  <tr><td>GitHub partnership</td><td>Partnerships PM has worked in the Google ecosystem with GitHub's partner team. Knows the Technology Partner Program process.</td><td>LiteRT team has no GitHub partner relationship.</td></tr>
+  <tr><td>CI/CD domain credibility</td><td>Partnerships PM speaks CI/CD natively — he can talk about pipeline stages, merge gates, artifact management, DevOps ROI with Harness and GitHub engineers without needing a translator.</td><td>A PM from an ML runtime team who hasn't worked in CI/CD will lose credibility in the first technical conversation with a Harness SE.</td></tr>
+  <tr><td>Conference play</td><td>Partnerships PM knows the AI Engineer World's Fair and similar DevOps-adjacent conference ecosystems. </td><td>LiteRT PMs are comfortable at I/O and ML-specific venues. World's Fair's Production Infra track is a different audience.</td></tr>
+</table>
+
+<hr class="section-divider">
+
+<h2>§5. Partnership Design</h2>
+
+<h3>Harness Partnership</h3>
+<p><strong>What Harness gets:</strong> First CI/CD platform with a native LiteRT pipeline stage. Announced as a named launch partner with Google AI Edge. Positions Harness in ML DevOps — a market their enterprise customers are actively entering. Blog post co-authored on Harness blog + Google AI Edge blog.</p>
+<p><strong>What Google gets:</strong> Enterprise distribution (Harness has significant enterprise engineering market share). Co-marketing reach. A "Deploys with LiteRT" certified partner for Pitch 1 Partner Network.</p>
+<p><strong>Engineering ask on Harness's side:</strong> Implement the Harness pipeline stage wrapper around the litert CLI — estimated 1–2 sprint for one Harness engineer. Partnerships PM provides the spec; Harness builds.</p>
+<p><strong>MOU structure:</strong> Non-exclusive, co-marketing agreement. Harness integrates and maintains the LiteRT pipeline stage. Google provides early access to LiteRT DevKit releases and a named badge ("Deploys with LiteRT — Certified by Google AI Edge").</p>
+
+<h3>GitHub Partnership</h3>
+<p><strong>Path:</strong> Publish 3 GitHub Actions to GitHub Marketplace under <code>google-ai-edge/</code>. No partnership MOU required for publishing — Google can publish directly. The partnership conversation with GitHub is about co-marketing, not technical access.</p>
+<p><strong>What GitHub gets:</strong> Fills a real gap in the Marketplace (0 ML/edge actions from a major vendor). Google brand name adds credibility to the Marketplace. GitHub can feature the actions in their "New on the Marketplace" newsletter.</p>
+<p><strong>What Google gets:</strong> Distribution to 100M+ GitHub users. GitHub featured placement in the Marketplace. A "verified by GitHub" action badge (available to verified organizations).</p>
+
+<hr class="section-divider">
+
+<h2>§6. The HF Flagship as DevKit's Launch Moment</h2>
+
+<p>The 12 @litertjs/core models + 3 HF Spaces + co-authored blog post ("formerly Pitch A") are not a separate workstream — they are the DevKit's launch marketing artifact. Every model in the HF launch was produced by running:</p>
+
+<pre class="cmd">litert convert sentence-transformers/all-MiniLM-L6-v2 --quantize int8 --validate
+litert bench model.tflite --targets web --post-to dashboard
+litert push model.tflite --hub litert-community --repo all-MiniLM-L6-v2-web --auto-card</pre>
+
+<p>The co-authored blog post with Xenova (HF) becomes: <strong>"We built 12 production-ready web models in 8 weeks — here's the pipeline that made it possible."</strong> The Spaces are the live demos. The benchmark tables in each model card were generated by <code>litert bench</code>. The model cards were generated by <code>litert push --auto-card</code>.</p>
+
+<div class="recommendation">
+  <strong>Why this framing is more powerful:</strong> The old "Pitch A" framing was "we added models to HF." The DevKit framing is "we shipped 12 models in 8 weeks because we had a pipeline — and now you can use the same pipeline." The models aren't the story; they're the proof. The DevKit is the story.
+</div>
+
+<hr class="section-divider">
+
+<h2>§7. Conference Strategy</h2>
+
+<table>
+  <tr><th>Conference</th><th>Date</th><th>Track / framing</th><th>Speaker</th><th>Priority</th></tr>
+  <tr><td><strong>AI Engineer World's Fair 2026</strong></td><td>June 29–July 2, SF</td><td>"LLM Production Infra" or "Evals &amp; Observability" track. Talk title: "CI/CD for On-Device AI — What we learned shipping 12 models to the browser in 8 weeks."</td><td>Partnerships PM + Harness co-presenter (if partnership is live by then)</td><td><span class="badge badge-red">P0 — submit CFP immediately</span></td></tr>
+  <tr><td><strong>PyTorch Conference NA</strong></td><td>Oct 20–21, San Jose</td><td>LiteRT DevKit vs ExecuTorch positioning. Talk: "Framework-agnostic edge CI/CD — LiteRT DevKit works with PyTorch, JAX, and TensorFlow." Direct ExecuTorch audience.</td><td>LiteRT eng + Partnerships PM</td><td><span class="badge badge-blue">P1 — submit Sept</span></td></tr>
+  <tr><td><strong>AI Infra Summit</strong></td><td>Sep 15–17, Santa Clara</td><td>Enterprise CI/CD angle. Co-present with Harness if MOU is signed.</td><td>Partnerships PM + Harness</td><td><span class="badge badge-blue">P1</span></td></tr>
+  <tr><td><strong>Google I/O 2027</strong></td><td>May 2027</td><td>Full DevKit GA + Pitch 1 Partner Network launch. The full ecosystem story.</td><td>Lead PM or LiteRT VP</td><td><span class="badge badge-green">P2 — plan for it</span></td></tr>
+</table>
+
+<hr class="section-divider">
+
+<h2>§9. Business Outcomes</h2>
+
+<table>
+  <tr><th>Metric</th><th>Baseline (Apr 30, 2026)</th><th>6-month target</th><th>12-month target</th></tr>
+  <tr><td>GitHub Actions for LiteRT in Marketplace</td><td>0</td><td>3 (convert, bench, gate)</td><td>3 + Bitrise Steps + CircleCI Orbs</td></tr>
+  <tr><td>litert-devkit GitHub stars</td><td>0</td><td>500+</td><td>2,000+</td></tr>
+  <tr><td>@litertjs/core weekly npm downloads</td><td>~800/wk (unverified)</td><td>3,000+/wk</td><td>8,000+/wk</td></tr>
+  <tr><td>CI/CD platform partners (Harness, Bitrise, CircleCI)</td><td>0</td><td>2 (Harness + Bitrise co-announcement)</td><td>3+ (add CircleCI Orb)</td></tr>
+  <tr><td>Benchmark dashboard device profiles</td><td>0</td><td>15+ community-contributed</td><td>50+</td></tr>
+  <tr><td>@litertjs/core models in HF litert-community (Web Models)</td><td>0</td><td>12 (via litert push --auto-card)</td><td>25+</td></tr>
+  <tr><td>Conference talk accepted (major AI/DevOps conf)</td><td>0</td><td>1 (AI Engineer World's Fair — if submitted)</td><td>2 (World's Fair + PyTorch Conf)</td></tr>
+  <tr><td>LiteRT GitHub stars</td><td>~2,300</td><td>3,500+</td><td>6,000+</td></tr>
+</table>
+
+<h2>§10. Risks and Mitigations</h2>
+
+<table>
+  <tr><th>Risk</th><th>Likelihood</th><th>Mitigation</th></tr>
+  <tr><td>LiteRT engineering can't staff the CLI build</td><td>Med</td><td>CLI v1.0 wraps existing litert-torch converter — minimal new code. The 3 GitHub Actions are YAML + shell script wrappers. Estimate: 1 engineer, ~80 hours. If bandwidth isn't there, ship Actions-only first (Actions don't require the CLI).</td></tr>
+  <tr><td>Harness deprioritizes the integration</td><td>Low</td><td>Start with GitHub Actions (no partnership needed). Harness is Phase 2. If Harness doesn't engage, substitute GitLab CI (same approach, different platform).</td></tr>
+  <tr><td>ExecuTorch ships GitHub Actions before LiteRT</td><td>Med</td><td>Verified: 0 ExecuTorch GitHub Actions as of April 30, 2026. Prioritize Actions over CLI — Actions can ship in month 3, CLI in month 4.</td></tr>
+  <tr><td>AI Engineer World's Fair CFP already closed</td><td>Unknown — check today</td><td>If World's Fair CFP is closed, pivot to PyTorch Conference (October) as the launch conference. Submit immediately.</td></tr>
+  <tr><td>Device farm costs for benchmark-action</td><td>Low</td><td>Start with browser-only benchmarks (WebGPU/WASM — zero cost, any CI machine). Device farm integration is Phase 2 (month 5+).</td></tr>
+  <tr><td>Benchmark dashboard data quality (bad community submissions)</td><td>Med</td><td>Require GitHub account for opt-in telemetry. Rate-limit submissions per repo. Flag outliers for human review before dashboard display.</td></tr>
+</table>
+
+<h2>§11. Month-by-Month Execution Plan</h2>
+
+<table>
+  <tr><th>Month</th><th>Partnerships PM owns</th><th>LiteRT eng owns</th><th>Gate</th></tr>
+  <tr><td><strong>1</strong></td><td>CLI command spec (all 4 commands + flags). GitHub Actions spec. Harness outreach (week 1). Bitrise + CircleCI outreach (week 1). GitHub outreach (week 2). Roboflow + Ultralytics outreach (week 2). W&amp;B outreach (week 3). CFP submission to AI Engineer World's Fair.</td><td>Repo bootstrap (google-ai-edge/litert-devkit). OSPO review starts. Convert command prototype.</td><td class="gate">CLI spec approved by Lead PM + Matt. Harness intro meeting booked.</td></tr>
+  <tr><td><strong>2</strong></td><td>Harness integration spec. GitHub Actions YAML spec. Review litert convert + validate CLI builds. W&amp;B integration spec.</td><td>litert convert + validate CLI (internal). GitHub Actions v0.1 (convert-action).</td><td class="gate">convert-action works end-to-end on a test PyTorch model in a real GitHub repo CI run.</td></tr>
+  <tr><td><strong>3</strong></td><td>Benchmark dashboard data schema + design. Benchmark telemetry opt-in design. litert bench + gate Actions spec. Begin Harness MOU negotiation.</td><td>litert bench CLI. litert-bench-action. litert-gate-action. Dashboard backend (static JSON aggregator).</td><td class="gate">All 3 actions work in a test repo CI pipeline end-to-end. Dashboard ingests at least 1 bench run.</td></tr>
+  <tr><td><strong>4</strong></td><td>HF model push campaign (12 models using litert push --auto-card). Benchmark dashboard content (seed with 10 device profiles). Contact HF blog editor for blog post scheduling.</td><td>litert push CLI. Dashboard frontend at ai.google.dev/edge/bench (or staging URL). W&amp;B integration plugin.</td><td class="gate">litert push --auto-card produces a correct HF model card on the first try. Dashboard live at staging URL with 10 device profiles.</td></tr>
+  <tr><td><strong>5</strong></td><td>Draft co-authored blog post (LiteRT Partnerships + Xenova + Matt). 3 HF Spaces built and live. DevKit README, quickstart, and docs written. Harness MOU signed or paused.</td><td>OSPO process complete. litert-devkit repo public. MLflow plugin.</td><td class="gate">Repo public. Blog draft in shared Doc. 12 models live in litert-community. 3 Spaces live.</td></tr>
+  <tr><td><strong>6</strong></td><td>Publish 3 GitHub Actions to Marketplace. Coordinate HF blog + AI Edge blog publish dates. Co-announce with Harness (if MOU signed) or GitHub (featured placement). World's Fair talk (if accepted — month 1 CFP).</td><td>Final Actions review + publication.</td><td class="gate">Actions published in Marketplace. Blog live on HF + AI Edge blog. Download count baseline established. Conference talk delivered (if accepted).</td></tr>
+  <tr><td><strong>7–9</strong></td><td>Harness native pipeline stage co-design (if not complete). PyTorch Conference submission. DevKit v1.1: add device-farm integration. Community device benchmark contributions (target: 30+ profiles).</td><td>DevKit v1.1 CLI. Device farm integration.</td><td class="gate">Harness integration in beta. 30+ community device profiles in dashboard. PyTorch Conference talk submitted.</td></tr>
+</table>
+</body>
+</html>

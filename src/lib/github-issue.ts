@@ -2,7 +2,7 @@ import type { RunResult } from "./types";
 
 /**
  * Build a deep link that opens a prefilled GitHub Issue with the run JSON
- * embedded in a fenced code block. The maintainer (Abhi) reviews and merges
+ * embedded in a fenced code block. The maintainer reviews and merges
  * to data/runs.json. No backend needed.
  */
 

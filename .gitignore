@@ -14,3 +14,9 @@ node_modules/.tmp
 
 # Private runbook — re-ping recipient name lives here
 _runbook/
+
+# Local MCP server config (absolute machine paths)
+.mcp.json
+
+# Separate sub-project (lives in its own repo)
+specs/
