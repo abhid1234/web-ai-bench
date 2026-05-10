@@ -24,7 +24,7 @@ export function LessonShell({
   return (
     <article className="max-w-4xl mx-auto flex flex-col gap-6">
       <header className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span
             className="inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold tabular-nums"
             style={{
@@ -38,7 +38,7 @@ export function LessonShell({
             className="text-[10px] uppercase tracking-wider font-semibold"
             style={{ color: "var(--color-on-surface-variant)" }}
           >
-            Lesson {lesson.number} · {lesson.kicker}
+            Lesson {lesson.number} · {lesson.minutes} min read · {lesson.kicker}
           </span>
         </div>
         <h1
@@ -48,11 +48,21 @@ export function LessonShell({
           {lesson.title}
         </h1>
         <p
-          className="text-base leading-relaxed max-w-2xl"
+          className="text-base md:text-lg leading-relaxed max-w-2xl"
           style={{ color: "var(--color-on-surface-variant)" }}
         >
           {lesson.oneLiner}
         </p>
+        <a
+          href="#lab"
+          className="inline-flex self-start items-center gap-2 mt-1 px-3.5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-opacity hover:opacity-80"
+          style={{
+            backgroundColor: "var(--color-tertiary-container)",
+            color: "var(--color-tertiary)",
+          }}
+        >
+          Skip to lab ↓
+        </a>
       </header>
 
       <div className="flex flex-col gap-6">{children}</div>
@@ -130,7 +140,7 @@ export function LessonShell({
 export function Prose({ children }: { children: ReactNode }) {
   return (
     <div
-      className="prose-block flex flex-col gap-3 text-[15px] leading-relaxed"
+      className="prose-block flex flex-col gap-4 text-[17px] md:text-[15px] leading-[1.7] md:leading-relaxed"
       style={{ color: "var(--color-on-surface)" }}
     >
       {children}
@@ -147,9 +157,69 @@ export function Callout({ children, kind = "info" }: { children: ReactNode; kind
   const c = palette[kind];
   return (
     <div
-      className="rounded-lg p-4 text-sm leading-relaxed"
+      className="rounded-lg p-4 text-[15px] md:text-sm leading-relaxed"
       style={{ backgroundColor: c.bg, color: c.fg }}
     >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * CardGrid — replaces dense bullet lists with scannable cards.
+ * Pass an array of items; each renders as a card with a label, title, and body.
+ */
+export function CardGrid({ items, cols = 2 }: { items: CardItem[]; cols?: 1 | 2 | 3 }) {
+  const colsClass = cols === 1 ? "grid-cols-1" : cols === 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  return (
+    <div className={`grid ${colsClass} gap-3`}>
+      {items.map((item, i) => (
+        <div
+          key={i}
+          className="rounded-lg p-4 flex flex-col gap-2"
+          style={{
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-outline-variant)",
+          }}
+        >
+          {item.label && (
+            <div
+              className="text-[10px] uppercase tracking-wider font-bold inline-block self-start px-2 py-0.5 rounded"
+              style={{
+                color: item.labelColor ?? "var(--color-on-surface-variant)",
+                backgroundColor: item.labelBg ?? "var(--color-surface-container)",
+              }}
+            >
+              {item.label}
+            </div>
+          )}
+          <div className="text-base font-bold leading-tight" style={{ color: "var(--color-on-surface)" }}>
+            {item.title}
+          </div>
+          <div className="text-sm leading-relaxed" style={{ color: "var(--color-on-surface-variant)" }}>
+            {item.body}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export interface CardItem {
+  label?: string;
+  labelColor?: string;
+  labelBg?: string;
+  title: ReactNode;
+  body: ReactNode;
+}
+
+/**
+ * LabAnchor — wrap each lesson's interactive lab in this so the
+ * "Skip to lab ↓" pill in the header has somewhere to scroll to.
+ */
+export function LabAnchor({ children }: { children: ReactNode }) {
+  return (
+    <div id="lab" className="scroll-mt-20">
       {children}
     </div>
   );

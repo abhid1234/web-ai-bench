@@ -5,6 +5,7 @@ export interface Lesson {
   title: string;
   oneLiner: string;
   kicker: string;
+  minutes: number;
 }
 
 export const LESSONS: Lesson[] = [
@@ -15,6 +16,7 @@ export const LESSONS: Lesson[] = [
     title: "Why on-device AI",
     oneLiner: "The case for running models in the browser instead of the cloud.",
     kicker: "Privacy, latency, cost",
+    minutes: 3,
   },
   {
     number: 1,
@@ -23,6 +25,7 @@ export const LESSONS: Lesson[] = [
     title: "Three browser backends",
     oneLiner: "WebNN, WebGPU, and WASM — what each is, when each wins.",
     kicker: "WebNN · WebGPU · WASM",
+    minutes: 4,
   },
   {
     number: 2,
@@ -31,6 +34,7 @@ export const LESSONS: Lesson[] = [
     title: "NPUs and where they live",
     oneLiner: "Hexagon, Neural Engine, MediaTek APU, Tensor — and how WebNN routes to them.",
     kicker: "Hardware acceleration",
+    minutes: 4,
   },
   {
     number: 3,
@@ -39,6 +43,7 @@ export const LESSONS: Lesson[] = [
     title: "Picking a model",
     oneLiner: "Task families, model size, quantization, and dtype trade-offs per backend.",
     kicker: "Model catalog",
+    minutes: 3,
   },
   {
     number: 4,
@@ -47,6 +52,7 @@ export const LESSONS: Lesson[] = [
     title: "The compatibility matrix",
     oneLiner: "Every model × every backend in one grid — the documentation no one writes.",
     kicker: "Cross-device data",
+    minutes: 2,
   },
   {
     number: 5,
@@ -55,6 +61,7 @@ export const LESSONS: Lesson[] = [
     title: "Run your own bench",
     oneLiner: "Pick anything from the catalog, run it on your device, contribute to the dataset.",
     kicker: "The lab",
+    minutes: 3,
   },
   {
     number: 6,
@@ -63,6 +70,7 @@ export const LESSONS: Lesson[] = [
     title: "Quantization",
     oneLiner: "Trading bits for speed and memory — fp32 down to int4, and which backend wants what.",
     kicker: "fp32 · fp16 · q8 · q4",
+    minutes: 5,
   },
 ];
 
