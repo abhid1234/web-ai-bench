@@ -17,6 +17,7 @@ export const router = createBrowserRouter([
       { path: "learn/models", lazy: () => import("./routes/lessons/Lesson3Models") },
       { path: "learn/matrix", lazy: () => import("./routes/lessons/Lesson4Matrix") },
       { path: "learn/run", lazy: () => import("./routes/lessons/Lesson5Run") },
+      { path: "learn/quantization", lazy: () => import("./routes/lessons/Lesson6Quantization") },
       // Legacy redirects from the pre-curriculum URLs
       { path: "matrix", element: <Navigate to="/learn/matrix" replace /> },
       { path: "models", element: <Navigate to="/learn/models" replace /> },

@@ -21,8 +21,8 @@ export function Component() {
           className="text-base md:text-lg leading-relaxed max-w-2xl"
           style={{ color: "var(--color-on-surface-variant)" }}
         >
-          Six short lessons that teach how AI runs on-device — through the browser. Every lesson includes a working lab
-          you can run on this page, on this device, right now. No install, no SDK, no signup.
+          Seven short lessons that teach how AI runs on-device — through the browser. Every lesson includes a working
+          lab you can run on this page, on this device, right now. No install, no SDK, no signup.
         </p>
       </header>
 

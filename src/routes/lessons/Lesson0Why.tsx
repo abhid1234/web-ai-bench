@@ -13,8 +13,8 @@ export function Component() {
         <p>
           On-device AI flips the question. Instead of asking <em>"how do we get the user's data to the model?"</em>{" "}
           you ask <em>"how do we get the model to the user?"</em> The browser turns out to be a great answer:
-          it's already installed, it's sandboxed, it talks to every kind of accelerator the device exposes, and the
-          model only needs to be downloaded once.
+          it's already installed, it's sandboxed, it talks to the CPU, GPU, and (on newer devices) the dedicated
+          NPU, and the model only needs to be downloaded once.
         </p>
         <p>The case is concrete:</p>
         <ul className="ml-5 list-disc space-y-1.5">
@@ -47,11 +47,12 @@ export function Component() {
 
       <Prose>
         <p>
-          The numbers above are <em>real</em>. They're the actual median inference latency on your machine right now —
-          not a marketing screenshot. The rest of this curriculum unpacks how that's possible: which APIs the browser
+          The numbers above are <em>real</em> — the actual median inference latency on your machine right now, not a
+          marketing screenshot. The rest of this curriculum unpacks how that's possible: which APIs the browser
           exposes (Lesson 1), how those APIs reach the dedicated AI silicon on modern devices (Lesson 2), how to pick
-          a model that actually fits (Lesson 3), how every model × every backend looks across the internet (Lesson 4),
-          and how to run your own bench (Lesson 5).
+          a model that actually fits (Lesson 3), how every model × every backend looks across the internet
+          (Lesson 4), how to run your own bench (Lesson 5), and the quantization tricks that make any of this fit
+          in a browser (Lesson 6).
         </p>
       </Prose>
     </LessonShell>

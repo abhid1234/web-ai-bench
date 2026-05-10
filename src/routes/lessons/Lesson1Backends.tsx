@@ -6,10 +6,10 @@ export function Component() {
     <LessonShell slug="backends">
       <Prose>
         <p>
-          When the browser runs a neural network, it has three real options for where to do the math. They've shipped
-          at different times, they target different hardware, and they have very different performance shapes. You
-          almost never pick one — you pick the model and let the runtime choose. But to read a benchmark, you have to
-          know what each one is.
+          When the browser runs a neural network, it has three real options for where to do the math. Each shipped
+          at a different time, targets different hardware, and has a different performance profile. You almost
+          never pick one directly — you pick the model and let the runtime choose. But to read a benchmark, you have
+          to know what each one is.
         </p>
         <p>
           <span className="font-semibold">WASM</span> (WebAssembly) runs on the CPU. It's the universal fallback —

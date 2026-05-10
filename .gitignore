@@ -20,3 +20,4 @@ _runbook/
 
 # Separate sub-project (lives in its own repo)
 specs/
+.gstack/

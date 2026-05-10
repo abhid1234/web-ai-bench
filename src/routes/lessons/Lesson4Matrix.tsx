@@ -6,9 +6,9 @@ export function Component() {
     <LessonShell slug="matrix">
       <Prose>
         <p>
-          The compatibility matrix is the table that doesn't exist anywhere else: every model in the catalog crossed
-          with every browser backend, populated with real data from real devices. It answers the question every
-          developer evaluating in-browser AI has: <em>"will this model work on the backend I want, and how fast?"</em>
+          The compatibility matrix is every model in the catalog crossed with every browser backend, populated with
+          real data from real devices. It answers the question every developer evaluating in-browser AI ends up
+          asking: <em>"will this model work on the backend I want, and how fast?"</em>
         </p>
         <p>
           Reading the grid: green cells passed and show the median inference time. Red cells failed — click for the

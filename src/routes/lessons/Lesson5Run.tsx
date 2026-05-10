@@ -6,9 +6,9 @@ export function Component() {
     <LessonShell slug="run">
       <Prose>
         <p>
-          The five lessons before this one were the theory. This one is the lab — the same harness that produced the
-          numbers in the matrix, exposed for you to drive. Pick any model from the catalog, click run, and watch the
-          three backends race on your hardware.
+          The lessons before this one were the theory. This one is the lab — the same harness that produced the
+          matrix numbers, exposed for you to run. Pick any model from the catalog, click run, and watch the three
+          backends race on your hardware.
         </p>
         <p>What happens when you click <em>Run All Backends</em>:</p>
         <ol className="ml-5 list-decimal space-y-1.5">
@@ -41,22 +41,9 @@ export function Component() {
 
       <Prose>
         <p>
-          That's the curriculum. You now know why on-device AI matters, how the browser exposes three backends,
-          where NPUs live and how WebNN reaches them, how to pick a model, how to read the matrix, and how to
-          contribute back. Everything you ran was real code on your real device.
-        </p>
-        <p>
-          If you want to take this further: the source is open at{" "}
-          <a
-            href="https://github.com/abhid1234/web-ai-bench"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline font-semibold"
-          >
-            github.com/abhid1234/web-ai-bench
-          </a>
-          . The harness is a few hundred lines of TypeScript; the lessons are the README. Open an issue if a model
-          fails on a backend you care about — that's the documentation no one writes, and we're writing it.
+          One axis is left to unpack: the <em>quantization</em> column on every model card. It's the reason any
+          of this fits in a browser at all, and the reason WebNN routes int8 to the NPU but not fp32. That's
+          Lesson 6.
         </p>
       </Prose>
     </LessonShell>

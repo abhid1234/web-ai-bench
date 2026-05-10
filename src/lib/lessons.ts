@@ -56,6 +56,14 @@ export const LESSONS: Lesson[] = [
     oneLiner: "Pick anything from the catalog, run it on your device, contribute to the dataset.",
     kicker: "The lab",
   },
+  {
+    number: 6,
+    slug: "quantization",
+    path: "/learn/quantization",
+    title: "Quantization",
+    oneLiner: "Trading bits for speed and memory — fp32 down to int4, and which backend wants what.",
+    kicker: "fp32 · fp16 · q8 · q4",
+  },
 ];
 
 export function getLesson(slug: string): Lesson | undefined {

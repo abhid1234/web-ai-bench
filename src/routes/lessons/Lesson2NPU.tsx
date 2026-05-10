@@ -6,10 +6,10 @@ export function Component() {
     <LessonShell slug="npu">
       <Prose>
         <p>
-          A Neural Processing Unit (NPU) is a chip that does one thing exceptionally well: matrix multiplication on
-          low-precision integers. It's not a CPU, not a GPU, not a TPU — it's silicon designed specifically to run
-          quantized neural networks at low power, on-device, with minimal heat. Every smartphone shipped in the last
-          three years has one. Most people don't know it's there.
+          A Neural Processing Unit (NPU) is a chip built for one thing: matrix multiplication on low-precision
+          integers. It's not a CPU, not a GPU, not a TPU — it's silicon designed specifically to run quantized
+          neural networks at low power, on-device, with minimal heat. Every smartphone shipped in the last three
+          years has one, and almost nothing on the web reaches it.
         </p>
         <p>The NPU landscape today, by vendor:</p>
         <ul className="ml-5 list-disc space-y-1.5">
@@ -54,10 +54,9 @@ export function Component() {
 
       <Prose>
         <p>
-          The point of WebNN isn't that it's the fastest backend everywhere — it isn't. The point is that it's the
-          only browser API that <em>can</em> reach the NPU. Without it, on-device AI in the browser tops out at GPU
-          speed; with it, the same code that runs in Chrome on a Mac runs at native-app speed on a Pixel. That's the
-          step change.
+          WebNN isn't the fastest backend everywhere — it isn't. What it is, is the only browser API that{" "}
+          <em>can</em> reach the NPU. Without it, on-device AI in the browser tops out at GPU speed; with it, the
+          same code that runs in Chrome on a Mac runs at native-app speed on a Pixel. That's the step change.
         </p>
       </Prose>
     </LessonShell>

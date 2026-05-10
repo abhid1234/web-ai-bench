@@ -9,8 +9,8 @@ export function Component() {
         <p>
           Picking a model for in-browser AI is a four-axis decision: <em>task</em> (what does it do), <em>size</em>{" "}
           (will it fit in browser memory), <em>quantization</em> (precision vs. speed/memory), and <em>format</em>{" "}
-          (does Transformers.js understand it). Get any one wrong and the model either fails to load or runs at one
-          frame per second.
+          (does Transformers.js understand it). Get any one wrong and the model either fails to load or runs
+          unusably slowly. Lesson 6 goes deep on the quantization axis specifically.
         </p>
         <p>
           <span className="font-semibold">Task family</span> determines the pipeline. The catalog covers six:
