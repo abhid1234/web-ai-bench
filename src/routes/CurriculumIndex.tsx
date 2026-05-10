@@ -98,11 +98,7 @@ export function Component() {
           style={{ color: "var(--color-primary)" }}
         >
           GitHub
-        </a>{" "}
-        ·{" "}
-        <Link to="/pitch" className="underline font-semibold" style={{ color: "var(--color-primary)" }}>
-          Pitch deck
-        </Link>
+        </a>
       </footer>
     </div>
   );

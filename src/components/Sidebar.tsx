@@ -99,9 +99,6 @@ export function Sidebar() {
           <BackendChip name="WASM" color="var(--color-wasm)" />
         </div>
         <div className="flex flex-col gap-1">
-          <Link to="/pitch" className="hover:underline" style={{ color: "var(--color-on-surface-variant)" }}>
-            Pitch deck →
-          </Link>
           <a
             href="https://github.com/abhid1234/web-ai-bench"
             target="_blank"
