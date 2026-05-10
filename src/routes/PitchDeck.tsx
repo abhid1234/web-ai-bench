@@ -18,6 +18,11 @@ const PAGE = "#f8f9fa";
 const FONT_BODY = "'Inter', system-ui, -apple-system, sans-serif";
 const FONT_HEAD = "'Space Grotesk', 'Inter', system-ui, sans-serif";
 
+// ─── Per-slide metadata (built after SLIDES is defined below) ────────────────
+
+type SlideMeta = { title: string; section: string; note: string };
+// Filled in via SLIDE_META constant at the bottom of the file (after SLIDES).
+
 // ─── Citation registry ───────────────────────────────────────────────────────
 // Sources are verified May 2026 via Gemini Deep Research Max. URLs are Gemini's
 // grounding redirects; they resolve to the labeled domain.
@@ -219,16 +224,17 @@ function Problem() {
           Deploying a custom edge model still takes 6 manual steps across disconnected tools — no unified CI/CD pipeline ties the 1P stack together.<Cite ids={[17, 18]} />
         </span>
       </Title>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 content-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 content-start stagger-enter">
         {steps.map((s) => (
           <div
             key={s.n}
             style={{
               background: SURFACE,
               border: `1px solid ${BORDER}`,
-              boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+              boxShadow:
+                "0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.04)",
             }}
-            className="flex gap-4 p-4 rounded-xl"
+            className="flex gap-4 p-4 rounded-2xl"
           >
             <span
               style={{ color: RED }}
@@ -264,7 +270,7 @@ function Stakes() {
   return (
     <Wrap>
       <Title>The window is 18–24 months.</Title>
-      <div className="flex flex-col gap-4 flex-1 justify-center">
+      <div className="flex flex-col gap-4 flex-1 justify-center stagger-enter">
         <Card accent={RED}>
           <div
             style={{ color: RED }}
@@ -331,6 +337,161 @@ function Stakes() {
         </Card>
       </div>
     </Wrap>
+  );
+}
+
+// ─── Section divider component ───────────────────────────────────────────────
+
+function SectionDivider({
+  part,
+  title,
+  subtitle,
+  accent,
+}: {
+  part: string;
+  title: string;
+  subtitle: string;
+  accent: string;
+}) {
+  return (
+    <div
+      style={{
+        background:
+          "radial-gradient(ellipse at center, " +
+          accent +
+          "11 0%, transparent 60%), " +
+          SURFACE,
+      }}
+      className="absolute inset-0 flex flex-col items-center justify-center text-center px-12"
+    >
+      <div
+        style={{ background: accent, height: 3, width: 64, borderRadius: 2 }}
+        className="mb-10"
+      />
+      <p
+        style={{
+          color: accent,
+          fontFamily: FONT_HEAD,
+          letterSpacing: "0.32em",
+        }}
+        className="text-sm font-bold uppercase mb-8"
+      >
+        {part}
+      </p>
+      <h2
+        style={{
+          color: INK,
+          fontFamily: FONT_HEAD,
+          letterSpacing: "-0.035em",
+        }}
+        className="text-6xl md:text-[5rem] font-bold mb-8 leading-[1.02] max-w-5xl"
+      >
+        {title}
+      </h2>
+      <p
+        style={{ color: GRAY, fontFamily: FONT_BODY }}
+        className="text-xl md:text-2xl max-w-3xl font-light leading-snug"
+      >
+        {subtitle}
+      </p>
+    </div>
+  );
+}
+
+function PartTwoDivider() {
+  return (
+    <SectionDivider
+      part="Part II"
+      title="The plays."
+      subtitle="One initiative. Three pitches. One recommendation that ships in six months."
+      accent={BLUE}
+    />
+  );
+}
+
+function PartThreeDivider() {
+  return (
+    <SectionDivider
+      part="Part III"
+      title="The proposal."
+      subtitle="Why this team, why this person, what gets approved today."
+      accent={GREEN}
+    />
+  );
+}
+
+// ─── Hero-number slide — the 100× hardware moat ──────────────────────────────
+
+function HardwareMoatHero() {
+  return (
+    <div
+      style={{
+        background:
+          "radial-gradient(ellipse at center, " +
+          BLUE +
+          "0d 0%, transparent 65%), " +
+          SURFACE,
+      }}
+      className="absolute inset-0 flex flex-col items-center justify-center text-center px-12"
+    >
+      <p
+        style={{
+          color: BLUE,
+          fontFamily: FONT_HEAD,
+          letterSpacing: "0.32em",
+        }}
+        className="text-xs font-bold uppercase mb-8"
+      >
+        The hardware moat · live today
+      </p>
+      <div className="flex items-baseline gap-2 mb-2">
+        <span
+          style={{
+            color: INK,
+            fontFamily: FONT_HEAD,
+            letterSpacing: "-0.055em",
+            lineHeight: 0.85,
+            fontWeight: 700,
+          }}
+          className="text-[12rem] md:text-[18rem]"
+        >
+          100
+        </span>
+        <span
+          style={{
+            color: BLUE,
+            fontFamily: FONT_HEAD,
+            letterSpacing: "-0.04em",
+            lineHeight: 1,
+            fontWeight: 700,
+          }}
+          className="text-[6rem] md:text-[9rem]"
+        >
+          ×
+        </span>
+      </div>
+      <p
+        style={{ color: INK, fontFamily: FONT_HEAD, letterSpacing: "-0.02em" }}
+        className="text-3xl md:text-4xl font-bold mb-6 leading-tight"
+      >
+        CPU on Snapdragon 8 Elite Gen 5.
+      </p>
+      <p
+        style={{ color: GRAY, fontFamily: FONT_BODY }}
+        className="text-lg md:text-xl max-w-3xl font-light leading-snug mb-4"
+      >
+        LiteRT × Qualcomm AI Engine Direct delivers 100× the speed of CPU
+        execution. 50+ canonical models run in under 5&nbsp;ms on the NPU.
+        MediaTek Dimensity 9400 hits 12× via the NeuroPilot Accelerator.
+      </p>
+      <p
+        style={{ color: MUTED, fontFamily: FONT_BODY }}
+        className="text-sm max-w-2xl"
+      >
+        ExecuTorch can&apos;t replicate this — these are Google × silicon-vendor
+        compiler integrations no competitor has.<Cite ids={[11, 12, 13]} />
+      </p>
+    </div>
   );
 }
 
@@ -1494,22 +1655,69 @@ const SLIDES = [
   <Stakes />,
   <MarketMap />,
   <TwoWorlds />,
+  <HardwareMoatHero />,
+  <PartTwoDivider />,
   <ThreePlays />,
   <Devkit />,
   <PartnerNetwork />,
   <VertexBridge />,
+  <PartThreeDivider />,
   <WhyThisTeam />,
   <TheAsk />,
   <DeepDives />,
   <Sources />,
 ];
 
+// ─── Per-slide metadata (titles, sections, speaker notes) ─────────────────────
+
+const SLIDE_META: SlideMeta[] = [
+  { title: "Cover", section: "Opening", note: "Hook: deployment layer for on-device AI is missing. Three plays, one recommendation. Pause for eye contact." },
+  { title: "Problem", section: "The Stakes", note: "Frame: nine great Google products, zero coherent workflow. A custom edge model still takes six manual steps. ExecuTorch ships a CLI; we don't." },
+  { title: "Stakes", section: "The Stakes", note: "Three threats: ExecuTorch went vendor-neutral (Linux Foundation, April 2026), World's Fair has zero edge-CI/CD tracks, ONNX Runtime Web won browser AI. 18-24 month window." },
+  { title: "Market map", section: "The Stakes", note: "Reference slide. Per-vendor verified. 8 of 12 boxes have strong 1P. Net: 1 acute gap (Frontend AI UI) + 1 weak position (developer-facing observability mindshare). The DevKit packages the rest." },
+  { title: "Two worlds", section: "The Stakes", note: "Pre-empt the AICore objection: AICore solves general AI on Android. DevKit is for the second world — custom domain models AICore won't serve." },
+  { title: "100× hardware moat", section: "The Stakes", note: "Hero number. Pause. ExecuTorch can't replicate Google × Qualcomm AI Engine Direct or MediaTek NeuroPilot integrations. This is the silicon-vendor partnership advantage." },
+  { title: "Part II · The plays", section: "The Plays", note: "Transition. Section break. Take a breath, then dive into the three pitches." },
+  { title: "Three plays", section: "The Plays", note: "Three pitches, one initiative. Recommendation is Pitch 2 (DevKit) because it has the fastest path to independent shipped artifacts and zero cross-org friction." },
+  { title: "Pitch 2 — DevKit", section: "The Plays", note: "Recommended. The Xcode for Google's edge AI stack. CLI + GitHub Actions + observability hooks + benchmark dashboard. Connects LiteRT, Gemma 4, Vertex, Cloud Run into one workflow." },
+  { title: "Pitch 1 — Partner Network", section: "The Plays", note: "Parallel ecosystem motion. Certification program across 4 partner classes. Year-1 target: 8 launch partners. Vercel and Lovable are strategic Year-1 targets." },
+  { title: "Pitch 3 — Vertex Bridge", section: "The Plays", note: "Bring at month 3 after Pitch 2 traction. Kaggle-first to dodge cross-org friction. Plan B fallback if Firebase declines: GCS+CDN+WorkManager or Vertex Registry signed REST." },
+  { title: "Part III · The proposal", section: "The Proposal", note: "Transition. Final third: why this team, why this person, what gets approved today." },
+  { title: "Why this team / why this PM", section: "The Proposal", note: "Partnerships PM needed for Bitrise/CircleCI/Harness conversations. Engineering-only can't pull this off — the moat is the partnership relationships." },
+  { title: "The Ask", section: "The Proposal", note: "6-month rotation. Pitch 2 primary, Pitch 1 parallel, Pitch 3 at month 3. Eight Year-1 deliverables — every one is independently verifiable." },
+  { title: "Deep dives", section: "Reference", note: "Pointer slide. The 5 runbooks have full execution detail. Don't read them in the meeting — share them after." },
+  { title: "Sources", section: "Reference", note: "19 verified citations. Every factual claim cross-referenced with Gemini Deep Research Max + Google Doc + per-vendor WebSearch." },
+];
+
 // ─── Deck shell ───────────────────────────────────────────────────────────────
 
+// Inject global animation CSS once
+const ANIMATION_CSS = `
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .stagger-enter > * { opacity: 0; animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .stagger-enter > *:nth-child(1) { animation-delay: 0.05s; }
+  .stagger-enter > *:nth-child(2) { animation-delay: 0.12s; }
+  .stagger-enter > *:nth-child(3) { animation-delay: 0.19s; }
+  .stagger-enter > *:nth-child(4) { animation-delay: 0.26s; }
+  .stagger-enter > *:nth-child(5) { animation-delay: 0.33s; }
+  .stagger-enter > *:nth-child(6) { animation-delay: 0.40s; }
+  .stagger-enter > *:nth-child(7) { animation-delay: 0.47s; }
+  .stagger-enter > *:nth-child(8) { animation-delay: 0.54s; }
+  @media print {
+    .print-hide { display: none !important; }
+    .print-slide { page-break-after: always; height: auto !important; min-height: 100vh; position: relative !important; }
+  }
+`;
+
 export function Component() {
+  const isPrint =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).has("print");
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const [overview, setOverview] = useState(false);
+  const [speaker, setSpeaker] = useState(false);
 
   const goTo = useCallback(
     (next: number) => {
@@ -1526,6 +1734,22 @@ export function Component() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (e.key === "o" || e.key === "O") {
+        e.preventDefault();
+        setOverview((v) => !v);
+        return;
+      }
+      if (e.key === "p" || e.key === "P") {
+        e.preventDefault();
+        setSpeaker((v) => !v);
+        return;
+      }
+      if (e.key === "Escape") {
+        if (overview) setOverview(false);
+        else if (speaker) setSpeaker(false);
+        return;
+      }
+      if (overview) return; // disable nav while overview open
       if (["ArrowRight", "ArrowDown", " "].includes(e.key)) {
         e.preventDefault();
         goTo(idx + 1);
@@ -1537,10 +1761,54 @@ export function Component() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [goTo, idx]);
+  }, [goTo, idx, overview, speaker]);
 
-  // Progress percent for thin top progress bar
   const pct = ((idx + 1) / SLIDES.length) * 100;
+  const meta = SLIDE_META[idx] ?? { title: "", section: "", note: "" };
+
+  // ─── PRINT MODE: linearize all slides ────────────────────────────────────
+  if (isPrint) {
+    return (
+      <div
+        style={{
+          fontFamily: FONT_BODY,
+          background: PAGE,
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
+        } as React.CSSProperties}
+        className="select-none"
+      >
+        <style>{ANIMATION_CSS}</style>
+        {SLIDES.map((slide, i) => (
+          <div
+            key={i}
+            className="print-slide"
+            style={{
+              position: "relative",
+              width: "100vw",
+              height: "100vh",
+              overflow: "hidden",
+              borderBottom: `1px solid ${BORDER}`,
+            }}
+          >
+            <div className="absolute top-0 left-0 right-0 flex" style={{ height: 2 }}>
+              <div style={{ background: BLUE, flex: 4 }} />
+              <div style={{ background: RED, flex: 2 }} />
+              <div style={{ background: YELLOW, flex: 1 }} />
+              <div style={{ background: GREEN, flex: 2 }} />
+            </div>
+            <div
+              style={{ color: MUTED, fontFamily: FONT_HEAD, letterSpacing: "0.05em" }}
+              className="absolute top-5 right-7 text-xs tabular-nums z-10"
+            >
+              {String(i + 1).padStart(2, "0")} / {String(SLIDES.length).padStart(2, "0")}
+            </div>
+            {slide}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -1552,6 +1820,8 @@ export function Component() {
       } as React.CSSProperties}
       className="fixed inset-0 overflow-hidden select-none"
     >
+      <style>{ANIMATION_CSS}</style>
+
       {/* Google-color top bar — slimmer, more refined */}
       <div className="absolute top-0 left-0 right-0 flex" style={{ height: 2 }}>
         <div style={{ background: BLUE, flex: 4 }} />
@@ -1574,7 +1844,7 @@ export function Component() {
         }}
       />
 
-      {/* Top-left label */}
+      {/* Top-left label — section indicator */}
       <div className="absolute top-5 left-7 flex items-center gap-2.5 z-10">
         <div className="flex gap-1">
           {[BLUE, RED, YELLOW, GREEN].map((c) => (
@@ -1591,6 +1861,21 @@ export function Component() {
         >
           LiteRT Rotation
         </span>
+        {meta.section && (
+          <>
+            <span style={{ color: BORDER }} className="text-[0.65rem]">·</span>
+            <span
+              style={{
+                color: GRAY,
+                fontFamily: FONT_HEAD,
+                letterSpacing: "0.18em",
+              }}
+              className="text-[0.65rem] font-semibold uppercase"
+            >
+              {meta.section}
+            </span>
+          </>
+        )}
       </div>
 
       {/* Slide counter */}
@@ -1605,6 +1890,7 @@ export function Component() {
 
       {/* Slide content with slide-from-direction motion */}
       <div
+        key={idx}
         style={{
           opacity: visible ? 1 : 0,
           transform: visible
@@ -1618,6 +1904,44 @@ export function Component() {
         {SLIDES[idx]}
       </div>
 
+      {/* Speaker notes overlay */}
+      {speaker && (
+        <div
+          style={{
+            background: "rgba(32, 33, 36, 0.96)",
+            borderTop: `2px solid ${BLUE}`,
+            backdropFilter: "blur(8px)",
+            fontFamily: FONT_BODY,
+          }}
+          className="absolute bottom-0 left-0 right-0 px-10 py-5 z-20 flex items-start gap-4"
+        >
+          <span
+            style={{
+              color: BLUE,
+              fontFamily: FONT_HEAD,
+              letterSpacing: "0.18em",
+            }}
+            className="text-[0.6rem] uppercase font-bold tracking-widest mt-1 shrink-0"
+          >
+            Speaker · {String(idx + 1).padStart(2, "0")}
+          </span>
+          <p
+            style={{ color: "#fff" }}
+            className="text-sm md:text-base leading-relaxed max-w-5xl flex-1"
+          >
+            {meta.note}
+          </p>
+          <button
+            onClick={() => setSpeaker(false)}
+            style={{ color: MUTED }}
+            className="text-xl leading-none ml-2 hover:text-white"
+            aria-label="Close speaker notes"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Prev arrow */}
       <button
         onClick={() => goTo(idx - 1)}
@@ -1629,7 +1953,7 @@ export function Component() {
           boxShadow:
             "0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.05)",
         }}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-0 z-10 cursor-pointer hover:shadow-md hover:scale-105"
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-0 z-10 cursor-pointer hover:shadow-md hover:scale-105 print-hide"
         aria-label="Previous slide"
       >
         ←
@@ -1646,18 +1970,19 @@ export function Component() {
           boxShadow:
             "0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.05)",
         }}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-0 z-10 cursor-pointer hover:shadow-md hover:scale-105"
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-0 z-10 cursor-pointer hover:shadow-md hover:scale-105 print-hide"
         aria-label="Next slide"
       >
         →
       </button>
 
       {/* Progress dots */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10 print-hide">
         {SLIDES.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
+            title={SLIDE_META[i]?.title}
             style={{
               background: i === idx ? BLUE : BORDER,
               width: i === idx ? 28 : 6,
@@ -1667,10 +1992,107 @@ export function Component() {
               cursor: "pointer",
               border: "none",
             }}
-            aria-label={`Go to slide ${i + 1}`}
+            aria-label={`Go to slide ${i + 1} — ${SLIDE_META[i]?.title ?? ""}`}
           />
         ))}
       </div>
+
+      {/* Keyboard-hint footer (right) */}
+      <div
+        style={{
+          color: MUTED,
+          fontFamily: FONT_HEAD,
+          letterSpacing: "0.12em",
+        }}
+        className="absolute bottom-5 right-7 text-[0.55rem] uppercase font-semibold z-10 print-hide flex items-center gap-3"
+      >
+        <button onClick={() => setOverview(true)} className="hover:text-gray-700 cursor-pointer">
+          [O]verview
+        </button>
+        <button onClick={() => setSpeaker((v) => !v)} className="hover:text-gray-700 cursor-pointer">
+          [P]resenter
+        </button>
+      </div>
+
+      {/* Overview grid modal */}
+      {overview && (
+        <div
+          style={{ background: "rgba(13, 17, 23, 0.78)", backdropFilter: "blur(6px)" }}
+          className="absolute inset-0 z-30 flex flex-col items-center justify-center p-10"
+          onClick={() => setOverview(false)}
+        >
+          <div className="flex items-center justify-between w-full max-w-7xl mb-6">
+            <p
+              style={{
+                color: "#fff",
+                fontFamily: FONT_HEAD,
+                letterSpacing: "0.18em",
+              }}
+              className="text-xs uppercase font-bold"
+            >
+              Overview · {SLIDES.length} slides · press <kbd className="px-1.5 py-0.5 rounded bg-white/10 ml-1">Esc</kbd> to close
+            </p>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOverview(false);
+              }}
+              className="text-white text-2xl hover:opacity-70"
+              aria-label="Close overview"
+            >
+              ×
+            </button>
+          </div>
+          <div
+            className="grid gap-3 w-full max-w-7xl overflow-y-auto"
+            style={{ gridTemplateColumns: "repeat(4, 1fr)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {SLIDES.map((_, i) => {
+              const m = SLIDE_META[i] ?? { title: "", section: "" };
+              const isCurrent = i === idx;
+              return (
+                <button
+                  key={i}
+                  onClick={() => {
+                    goTo(i);
+                    setOverview(false);
+                  }}
+                  style={{
+                    background: SURFACE,
+                    border: isCurrent ? `2px solid ${BLUE}` : `1px solid ${BORDER}`,
+                    boxShadow: isCurrent
+                      ? `0 4px 20px ${BLUE}55`
+                      : "0 1px 3px rgba(0,0,0,0.18)",
+                  }}
+                  className="rounded-xl p-4 text-left transition-all hover:scale-[1.02]"
+                >
+                  <div
+                    style={{
+                      color: isCurrent ? BLUE : MUTED,
+                      fontFamily: FONT_HEAD,
+                      letterSpacing: "0.15em",
+                    }}
+                    className="text-[0.55rem] uppercase font-bold mb-2"
+                  >
+                    {String(i + 1).padStart(2, "0")} · {m.section}
+                  </div>
+                  <div
+                    style={{
+                      color: INK,
+                      fontFamily: FONT_HEAD,
+                      letterSpacing: "-0.01em",
+                    }}
+                    className="text-base font-semibold leading-tight"
+                  >
+                    {m.title}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
