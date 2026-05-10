@@ -14,6 +14,10 @@ const BORDER = "#e8eaed";
 const SURFACE = "#ffffff";
 const PAGE = "#f8f9fa";
 
+// Typography stacks
+const FONT_BODY = "'Inter', system-ui, -apple-system, sans-serif";
+const FONT_HEAD = "'Space Grotesk', 'Inter', system-ui, sans-serif";
+
 // ─── Citation registry ───────────────────────────────────────────────────────
 // Sources are verified May 2026 via Gemini Deep Research Max. URLs are Gemini's
 // grounding redirects; they resolve to the labeled domain.
@@ -56,7 +60,7 @@ function Cite({ ids }: { ids: number[] }) {
 
 function Wrap({ children }: { children: React.ReactNode }) {
   return (
-    <div className="absolute inset-0 flex flex-col px-10 md:px-20 pt-14 pb-14 overflow-hidden">
+    <div className="absolute inset-0 flex flex-col px-12 md:px-24 pt-16 pb-16 overflow-hidden">
       {children}
     </div>
   );
@@ -65,8 +69,12 @@ function Wrap({ children }: { children: React.ReactNode }) {
 function Title({ children }: { children: React.ReactNode }) {
   return (
     <h2
-      style={{ color: INK }}
-      className="text-3xl md:text-[2.2rem] font-extrabold mb-6 leading-tight"
+      style={{
+        color: INK,
+        fontFamily: FONT_HEAD,
+        letterSpacing: "-0.02em",
+      }}
+      className="text-4xl md:text-[2.75rem] font-bold mb-8 leading-[1.1]"
     >
       {children}
     </h2>
@@ -98,10 +106,11 @@ function Card({
       style={{
         background: SURFACE,
         border: `1px solid ${BORDER}`,
-        borderLeft: accent ? `4px solid ${accent}` : `1px solid ${BORDER}`,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.07)",
+        borderLeft: accent ? `3px solid ${accent}` : `1px solid ${BORDER}`,
+        boxShadow:
+          "0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.04)",
       }}
-      className={`rounded-xl p-5 ${className}`}
+      className={`rounded-2xl p-5 ${className}`}
     >
       {children}
     </div>
@@ -113,15 +122,18 @@ function Card({
 function Cover() {
   return (
     <div
-      style={{ background: SURFACE }}
+      style={{
+        background:
+          "radial-gradient(ellipse at top, #f0f6ff 0%, #ffffff 45%, #ffffff 100%)",
+      }}
       className="absolute inset-0 flex flex-col items-center justify-center text-center px-8"
     >
-      <div className="flex gap-1.5 mb-12">
+      <div className="flex gap-1.5 mb-14">
         {[
-          { w: 56, c: BLUE },
-          { w: 28, c: RED },
-          { w: 14, c: YELLOW },
-          { w: 28, c: GREEN },
+          { w: 64, c: BLUE },
+          { w: 32, c: RED },
+          { w: 16, c: YELLOW },
+          { w: 32, c: GREEN },
         ].map((s) => (
           <div
             key={s.c}
@@ -130,8 +142,12 @@ function Cover() {
         ))}
       </div>
       <h1
-        style={{ color: INK }}
-        className="text-5xl md:text-7xl font-extrabold mb-6 leading-[1.1] tracking-tight max-w-4xl"
+        style={{
+          color: INK,
+          fontFamily: FONT_HEAD,
+          letterSpacing: "-0.035em",
+        }}
+        className="text-6xl md:text-[5.5rem] font-bold mb-8 leading-[1.02] max-w-5xl"
       >
         The deployment layer
         <br />
@@ -139,10 +155,16 @@ function Cover() {
         <br />
         <span style={{ color: BLUE }}>is missing.</span>
       </h1>
-      <p style={{ color: GRAY }} className="text-xl md:text-2xl mb-4 font-light">
+      <p
+        style={{ color: GRAY, fontFamily: FONT_BODY, letterSpacing: "-0.005em" }}
+        className="text-xl md:text-2xl mb-4 font-normal max-w-3xl"
+      >
         LiteRT Rotation — Three Plays to Own the Edge AI Stack
       </p>
-      <p style={{ color: MUTED }} className="text-sm mt-4">
+      <p
+        style={{ color: MUTED, fontFamily: FONT_BODY }}
+        className="text-xs mt-6 uppercase tracking-[0.18em] font-semibold"
+      >
         Google Cloud Partnerships · LiteRT Team · May 2026
       </p>
     </div>
@@ -1487,15 +1509,17 @@ const SLIDES = [
 export function Component() {
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [direction, setDirection] = useState<1 | -1>(1);
 
   const goTo = useCallback(
     (next: number) => {
       if (next < 0 || next >= SLIDES.length || next === idx) return;
+      setDirection(next > idx ? 1 : -1);
       setVisible(false);
       setTimeout(() => {
         setIdx(next);
         setVisible(true);
-      }, 120);
+      }, 160);
     },
     [idx]
   );
@@ -1515,21 +1539,43 @@ export function Component() {
     return () => window.removeEventListener("keydown", handler);
   }, [goTo, idx]);
 
+  // Progress percent for thin top progress bar
+  const pct = ((idx + 1) / SLIDES.length) * 100;
+
   return (
     <div
-      style={{ fontFamily: "'Nunito', system-ui, sans-serif", background: PAGE }}
+      style={{
+        fontFamily: FONT_BODY,
+        background: PAGE,
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
+      } as React.CSSProperties}
       className="fixed inset-0 overflow-hidden select-none"
     >
-      {/* Google-color top bar — 3px, prominent */}
-      <div className="absolute top-0 left-0 right-0 flex" style={{ height: 3 }}>
+      {/* Google-color top bar — slimmer, more refined */}
+      <div className="absolute top-0 left-0 right-0 flex" style={{ height: 2 }}>
         <div style={{ background: BLUE, flex: 4 }} />
         <div style={{ background: RED, flex: 2 }} />
         <div style={{ background: YELLOW, flex: 1 }} />
         <div style={{ background: GREEN, flex: 2 }} />
       </div>
 
+      {/* Progress bar — thin blue fill below the brand bar */}
+      <div
+        className="absolute left-0"
+        style={{
+          top: 2,
+          height: 2,
+          width: `${pct}%`,
+          background: BLUE,
+          opacity: 0.6,
+          transition: "width 0.4s cubic-bezier(0.4,0,0.2,1)",
+          zIndex: 5,
+        }}
+      />
+
       {/* Top-left label */}
-      <div className="absolute top-4 left-6 flex items-center gap-2 z-10">
+      <div className="absolute top-5 left-7 flex items-center gap-2.5 z-10">
         <div className="flex gap-1">
           {[BLUE, RED, YELLOW, GREEN].map((c) => (
             <span
@@ -1539,22 +1585,34 @@ export function Component() {
             />
           ))}
         </div>
-        <span style={{ color: MUTED }} className="text-xs font-bold uppercase tracking-widest">
+        <span
+          style={{ color: MUTED, fontFamily: FONT_HEAD, letterSpacing: "0.18em" }}
+          className="text-[0.65rem] font-semibold uppercase"
+        >
           LiteRT Rotation
         </span>
       </div>
 
       {/* Slide counter */}
       <div
-        style={{ color: MUTED }}
-        className="absolute top-4 right-6 text-xs tabular-nums font-mono z-10"
+        style={{ color: MUTED, fontFamily: FONT_HEAD, letterSpacing: "0.05em" }}
+        className="absolute top-5 right-7 text-xs tabular-nums font-medium z-10"
       >
-        {idx + 1} / {SLIDES.length}
+        {String(idx + 1).padStart(2, "0")}
+        <span style={{ color: BORDER }}> / </span>
+        {String(SLIDES.length).padStart(2, "0")}
       </div>
 
-      {/* Slide content */}
+      {/* Slide content with slide-from-direction motion */}
       <div
-        style={{ opacity: visible ? 1 : 0, transition: "opacity 0.12s ease" }}
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible
+            ? "translateX(0)"
+            : `translateX(${direction === 1 ? "16px" : "-16px"})`,
+          transition:
+            "opacity 0.24s cubic-bezier(0.16,1,0.3,1), transform 0.32s cubic-bezier(0.16,1,0.3,1)",
+        }}
         className="absolute inset-0"
       >
         {SLIDES[idx]}
@@ -1568,9 +1626,10 @@ export function Component() {
           background: SURFACE,
           border: `1px solid ${BORDER}`,
           color: GRAY,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          boxShadow:
+            "0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.05)",
         }}
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-0 z-10 cursor-pointer hover:shadow-md"
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-0 z-10 cursor-pointer hover:shadow-md hover:scale-105"
         aria-label="Previous slide"
       >
         ←
@@ -1584,26 +1643,27 @@ export function Component() {
           background: SURFACE,
           border: `1px solid ${BORDER}`,
           color: GRAY,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          boxShadow:
+            "0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.05)",
         }}
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-0 z-10 cursor-pointer hover:shadow-md"
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-0 z-10 cursor-pointer hover:shadow-md hover:scale-105"
         aria-label="Next slide"
       >
         →
       </button>
 
       {/* Progress dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
         {SLIDES.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
             style={{
               background: i === idx ? BLUE : BORDER,
-              width: i === idx ? 24 : 8,
-              height: 8,
-              borderRadius: 4,
-              transition: "all 0.25s ease",
+              width: i === idx ? 28 : 6,
+              height: 6,
+              borderRadius: 999,
+              transition: "all 0.32s cubic-bezier(0.16,1,0.3,1)",
               cursor: "pointer",
               border: "none",
             }}
