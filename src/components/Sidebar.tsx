@@ -100,6 +100,14 @@ export function Sidebar() {
         </div>
         <div className="flex flex-col gap-1">
           <a
+            href="https://abhid.substack.com/p/how-to-fit-a-35-billion-parameter"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            Companion blog →
+          </a>
+          <a
             href="https://github.com/abhid1234/web-ai-bench"
             target="_blank"
             rel="noopener noreferrer"

@@ -99,6 +99,16 @@ export function Component() {
         >
           GitHub
         </a>
+        {" "}·{" "}
+        <a
+          href="https://abhid.substack.com/p/how-to-fit-a-35-billion-parameter"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline font-semibold"
+          style={{ color: "var(--color-primary)" }}
+        >
+          Companion blog
+        </a>
       </footer>
     </div>
   );
