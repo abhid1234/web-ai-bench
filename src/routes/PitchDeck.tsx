@@ -312,131 +312,120 @@ function Stakes() {
   );
 }
 
-// ─── Slide 2.4: Market map — on-device AI tooling × Google 1P overlay ────────
+// ─── Slide 2.4: Market map — Web AI / Agentic ecosystem × Google 1P ──────────
 
-type Cell = { vendors: string[]; google?: string[]; gap?: boolean };
-type StageRow = { stage: string; full: string; cells: [Cell, Cell, Cell] }; // [Incumbents, Challengers, AI-Native]
+type MarketCell = { vendors: string[]; isGap?: boolean };
+type MarketCol = { col: string; sub: string; google: MarketCell; other: MarketCell };
+type MarketGroup = { header: string; color: string; cols: MarketCol[] };
 
-// Vendor lists synthesized from Deep Research Max market-map job (2026-05-06,
-// runbook/research/2026-05-06-market-map.md). Google products (in `google`)
-// overlay the natural-incumbent cell. Gap cells = no Google product OR Google
-// is meaningfully behind the leader and the category is operationally critical.
-const MARKET_STAGES: StageRow[] = [
+// Vendor census synthesized from:
+//   1. pitch/runbook/research/2026-05-06-market-map.md (Gemini Deep Research Max)
+//   2. pitch/runbook/research/2026-05-10-market-landscape-doc.md (the Web AI DevKit market doc)
+// Format mirrors the Sequoia / Harness $11B Developer Toolchain map: super-headers
+// span sub-categories. Rows are simplified to two: Google 1P vs. Other ecosystem.
+// An empty Google cell with isGap is the strategic gap signal.
+const MARKET: MarketGroup[] = [
   {
-    stage: "TRAIN",
-    full: "Author + fine-tune",
-    cells: [
-      { vendors: ["AWS SageMaker", "Azure ML", "HF AutoTrain"], google: ["Vertex AI", "TF/JAX/Keras"] },
-      { vendors: ["Ultralytics", "Roboflow", "Edge Impulse", "W&B"] },
-      { vendors: ["Unsloth", "MLX", "LlamaFactory", "Axolotl"], google: ["Gemma 4 E2B/E4B"] },
+    header: "Setup & Compute Foundation",
+    color: BLUE,
+    cols: [
+      {
+        col: "Compute APIs",
+        sub: "WebGPU / WebNN / Wasm",
+        google: { vendors: ["WebGPU (Chrome-led)", "Chrome Built-in AI APIs", "WebMCP"] },
+        other: { vendors: ["Safari WebGPU 26", "Firefox WebGPU", "W3C WebNN", "WebAssembly"] },
+      },
+      {
+        col: "Browser ML Runtime",
+        sub: "Low-level inference",
+        google: { vendors: ["TensorFlow.js (legacy)", "LiteRT.js", "MediaPipe Web"] },
+        other: { vendors: ["ONNX Runtime Web (1.4M/wk)"] },
+      },
+      {
+        col: "Pipelines",
+        sub: "NLP / Vision tasks",
+        google: { vendors: ["MediaPipe tasks-genai"] },
+        other: { vendors: ["Transformers.js v4", "HF Optimum"] },
+      },
+      {
+        col: "In-Browser LLMs",
+        sub: "Generative engines",
+        google: { vendors: ["Chrome Gemini Nano (Prompt / Translator / Summarizer / Lang-Detect)"] },
+        other: { vendors: ["WebLLM", "MLC web-llm", "llama.cpp wasm"] },
+      },
     ],
   },
   {
-    stage: "CONVERT",
-    full: "→ edge format",
-    cells: [
-      { vendors: ["coremltools 10", "ONNX exporter"] },
-      { vendors: ["ExecuTorch AOT Autograd", "Optimum CLI"], google: ["litert-torch", "AI Edge Torch"] },
-      { vendors: ["MLC-LLM", "llama.cpp GGUF"] },
+    header: "Implementation & Orchestration",
+    color: GREEN,
+    cols: [
+      {
+        col: "Frontend AI UI",
+        sub: "TS / React orchestration",
+        google: { vendors: [], isGap: true },
+        other: { vendors: ["Vercel AI SDK", "LangChain.js", "Mastra"] },
+      },
+      {
+        col: "Agent Orchestration",
+        sub: "Backend multi-agent",
+        google: { vendors: ["ADK 2.0", "Genkit", "Vertex AI Agent Engine"] },
+        other: { vendors: ["LangGraph", "CrewAI", "AutoGen", "Pydantic AI"] },
+      },
+      {
+        col: "Browser Automation",
+        sub: "LAMs + agentic web",
+        google: { vendors: ["Puppeteer (legacy)"] },
+        other: { vendors: ["Browser Use (80k★)", "Stagehand", "Firecrawl", "Playwright"] },
+      },
+      {
+        col: "Agentic IDEs",
+        sub: "Autonomous coding",
+        google: { vendors: ["Project IDX", "Jules", "Antigravity"] },
+        other: { vendors: ["Cursor", "Windsurf", "Amazon Kiro", "Devin"] },
+      },
+      {
+        col: "Vibe Coding",
+        sub: "No-code AI apps",
+        google: { vendors: [], isGap: true },
+        other: { vendors: ["Vercel v0", "Replit Agent", "Bolt.new", "Lovable"] },
+      },
     ],
   },
   {
-    stage: "QUANTIZE",
-    full: "INT8 / INT4",
-    cells: [
-      { vendors: ["NVIDIA TensorRT", "Intel OpenVINO", "Apple palettization"], gap: true },
-      { vendors: ["Qualcomm AIMET", "MediaTek Quantizer"] },
-      { vendors: ["AutoGPTQ", "AWQ", "HQQ", "GGUF quantizers"] },
-    ],
-  },
-  {
-    stage: "BENCH",
-    full: "Cross-device perf",
-    cells: [
-      { vendors: ["MLPerf Mobile", "Qualcomm AI Hub"], gap: true },
-      { vendors: ["hud.pytorch.org", "HF HW Benchmarks", "Edge Impulse Profiler"] },
-      { vendors: ["Vercel Edge Bench", "Liquid AI LEAP"] },
-    ],
-  },
-  {
-    stage: "PUSH",
-    full: "Model registry",
-    cells: [
-      { vendors: ["Hugging Face Hub", "AWS S3"], google: ["Kaggle Models (2,300+)", "Vertex Model Registry"] },
-      { vendors: ["Roboflow Universe", "Ultralytics HUB"] },
-      { vendors: ["Ollama Hub", "Replicate Edge"] },
-    ],
-  },
-  {
-    stage: "CI/CD",
-    full: "Pipeline gates",
-    cells: [
-      { vendors: ["GitHub Actions", "GitLab CI", "CodePipeline"], gap: true },
-      { vendors: ["CircleCI Orbs", "Harness", "Bitrise ML Steps"], gap: true },
-      { vendors: ["Edge Impulse build-deploy", "Vercel handlers", "RunAnywhere"], gap: true },
-    ],
-  },
-  {
-    stage: "OTA",
-    full: "Hosted delivery",
-    cells: [
-      { vendors: ["Apple App Store", "AWS IoT Greengrass"], google: ["Firebase Remote Config*"] },
-      { vendors: ["Vercel Edge Config", "Cloudflare Workers AI"], gap: true },
-      { vendors: ["RunAnywhere OTA", "ClearBlade", "Avassa"] },
-    ],
-  },
-  {
-    stage: "MOBILE",
-    full: "Native runtime",
-    cells: [
-      { vendors: ["Apple Core ML 10", "Qualcomm AI Engine Direct", "MediaTek NeuroPilot"], google: ["LiteRT v2.21", "LiteRT-LM", "MediaPipe", "AICore"] },
-      { vendors: ["ExecuTorch v1.2 (LF)", "ONNX Runtime Mobile"] },
-      { vendors: ["llama.cpp", "MLC-LLM", "Liquid AI LEAP"] },
-    ],
-  },
-  {
-    stage: "WEB AI",
-    full: "Browser inference",
-    cells: [
-      { vendors: ["WebGL"], google: ["TensorFlow.js (legacy)"] },
-      { vendors: ["ONNX Runtime Web (1.4M/wk)", "MediaPipe Web", "WebNN", "WebGPU"], gap: true },
-      { vendors: ["Transformers.js v4 (C++ WebGPU)"], google: ["@litertjs/core (~800/wk)"] },
-    ],
-  },
-  {
-    stage: "HW NPU",
-    full: "Silicon + delegates",
-    cells: [
-      { vendors: ["Apple Neural Engine", "NVIDIA Jetson", "Snapdragon Hexagon"] },
-      { vendors: ["MediaTek APU 9400", "ARM Ethos-U85"], google: ["Pixel Tensor G5/G6"] },
-      { vendors: ["Hailo-8", "SiMa.ai", "Liquid AI HW"] },
-    ],
-  },
-  {
-    stage: "OBSERVE",
-    full: "Edge telemetry",
-    cells: [
-      { vendors: ["Datadog", "Splunk", "CloudWatch"], gap: true },
-      { vendors: ["LogicMonitor", "ClearBlade", "Advian"], gap: true },
-      { vendors: ["RunAnywhere Analytics", "Lumana", "Apple Health Telemetry"], gap: true },
+    header: "Deployment, Governance, Observability",
+    color: RED,
+    cols: [
+      {
+        col: "Headless Infra",
+        sub: "Agentic browser hosting",
+        google: { vendors: [], isGap: true },
+        other: { vendors: ["Browserbase", "Render", "Fly.io"] },
+      },
+      {
+        col: "AI Observability",
+        sub: "Traces / evals / cost",
+        google: { vendors: ["Vertex Agent Anomaly*"], isGap: true },
+        other: { vendors: ["Langfuse", "Braintrust", "Helicone", "LangSmith", "Confident AI"] },
+      },
+      {
+        col: "Agentic Browser",
+        sub: "AI-first shell",
+        google: { vendors: ["Chrome + Gemini in Chrome"] },
+        other: { vendors: ["Sigma", "Dia", "Atlas", "Arc (sunset)"] },
+      },
     ],
   },
 ];
 
-const MARKET_TIERS = [
-  { name: "Incumbents", color: BLUE, bg: BLUE + "08" },
-  { name: "Challengers", color: YELLOW, bg: YELLOW + "12" },
-  { name: "AI-Native 2.0", color: GREEN, bg: GREEN + "0d" },
-];
-
-function MarketCellPill({ text, isGoogle }: { text: string; isGoogle?: boolean }) {
+function MarketPill({ text, tone }: { text: string; tone: "google" | "other" }) {
+  const isG = tone === "google";
   return (
     <span
       style={{
-        background: isGoogle ? BLUE + "22" : "transparent",
-        color: isGoogle ? BLUE : INK,
-        border: isGoogle ? `1px solid ${BLUE}55` : "none",
-        fontWeight: isGoogle ? 700 : 400,
+        background: isG ? BLUE + "22" : "transparent",
+        color: isG ? BLUE : INK,
+        border: isG ? `1px solid ${BLUE}55` : "none",
+        fontWeight: isG ? 700 : 400,
       }}
       className="inline-block rounded px-1 py-px text-[0.55rem] leading-tight"
     >
@@ -446,124 +435,183 @@ function MarketCellPill({ text, isGoogle }: { text: string; isGoogle?: boolean }
 }
 
 function MarketMap() {
+  const flatCols: { group: MarketGroup; col: MarketCol; isFirst: boolean; isLast: boolean }[] = [];
+  MARKET.forEach((g) => {
+    g.cols.forEach((c, i) => {
+      flatCols.push({ group: g, col: c, isFirst: i === 0, isLast: i === g.cols.length - 1 });
+    });
+  });
+
   return (
     <Wrap>
       <Title>
-        The on-device AI tooling market.
+        The Web AI / Agentic ecosystem.
         <br />
         <span style={{ color: GRAY }} className="text-2xl font-normal">
-          Google 1P overlay (blue) · gaps (red).
+          Google 1P (blue) vs. the rest of the ecosystem. Empty 1P cells = gaps.
         </span>
       </Title>
       <div className="flex-1 overflow-x-auto -mx-2 px-2">
-        <table className="w-full" style={{ borderCollapse: "separate", borderSpacing: 0, minWidth: 1200, tableLayout: "fixed" }}>
+        <table
+          className="w-full"
+          style={{ borderCollapse: "separate", borderSpacing: 0, minWidth: 1200, tableLayout: "fixed" }}
+        >
           <thead>
+            {/* Super-header row */}
             <tr>
               <th
-                style={{ background: SURFACE, borderBottom: `2px solid ${INK}`, color: MUTED, width: 80 }}
-                className="text-[0.55rem] uppercase tracking-widest font-bold p-1.5 text-left"
+                rowSpan={2}
+                style={{ background: SURFACE, borderBottom: `2px solid ${INK}`, width: 115 }}
+                className="text-[0.55rem] uppercase tracking-widest font-bold p-1.5 text-left align-bottom"
               >
-                Tier ↓
+                <span style={{ color: MUTED }}>Row ↓</span>
               </th>
-              {MARKET_STAGES.map((s) => (
+              {MARKET.map((g) => (
                 <th
-                  key={s.stage}
-                  style={{ background: SURFACE, borderBottom: `2px solid ${INK}`, color: INK }}
-                  className="text-[0.62rem] font-bold uppercase tracking-wider p-1.5 text-left"
+                  key={g.header}
+                  colSpan={g.cols.length}
+                  style={{
+                    background: g.color + "12",
+                    color: g.color,
+                    borderBottom: `2px solid ${g.color}55`,
+                  }}
+                  className="text-[0.7rem] uppercase tracking-widest font-bold p-2 text-center"
                 >
-                  <div>{s.stage}</div>
+                  {g.header}
+                </th>
+              ))}
+            </tr>
+            {/* Sub-column header row */}
+            <tr>
+              {flatCols.map(({ group, col, isFirst }, i) => (
+                <th
+                  key={i}
+                  style={{
+                    background: SURFACE,
+                    borderBottom: `2px solid ${INK}`,
+                    borderLeft: isFirst ? `2px solid ${group.color}55` : `1px solid ${BORDER}`,
+                    color: INK,
+                  }}
+                  className="text-[0.62rem] font-bold uppercase tracking-wider p-1.5 text-left align-top"
+                >
+                  <div>{col.col}</div>
                   <div style={{ color: MUTED }} className="text-[0.5rem] font-normal normal-case mt-0.5">
-                    {s.full}
+                    {col.sub}
                   </div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {MARKET_TIERS.map((tier, tierIdx) => (
-              <tr key={tier.name}>
-                <th
-                  style={{
-                    background: tier.bg,
-                    borderRight: `2px solid ${tier.color}`,
-                    color: tier.color,
-                  }}
-                  className="text-[0.62rem] uppercase tracking-wider font-bold p-1.5 text-left whitespace-nowrap align-top"
-                >
-                  {tier.name}
-                </th>
-                {MARKET_STAGES.map((s) => {
-                  const cell = s.cells[tierIdx];
-                  const hasGoogle = !!cell.google?.length;
-                  const isGap = cell.gap && !hasGoogle;
-                  return (
-                    <td
-                      key={s.stage + tier.name}
-                      style={{
-                        background: hasGoogle ? BLUE + "0d" : isGap ? RED + "08" : SURFACE,
-                        borderTop: `1px solid ${BORDER}`,
-                        borderRight: `1px solid ${BORDER}`,
-                        borderLeft: hasGoogle
-                          ? `3px solid ${BLUE}`
-                          : isGap
-                          ? `3px dashed ${RED}`
-                          : `1px solid ${BORDER}`,
-                      }}
-                      className="p-1.5 align-top"
-                    >
-                      {isGap && (
-                        <div
-                          style={{ color: RED, fontWeight: 700 }}
-                          className="text-[0.5rem] uppercase tracking-widest mb-1"
-                        >
-                          GAP
-                        </div>
-                      )}
-                      {hasGoogle && (
-                        <div className="flex flex-wrap gap-0.5 mb-1">
-                          {cell.google!.map((g) => (
-                            <MarketCellPill key={g} text={g} isGoogle />
-                          ))}
-                        </div>
-                      )}
-                      <div className="flex flex-wrap gap-0.5">
-                        {cell.vendors.map((v) => (
-                          <MarketCellPill key={v} text={v} />
-                        ))}
+            {/* Row 1 — Google 1P */}
+            <tr>
+              <th
+                style={{
+                  background: BLUE + "0d",
+                  borderRight: `2px solid ${BLUE}`,
+                  color: BLUE,
+                }}
+                className="text-[0.62rem] uppercase tracking-wider font-bold p-1.5 text-left align-top"
+              >
+                Google 1P
+              </th>
+              {flatCols.map(({ group, col, isFirst }, i) => {
+                const isGap = !!col.google.isGap;
+                return (
+                  <td
+                    key={i}
+                    style={{
+                      background: isGap ? RED + "0d" : BLUE + "08",
+                      borderTop: `1px solid ${BORDER}`,
+                      borderRight: `1px solid ${BORDER}`,
+                      borderLeft: isFirst
+                        ? `2px solid ${group.color}55`
+                        : `1px solid ${BORDER}`,
+                    }}
+                    className="p-1.5 align-top"
+                  >
+                    {isGap && col.google.vendors.length === 0 && (
+                      <div
+                        style={{ color: RED, fontWeight: 700 }}
+                        className="text-[0.55rem] uppercase tracking-widest"
+                      >
+                        GAP — no 1P
                       </div>
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
+                    )}
+                    {isGap && col.google.vendors.length > 0 && (
+                      <div
+                        style={{ color: RED, fontWeight: 700 }}
+                        className="text-[0.5rem] uppercase tracking-widest mb-1"
+                      >
+                        Weak
+                      </div>
+                    )}
+                    <div className="flex flex-wrap gap-0.5">
+                      {col.google.vendors.map((v) => (
+                        <MarketPill key={v} text={v} tone="google" />
+                      ))}
+                    </div>
+                  </td>
+                );
+              })}
+            </tr>
+            {/* Row 2 — Other ecosystem */}
+            <tr>
+              <th
+                style={{
+                  background: PAGE,
+                  borderRight: `2px solid ${MUTED}`,
+                  color: GRAY,
+                }}
+                className="text-[0.62rem] uppercase tracking-wider font-bold p-1.5 text-left align-top"
+              >
+                Other ecosystem
+              </th>
+              {flatCols.map(({ group, col, isFirst }, i) => (
+                <td
+                  key={i}
+                  style={{
+                    background: SURFACE,
+                    borderTop: `1px solid ${BORDER}`,
+                    borderRight: `1px solid ${BORDER}`,
+                    borderLeft: isFirst
+                      ? `2px solid ${group.color}55`
+                      : `1px solid ${BORDER}`,
+                  }}
+                  className="p-1.5 align-top"
+                >
+                  <div className="flex flex-wrap gap-0.5">
+                    {col.other.vendors.map((v) => (
+                      <MarketPill key={v} text={v} tone="other" />
+                    ))}
+                  </div>
+                </td>
+              ))}
+            </tr>
           </tbody>
         </table>
       </div>
       <div className="flex items-center gap-4 mt-3 text-xs">
         <div className="flex items-center gap-1.5" style={{ color: GRAY }}>
           <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="rounded px-1.5 py-px text-[0.6rem] font-bold">1P</span>
-          Google product fills cell
+          Google product in cell
         </div>
         <div className="flex items-center gap-1.5" style={{ color: GRAY }}>
           <span style={{ color: RED, fontWeight: 700 }} className="text-[0.6rem] uppercase tracking-widest">GAP</span>
-          No Google product / leader is a competitor
+          No competitive Google product
         </div>
         <div style={{ color: MUTED }} className="ml-auto text-[0.65rem]">
-          Reference format: Sequoia / Harness developer-toolchain map · Vendor census via Gemini Deep Research Max, May 2026<Cite ids={[3, 9, 11, 13, 14, 15]} />
+          Reference: Sequoia / Harness $11B Developer Toolchain map · Vendor census: Gemini Deep Research Max (2026-05-06) + Market Landscape Map for AI DevKit (Google Doc, 2026-05-10)
         </div>
       </div>
       <p style={{ color: MUTED }} className="text-xs mt-2">
-        <strong style={{ color: INK }}>Strategic read:</strong> Google leads at the extremes —{" "}
-        <span style={{ color: BLUE }}>silicon</span> (Pixel Tensor) +{" "}
-        <span style={{ color: BLUE }}>OS runtime</span> (LiteRT, AICore) +{" "}
-        <span style={{ color: BLUE }}>foundation models</span> (Gemma 4) — but the operational middle is hollowed out.
-        Five red columns:{" "}
-        <span style={{ color: RED }}>QUANTIZE</span> (no 1P quantizer),{" "}
-        <span style={{ color: RED }}>BENCH</span> (no public dashboard like hud.pytorch.org),{" "}
-        <span style={{ color: RED }}>CI/CD</span> (zero Marketplace Actions),{" "}
-        <span style={{ color: RED }}>OTA</span> (Firebase pivoted to Gemini APIs),{" "}
-        <span style={{ color: RED }}>OBSERVE</span> (no edge-AI telemetry).
-        The DevKit pitch closes 3 of 5; the remaining 2 are addressable via Pitch 1 (Partner cert) and Pitch 3 (Vertex bridge).
+        <strong style={{ color: INK }}>Strategic read:</strong>{" "}
+        Google leads at the foundation (Chrome APIs, Gemini Nano, WebGPU) and at backend agent orchestration (ADK 2.0, Genkit, Vertex Agent Engine).
+        Three explicit <span style={{ color: RED }}>gaps</span>:{" "}
+        <strong style={{ color: RED }}>Frontend AI UI</strong> (Vercel AI SDK dominates the TS/React layer),{" "}
+        <strong style={{ color: RED }}>Vibe Coding</strong> (no 1P answer to v0 / Replit / Bolt / Lovable), and{" "}
+        <strong style={{ color: RED }}>Headless Infra + Observability</strong> (Browserbase, Langfuse, Braintrust monopolize agentic deployment).
+        The DevKit is positioned to close the observability gap natively; the other two are addressable via Pitch 1 (Partner Network — Vercel and Lovable as Strategic-tier launch partners).
       </p>
     </Wrap>
   );
