@@ -10,7 +10,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "ensure-no-sso": "node scripts/ensure-no-sso.mjs",
+    "deploy": "npm run ensure-no-sso && vercel --prod --yes --force"
   },
   "dependencies": {
     "react": "^19.0.0",
