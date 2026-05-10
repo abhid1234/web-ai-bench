@@ -321,6 +321,7 @@ type MarketGroup = { header: string; color: string; cols: MarketCol[] };
 // Vendor census synthesized from:
 //   1. pitch/runbook/research/2026-05-06-market-map.md (Gemini Deep Research Max)
 //   2. pitch/runbook/research/2026-05-10-market-landscape-doc.md (the Web AI DevKit market doc)
+//   3. pitch/runbook/research/2026-05-10-market-map-verification.md (per-vendor WebSearch)
 // Format mirrors the Sequoia / Harness $11B Developer Toolchain map: super-headers
 // span sub-categories. Rows are simplified to two: Google 1P vs. Other ecosystem.
 // An empty Google cell with isGap is the strategic gap signal.
@@ -332,14 +333,14 @@ const MARKET: MarketGroup[] = [
       {
         col: "Compute APIs",
         sub: "WebGPU / WebNN / Wasm",
-        google: { vendors: ["WebGPU (Chrome-led)", "Chrome Built-in AI APIs", "WebMCP"] },
+        google: { vendors: ["WebGPU (Chrome-led)", "Chrome Built-in AI APIs", "WebMCP (Chrome / W3C)"] },
         other: { vendors: ["Safari WebGPU 26", "Firefox WebGPU", "W3C WebNN", "WebAssembly"] },
       },
       {
         col: "Browser ML Runtime",
         sub: "Low-level inference",
-        google: { vendors: ["TensorFlow.js (legacy)", "LiteRT.js", "MediaPipe Web"] },
-        other: { vendors: ["ONNX Runtime Web (1.4M/wk)"] },
+        google: { vendors: ["LiteRT.js", "MediaPipe Web", "TensorFlow.js (legacy)"] },
+        other: { vendors: ["ONNX Runtime Web (~300K/wk)"] },
       },
       {
         col: "Pipelines",
@@ -351,7 +352,7 @@ const MARKET: MarketGroup[] = [
         col: "In-Browser LLMs",
         sub: "Generative engines",
         google: { vendors: ["Chrome Gemini Nano (Prompt / Translator / Summarizer / Lang-Detect)"] },
-        other: { vendors: ["WebLLM", "MLC web-llm", "llama.cpp wasm"] },
+        other: { vendors: ["WebLLM (MLC)", "llama.cpp wasm"] },
       },
     ],
   },
@@ -363,31 +364,31 @@ const MARKET: MarketGroup[] = [
         col: "Frontend AI UI",
         sub: "TS / React orchestration",
         google: { vendors: [], isGap: true },
-        other: { vendors: ["Vercel AI SDK", "LangChain.js", "Mastra"] },
+        other: { vendors: ["Vercel AI SDK", "LangChain.js", "Mastra (22k★)"] },
       },
       {
         col: "Agent Orchestration",
         sub: "Backend multi-agent",
         google: { vendors: ["ADK 2.0", "Genkit", "Vertex AI Agent Engine"] },
-        other: { vendors: ["LangGraph", "CrewAI", "AutoGen", "Pydantic AI"] },
+        other: { vendors: ["LangGraph", "CrewAI", "Pydantic AI", "AutoGen (declining)"] },
       },
       {
         col: "Browser Automation",
         sub: "LAMs + agentic web",
         google: { vendors: ["Puppeteer (legacy)"] },
-        other: { vendors: ["Browser Use (80k★)", "Stagehand", "Firecrawl", "Playwright"] },
+        other: { vendors: ["Browser Use (80k★)", "Stagehand v3 (CDP-native)", "Playwright", "Firecrawl (scraping)"] },
       },
       {
         col: "Agentic IDEs",
         sub: "Autonomous coding",
-        google: { vendors: ["Project IDX", "Jules", "Antigravity"] },
-        other: { vendors: ["Cursor", "Windsurf", "Amazon Kiro", "Devin"] },
+        google: { vendors: ["Antigravity", "Jules", "Gemini Code Assist"] },
+        other: { vendors: ["Cursor", "Windsurf (Cognition)", "Devin 3", "Amazon Kiro"] },
       },
       {
         col: "Vibe Coding",
         sub: "No-code AI apps",
-        google: { vendors: [], isGap: true },
-        other: { vendors: ["Vercel v0", "Replit Agent", "Bolt.new", "Lovable"] },
+        google: { vendors: ["AI Studio Build", "Stitch", "Opal"] },
+        other: { vendors: ["Vercel v0", "Replit Agent 3", "Bolt.new", "Lovable"] },
       },
     ],
   },
@@ -397,21 +398,21 @@ const MARKET: MarketGroup[] = [
     cols: [
       {
         col: "Headless Infra",
-        sub: "Agentic browser hosting",
-        google: { vendors: [], isGap: true },
-        other: { vendors: ["Browserbase", "Render", "Fly.io"] },
+        sub: "Agent sandboxes / browser hosting",
+        google: { vendors: ["Cloud Run sandboxes", "Vertex Agent Engine Code Exec", "GKE Agent Sandbox"] },
+        other: { vendors: ["Browserbase", "Cloudflare Browser Run", "Render", "Fly.io"] },
       },
       {
         col: "AI Observability",
         sub: "Traces / evals / cost",
-        google: { vendors: ["Vertex Agent Anomaly*"], isGap: true },
-        other: { vendors: ["Langfuse", "Braintrust", "Helicone", "LangSmith", "Confident AI"] },
+        google: { vendors: ["Vertex Agent Observability", "Agent Anomaly Detection", "Agent Evaluation"], isGap: true },
+        other: { vendors: ["Langfuse (ClickHouse)", "Braintrust", "LangSmith", "Helicone", "Confident AI"] },
       },
       {
         col: "Agentic Browser",
         sub: "AI-first shell",
         google: { vendors: ["Chrome + Gemini in Chrome"] },
-        other: { vendors: ["Sigma", "Dia", "Atlas", "Arc (sunset)"] },
+        other: { vendors: ["Comet (Perplexity)", "Atlas (OpenAI)", "Dia", "Sigma", "Arc (sunset)"] },
       },
     ],
   },
@@ -601,17 +602,19 @@ function MarketMap() {
           No competitive Google product
         </div>
         <div style={{ color: MUTED }} className="ml-auto text-[0.65rem]">
-          Reference: Sequoia / Harness $11B Developer Toolchain map · Vendor census: Gemini Deep Research Max (2026-05-06) + Market Landscape Map for AI DevKit (Google Doc, 2026-05-10)
+          Reference: Sequoia / Harness $11B Developer Toolchain map · Vendor census: Gemini Deep Research Max (2026-05-06) + Market Landscape Map for AI DevKit (Google Doc, 2026-05-10) + per-vendor WebSearch verification (2026-05-10)
         </div>
       </div>
       <p style={{ color: MUTED }} className="text-xs mt-2">
         <strong style={{ color: INK }}>Strategic read:</strong>{" "}
-        Google leads at the foundation (Chrome APIs, Gemini Nano, WebGPU) and at backend agent orchestration (ADK 2.0, Genkit, Vertex Agent Engine).
-        Three explicit <span style={{ color: RED }}>gaps</span>:{" "}
-        <strong style={{ color: RED }}>Frontend AI UI</strong> (Vercel AI SDK dominates the TS/React layer),{" "}
-        <strong style={{ color: RED }}>Vibe Coding</strong> (no 1P answer to v0 / Replit / Bolt / Lovable), and{" "}
-        <strong style={{ color: RED }}>Headless Infra + Observability</strong> (Browserbase, Langfuse, Braintrust monopolize agentic deployment).
-        The DevKit is positioned to close the observability gap natively; the other two are addressable via Pitch 1 (Partner Network — Vercel and Lovable as Strategic-tier launch partners).
+        After per-vendor verification, Google leads end-to-end across this stack: compute APIs (WebGPU, Chrome Built-in AI, WebMCP), in-browser LLMs (Gemini Nano), backend orchestration (ADK 2.0, Genkit, Vertex Agent Engine), agentic IDEs (Antigravity, Jules, Gemini Code Assist), <strong style={{ color: BLUE }}>vibe coding</strong> (AI Studio Build, Stitch, Opal — all launched 2025–2026), agent sandboxes (Cloud Run + Vertex Agent Engine Code Exec + GKE Agent Sandbox), and the agentic browser shell (Chrome).
+        <br />
+        <strong style={{ color: RED }}>One acute gap remains:</strong>{" "}
+        <strong style={{ color: RED }}>Frontend AI UI</strong> — Vercel AI SDK + LangChain.js + Mastra own the TS/React orchestration layer that Genkit (backend-only) and ADK (Python-first) don't address.
+        <strong style={{ color: RED }}> One weak position:</strong>{" "}
+        <strong style={{ color: RED }}>developer-facing LLM observability</strong> — Vertex Agent Observability suite exists, but Langfuse / Braintrust / Helicone / LangSmith own developer mindshare on prompt versioning + LLM-as-a-judge.
+        <br />
+        <strong style={{ color: INK }}>Pitch implication:</strong> the DevKit's highest-leverage partnership angles are <strong style={{ color: BLUE }}>Vercel</strong> (close the Frontend AI UI gap via SDK partnership) and <strong style={{ color: BLUE }}>Langfuse / Braintrust</strong> (close the observability mindshare gap via Strategic-tier integration).
       </p>
     </Wrap>
   );
