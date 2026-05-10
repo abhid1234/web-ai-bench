@@ -15,6 +15,9 @@ node_modules/.tmp
 # Private runbook — re-ping recipient name lives here
 _runbook/
 
+# Launch drafts (LinkedIn / X / Substack previews) — not source
+_launches/
+
 # Local MCP server config (absolute machine paths)
 .mcp.json
 

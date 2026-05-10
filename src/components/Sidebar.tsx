@@ -4,7 +4,7 @@ import { LESSONS } from "../lib/lessons";
 export function Sidebar() {
   return (
     <aside
-      className="w-64 flex-shrink-0 border-r flex flex-col"
+      className="hidden md:flex w-64 flex-shrink-0 border-r flex-col"
       style={{
         backgroundColor: "var(--color-surface)",
         borderColor: "var(--color-outline-variant)",
