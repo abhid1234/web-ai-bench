@@ -318,7 +318,7 @@ function Stakes() {
             ONNX Runtime Web · v1.25.0 surge (April 2026)
           </div>
           <div style={{ color: INK }} className="text-lg font-bold mb-1">
-            ~1.4M weekly downloads. Transformers.js v4 rewrote on top of it in C++ WebGPU.<Cite ids={[9]} />
+            ~300K weekly npm downloads. Transformers.js v4 rewrote on top of it in C++ WebGPU.<Cite ids={[9]} />
           </div>
           <div style={{ color: GRAY }} className="text-sm">
             Browser AI has consolidated around ONNX. Google&apos;s{" "}
