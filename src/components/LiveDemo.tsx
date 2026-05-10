@@ -19,6 +19,36 @@ type DemoState = {
 
 const ALL_BACKENDS: Backend[] = ["webnn", "webgpu", "wasm"];
 
+// LiveDemo only offers text-input models that fit in a reasonable
+// download. Vision (image-url), audio (audio-url), and LLMs > 130 MB
+// stay reachable from BenchLab on Lesson 5. The hero demo is meant to
+// "just work" without needing to fetch remote images/audio or wait for
+// half-gigabyte downloads on a phone.
+const PICKABLE_MODELS = MODELS.filter(
+  (m) => m.testInput.type === "text" && m.sizeMB <= 130,
+);
+
+function friendlyError(raw: string | undefined): string {
+  if (!raw) return "Failed";
+  const lower = raw.toLowerCase();
+  if (lower.includes("missing") && (lower.includes("execution") || lower.includes("kernel") || lower.includes("op")))
+    return "Backend missing an op for this model";
+  if (lower.includes("out of memory") || lower.includes("oom") || lower.includes("allocation failed"))
+    return "Out of memory — pick a smaller model";
+  if (lower.includes("session already started") || lower.includes("session mismatch"))
+    return "Backend conflict — refresh the page";
+  if (lower.includes("freedimension") || lower.includes("free dimension") || lower.includes("dynamic shape"))
+    return "Model needs dimension overrides not configured for this backend";
+  if (lower.includes("network") || lower.includes("fetch") || lower.includes("failed to load"))
+    return "Couldn't download model weights — check connection";
+  if (lower.includes("compile") || lower.includes("shader"))
+    return "Backend can't compile this model on your device";
+  if (lower.includes("not implemented") || lower.includes("unsupported"))
+    return "Op not yet supported on this backend";
+  if (raw.length > 64) return raw.slice(0, 60) + "…";
+  return raw;
+}
+
 type PipelineFn = (...args: unknown[]) => Promise<unknown>;
 
 async function runOne(
@@ -194,12 +224,21 @@ export function LiveDemo() {
             color: "var(--color-on-surface)",
           }}
         >
-          {MODELS.map((m) => (
+          {PICKABLE_MODELS.map((m) => (
             <option key={m.id} value={m.id}>
               {m.name} — {m.task} — {formatSize(m.sizeMB)}
             </option>
           ))}
         </select>
+      </div>
+      <div
+        className="text-[11px] mb-3 -mt-1"
+        style={{ color: "var(--color-on-surface-variant)" }}
+      >
+        Showing {PICKABLE_MODELS.length} text models that auto-run cleanly. For vision, audio, and big LLMs:{" "}
+        <a href="/learn/run" className="underline font-semibold" style={{ color: "var(--color-primary)" }}>
+          Lesson 5 → full catalog
+        </a>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -210,6 +249,7 @@ export function LiveDemo() {
             state={results[b]}
             highlightNPU={b === "webnn" && npuDetected}
             isWinner={winner === b}
+            modelSizeMB={selectedModel.sizeMB}
           />
         ))}
       </div>
@@ -244,11 +284,13 @@ function DemoCard({
   state,
   highlightNPU,
   isWinner,
+  modelSizeMB,
 }: {
   backend: Backend;
   state?: DemoState;
   highlightNPU: boolean;
   isWinner: boolean;
+  modelSizeMB: number;
 }) {
   const status = state?.status ?? "loading";
 
@@ -364,12 +406,15 @@ function DemoCard({
       </div>
       <div
         className="text-[10px] uppercase tracking-wider font-semibold mt-3"
-        style={{ color: "var(--color-on-surface-variant)" }}
+        style={{
+          color: status === "fail" ? "var(--color-danger)" : "var(--color-on-surface-variant)",
+        }}
+        title={status === "fail" ? state?.error : undefined}
       >
-        {status === "loading" && "Loading model…"}
+        {status === "loading" && `Downloading ${formatSize(modelSizeMB)}…`}
         {status === "inferring" && "Running 3 passes…"}
         {status === "done" && "✓ Done"}
-        {status === "fail" && (state?.error?.slice(0, 50) ?? "Failed")}
+        {status === "fail" && friendlyError(state?.error)}
       </div>
     </div>
   );
