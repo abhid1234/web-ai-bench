@@ -191,10 +191,10 @@ function Problem() {
   return (
     <Wrap>
       <Title>
-        Deploying a model to edge takes 6 manual steps.
+        Nine great Google products. Zero coherent workflow.
         <br />
         <span style={{ color: GRAY }} className="text-2xl font-normal">
-          For mobile and web on-device AI, there is no unified, cross-platform CI/CD pipeline.<Cite ids={[17, 18]} />
+          Deploying a custom edge model still takes 6 manual steps across disconnected tools — no unified CI/CD pipeline ties the 1P stack together.<Cite ids={[17, 18]} />
         </span>
       </Title>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 content-start">
@@ -615,6 +615,8 @@ function MarketMap() {
         <strong style={{ color: RED }}>developer-facing LLM observability</strong> — Vertex Agent Observability suite exists, but Langfuse / Braintrust / Helicone / LangSmith own developer mindshare on prompt versioning + LLM-as-a-judge.
         <br />
         <strong style={{ color: INK }}>Pitch implication:</strong> the DevKit's highest-leverage partnership angles are <strong style={{ color: BLUE }}>Vercel</strong> (close the Frontend AI UI gap via SDK partnership) and <strong style={{ color: BLUE }}>Langfuse / Braintrust</strong> (close the observability mindshare gap via Strategic-tier integration).
+        <br />
+        <strong style={{ color: INK }}>The moat:</strong> Google has the most complete on-device AI stack in the industry — silicon (Pixel Tensor), OS (AICore + Android), models (Gemma 4), cloud training (Vertex AI), runtimes (LiteRT, LiteRT-LM), agent infra (ADK 2.0 + Agent Engine Code Exec). The DevKit packages this 1P stack into a <strong style={{ color: BLUE }}>single Apple-style workflow no competitor can replicate</strong> — because no competitor has the underlying stack.
       </p>
     </Wrap>
   );
@@ -736,8 +738,7 @@ function ThreePlays() {
             DevKit CI/CD
           </div>
           <div style={{ color: GRAY }} className="text-sm mb-4 flex-1">
-            "Docker push for edge AI." CLI + GitHub Actions + public benchmark
-            dashboard. Fastest to independent impact. No cross-org dependencies.
+            "The Xcode for Google's edge AI stack." CLI + GitHub Actions + observability hooks + public benchmark dashboard. Connects LiteRT, Gemma 4, Vertex, and Cloud Run into one workflow. Fastest to independent impact.
           </div>
           <div style={{ color: BLUE }} className="text-xs font-mono">
             litert convert → validate → bench → push
@@ -790,7 +791,13 @@ function Devkit() {
           LiteRT DevKit
         </span>
       </div>
-      <Title>"Docker push for edge AI."</Title>
+      <Title>
+        The Xcode for Google&apos;s edge AI stack.
+        <br />
+        <span style={{ color: GRAY }} className="text-2xl font-normal">
+          Nine 1P products. One workflow. <code style={{ background: PAGE, border: `1px solid ${BORDER}`, color: INK }} className="px-1.5 py-0.5 rounded text-xl font-mono">litert convert &amp;&amp; litert push</code>.
+        </span>
+      </Title>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1">
         <div className="flex flex-col gap-4">
           <div>
