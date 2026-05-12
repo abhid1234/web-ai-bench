@@ -1487,21 +1487,59 @@ function WhyThisTeam() {
             </div>
             <div className="space-y-1.5">
               {[
-                { group: "CI/CD", items: ["GitHub Actions", "GitLab", "CircleCI", "Jenkins", "Bitrise", "Harness", "Buildkite"] },
-                { group: "MLOps", items: ["Hugging Face", "W&B", "MLflow", "Roboflow", "Ultralytics"] },
-                { group: "Silicon", items: ["Qualcomm", "MediaTek", "ARM", "Apple"] },
+                {
+                  group: "CI/CD",
+                  items: [
+                    { name: "GitHub Actions", slug: "githubactions" },
+                    { name: "GitLab", slug: "gitlab" },
+                    { name: "CircleCI", slug: "circleci" },
+                    { name: "Jenkins", slug: "jenkins" },
+                    { name: "Bitrise", slug: "bitrise" },
+                    { name: "Harness", slug: null },
+                    { name: "Buildkite", slug: "buildkite" },
+                  ],
+                },
+                {
+                  group: "MLOps",
+                  items: [
+                    { name: "Hugging Face", slug: "huggingface" },
+                    { name: "W&B", slug: "weightsandbiases" },
+                    { name: "MLflow", slug: "mlflow" },
+                    { name: "Roboflow", slug: "roboflow" },
+                    { name: "Ultralytics", slug: "ultralytics" },
+                  ],
+                },
+                {
+                  group: "Silicon",
+                  items: [
+                    { name: "Qualcomm", slug: "qualcomm" },
+                    { name: "MediaTek", slug: "mediatek" },
+                    { name: "ARM", slug: "arm" },
+                    { name: "Apple", slug: "apple" },
+                  ],
+                },
               ].map((row) => (
-                <div key={row.group} className="flex items-center gap-2 flex-wrap">
-                  <span style={{ color: MUTED }} className="text-[9px] uppercase tracking-wider font-semibold w-12 shrink-0">
+                <div key={row.group} className="flex items-center gap-1.5 flex-wrap">
+                  <span style={{ color: MUTED }} className="text-[9px] uppercase tracking-wider font-semibold w-14 shrink-0">
                     {row.group}
                   </span>
-                  {row.items.map((name) => (
+                  {row.items.map((item) => (
                     <span
-                      key={name}
+                      key={item.name}
                       style={{ background: PAGE, border: `1px solid ${BORDER}`, color: INK }}
-                      className="px-2 py-0.5 rounded text-[10px] font-medium"
+                      className="px-1.5 py-0.5 rounded text-[10px] font-medium inline-flex items-center gap-1"
                     >
-                      {name}
+                      {item.slug && (
+                        <img
+                          src={`https://cdn.simpleicons.org/${item.slug}/202124`}
+                          alt=""
+                          width={11}
+                          height={11}
+                          loading="lazy"
+                          className="shrink-0"
+                        />
+                      )}
+                      <span>{item.name}</span>
                     </span>
                   ))}
                 </div>
