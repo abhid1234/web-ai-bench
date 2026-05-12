@@ -494,80 +494,138 @@ function HardwareMoatHero() {
           "0d 0%, transparent 65%), " +
           SURFACE,
       }}
-      className="absolute inset-0 flex flex-col items-center justify-center text-center px-12"
+      className="absolute inset-0 flex flex-col items-center justify-center text-center px-12 py-12"
     >
       <p
         style={{
-          color: BLUE,
+          color: RED,
           fontFamily: FONT_HEAD,
           letterSpacing: "0.32em",
         }}
         className="text-xs font-bold uppercase mb-8"
       >
-        The hardware moat · live today
+        The paradox
       </p>
-      <div className="flex items-baseline gap-2 mb-2">
-        <span
-          style={{
-            color: INK,
-            fontFamily: FONT_HEAD,
-            letterSpacing: "-0.055em",
-            lineHeight: 0.85,
-            fontWeight: 700,
-          }}
-          className="text-[12rem] md:text-[18rem]"
+
+      {/* Two numbers side-by-side */}
+      <div className="flex items-center gap-8 md:gap-16 mb-8">
+        {/* Left: 100× (the strength) */}
+        <div className="flex flex-col items-center">
+          <div className="flex items-baseline gap-1">
+            <span
+              style={{
+                color: INK,
+                fontFamily: FONT_HEAD,
+                letterSpacing: "-0.055em",
+                lineHeight: 0.85,
+                fontWeight: 700,
+              }}
+              className="text-[7rem] md:text-[10rem]"
+            >
+              100
+            </span>
+            <span
+              style={{
+                color: BLUE,
+                fontFamily: FONT_HEAD,
+                letterSpacing: "-0.04em",
+                lineHeight: 1,
+                fontWeight: 700,
+              }}
+              className="text-[3.5rem] md:text-[5rem]"
+            >
+              ×
+            </span>
+          </div>
+          <p
+            style={{ color: GRAY }}
+            className="text-sm md:text-base font-medium uppercase tracking-wider mt-1"
+          >
+            CPU speedup on Snapdragon
+          </p>
+        </div>
+
+        {/* Separator */}
+        <div
+          style={{ color: MUTED, fontFamily: FONT_HEAD }}
+          className="text-2xl md:text-4xl font-light"
         >
-          100
+          vs
+        </div>
+
+        {/* Right: 0.06% (the gap) */}
+        <div className="flex flex-col items-center">
+          <span
+            style={{
+              color: RED,
+              fontFamily: FONT_HEAD,
+              letterSpacing: "-0.04em",
+              lineHeight: 0.9,
+              fontWeight: 700,
+            }}
+            className="text-[5rem] md:text-[7rem]"
+          >
+            0.06%
+          </span>
+          <p
+            style={{ color: GRAY }}
+            className="text-sm md:text-base font-medium uppercase tracking-wider mt-1"
+          >
+            of ORT-Web npm downloads
+          </p>
+        </div>
+      </div>
+
+      {/* Three "tech is fine" facts */}
+      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-6 max-w-3xl" style={{ color: GRAY }}>
+        <span className="inline-flex items-center gap-2 text-xs md:text-sm">
+          <span style={{ color: GREEN }} className="font-bold">✓</span>
+          <span>Officially recommended Android runtime<Cite ids={[1]} /></span>
         </span>
-        <span
-          style={{
-            color: BLUE,
-            fontFamily: FONT_HEAD,
-            letterSpacing: "-0.04em",
-            lineHeight: 1,
-            fontWeight: 700,
-          }}
-          className="text-[6rem] md:text-[9rem]"
-        >
-          ×
+        <span className="inline-flex items-center gap-2 text-xs md:text-sm">
+          <span style={{ color: GREEN }} className="font-bold">✓</span>
+          <span>50+ models &lt;5ms on Snapdragon NPU<Cite ids={[11, 12]} /></span>
+        </span>
+        <span className="inline-flex items-center gap-2 text-xs md:text-sm">
+          <span style={{ color: GREEN }} className="font-bold">✓</span>
+          <span>MediaTek NeuroPilot 12× CPU<Cite ids={[13]} /></span>
         </span>
       </div>
+
+      {/* The diagnosis */}
       <p
         style={{ color: INK, fontFamily: FONT_HEAD, letterSpacing: "-0.02em" }}
-        className="text-3xl md:text-4xl font-bold mb-6 leading-tight"
+        className="text-2xl md:text-3xl font-bold mb-3 leading-tight max-w-3xl"
       >
-        CPU on Snapdragon 8 Elite Gen 5.
+        The tech is fine. The workflow is the gap.
       </p>
-      <p
-        style={{ color: GRAY, fontFamily: FONT_BODY }}
-        className="text-lg md:text-xl max-w-3xl font-light leading-snug mb-6"
-      >
-        LiteRT × Qualcomm AI Engine Direct delivers 100× the speed of CPU
-        execution. 50+ canonical models run in under 5&nbsp;ms on the NPU.
-        MediaTek Dimensity 9400 hits 12× via the NeuroPilot Accelerator.
-      </p>
-      <div className="flex items-center gap-5 mb-4" style={{ color: GRAY }}>
-        <span className="inline-flex items-center gap-2 text-sm">
-          <InlineIcon slug="google" color="1a73e8" size={20} />
+
+      {/* Silicon partnership row */}
+      <div className="flex items-center gap-4 mb-5 text-sm" style={{ color: GRAY }}>
+        <span className="inline-flex items-center gap-2">
+          <InlineIcon slug="google" color="1a73e8" size={18} />
           <span className="font-semibold">Google</span>
         </span>
-        <span style={{ color: MUTED }} className="text-base">×</span>
-        <span className="inline-flex items-center gap-2 text-sm">
-          <InlineIcon slug="qualcomm" color="3253dc" size={20} />
+        <span style={{ color: MUTED }}>×</span>
+        <span className="inline-flex items-center gap-2">
+          <InlineIcon slug="qualcomm" color="3253dc" size={18} />
           <span className="font-semibold">Qualcomm</span>
         </span>
-        <span style={{ color: MUTED }} className="text-base">×</span>
-        <span className="inline-flex items-center gap-2 text-sm">
-          <InlineIcon slug="mediatek" color="ee3a3a" size={20} />
+        <span style={{ color: MUTED }}>×</span>
+        <span className="inline-flex items-center gap-2">
+          <InlineIcon slug="mediatek" color="ee3a3a" size={18} />
           <span className="font-semibold">MediaTek</span>
         </span>
       </div>
+
       <p
         style={{ color: MUTED, fontFamily: FONT_BODY }}
-        className="text-sm max-w-2xl"
+        className="text-sm max-w-2xl leading-relaxed"
       >
-        ExecuTorch can&apos;t replicate this — these are Google × silicon-vendor
-        compiler integrations no competitor has.<Cite ids={[11, 12, 13]} />
+        Best-in-class runtime, industry-leading silicon partnerships, near-zero
+        developer adoption. That&apos;s an awareness + ecosystem + operationalization
+        problem — exactly what DevKit, Partner Network, and Vertex Bridge are built
+        to solve.
       </p>
     </div>
   );
@@ -2114,11 +2172,11 @@ const SLIDES = [
   <Problem />,
   <Stakes />,
   <TheNumbers />,
+  <HardwareMoatHero />,
   <MarketMap />,
   <PartTwoDivider />,
   <ThreePlays />,
   <TwoWorlds />,
-  <HardwareMoatHero />,
   <Devkit />,
   <PartnerNetwork />,
   <VertexBridge />,
@@ -2136,12 +2194,12 @@ const SLIDE_META: SlideMeta[] = [
   { title: "Problem", section: "The Stakes", note: "Frame: nine great Google products, zero coherent workflow. A custom edge model still takes six manual steps. ExecuTorch ships a CLI; we don't." },
   { title: "Stakes", section: "The Stakes", note: "Three threats: ExecuTorch went vendor-neutral (Linux Foundation, April 2026), World's Fair has zero edge-CI/CD tracks, ONNX Runtime Web won browser AI. 18-24 month window." },
   { title: "The numbers", section: "The Stakes", note: "Quantitative backup for the three pitches. Web ML: LiteRT.js at 0.06% of ORT-Web (awareness gap, not tech). CI/CD: 0 LiteRT Actions on GitHub Marketplace (whitespace). Cloud-to-edge: AWS exited, Apple gold standard, Google has no path. Each column maps to one of the three pitches." },
+  { title: "The paradox", section: "The Stakes", note: "The slide that names the contradiction. 100× CPU speedup on Snapdragon (LiteRT × Qualcomm) vs 0.06% of ORT-Web npm downloads. Best-in-class tech, near-zero adoption. The diagnosis: not a tech gap, a workflow gap. Sets up the three pitches as the workflow fix." },
   { title: "Market map", section: "The Stakes", note: "Reference slide, scoped to the AI Edge team's actual lane (per ai.google.dev/edge). 9 of 12 boxes have strong 1P. Net: 1 acute GAP (Mobile / Edge CI/CD — the DevKit lane) + 2 weak positions (MCU mindshare vs Edge Impulse, benchmarking — AI Edge Portal still private preview)." },
   { title: "Part II · The plays", section: "The Plays", note: "Transition. Section break. Take a breath, then dive into the three pitches." },
   { title: "Three plays", section: "The Plays", note: "Three pitches, one initiative. Recommendation is Pitch 2 (DevKit) because it has the fastest path to independent shipped artifacts and zero cross-org friction." },
-  { title: "Two worlds", section: "The Plays", note: "DevKit lead-in #1 (scope): pre-empt the AICore objection. AICore + Gemini Nano solve general AI on Android. DevKit is for the second world — custom domain models AICore won't serve. Sets up Pitch 2." },
-  { title: "100× hardware moat", section: "The Plays", note: "DevKit lead-in #2 (moat): hero number, pause. Google × Qualcomm AI Engine Direct and MediaTek NeuroPilot integrations no competitor can replicate — this is the silicon-vendor partnership advantage that makes DevKit defensible. Sets up Pitch 2." },
-  { title: "Pitch 2 — DevKit", section: "The Plays", note: "Recommended. The Xcode for Google's edge AI stack. CLI + GitHub Actions + benchmark dashboard. Connects LiteRT, Gemma 4, Vertex, Cloud Run into one workflow. Two lead-in slides justified the scope + moat — now the play itself." },
+  { title: "Two worlds", section: "The Plays", note: "DevKit scope lead-in: pre-empt the AICore objection. AICore + Gemini Nano solve general AI on Android. DevKit is for the second world — custom domain models AICore won't serve." },
+  { title: "Pitch 2 — DevKit", section: "The Plays", note: "Recommended. The Xcode for Google's edge AI stack. CLI + GitHub Actions + benchmark dashboard. Connects LiteRT, Gemma 4, Vertex, Cloud Run into one workflow." },
   { title: "Pitch 1 — Partner Network", section: "The Plays", note: "Parallel ecosystem motion. Certification program across 4 partner classes. Year-1 target: 8 launch partners. Vercel and Lovable are strategic Year-1 targets." },
   { title: "Pitch 3 — Vertex Bridge", section: "The Plays", note: "Bring at month 3 after Pitch 2 traction. Kaggle-first to dodge cross-org friction. Plan B fallback if Firebase declines: GCS+CDN+WorkManager or Vertex Registry signed REST." },
   { title: "Part III · The proposal", section: "The Proposal", note: "Transition. Final third: why this team, why this person, what gets approved today." },
