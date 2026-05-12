@@ -334,8 +334,9 @@ function Stakes() {
         <Card accent={RED}>
           <div
             style={{ color: RED }}
-            className="text-xs font-bold uppercase tracking-widest mb-2"
+            className="text-xs font-bold uppercase tracking-widest mb-2 inline-flex items-center gap-2"
           >
+            <InlineIcon slug="pytorch" color="ea4335" size={14} />
             ExecuTorch · Linux Foundation (April 2026) · v1.2.0
           </div>
           <div style={{ color: INK }} className="text-lg font-bold mb-1">
@@ -379,8 +380,9 @@ function Stakes() {
         <Card accent={BLUE}>
           <div
             style={{ color: BLUE }}
-            className="text-xs font-bold uppercase tracking-widest mb-2"
+            className="text-xs font-bold uppercase tracking-widest mb-2 inline-flex items-center gap-2"
           >
+            <InlineIcon slug="onnx" color="1a73e8" size={14} />
             ONNX Runtime Web · v1.25.0 surge (April 2026)
           </div>
           <div style={{ color: INK }} className="text-lg font-bold mb-1">
@@ -538,12 +540,28 @@ function HardwareMoatHero() {
       </p>
       <p
         style={{ color: GRAY, fontFamily: FONT_BODY }}
-        className="text-lg md:text-xl max-w-3xl font-light leading-snug mb-4"
+        className="text-lg md:text-xl max-w-3xl font-light leading-snug mb-6"
       >
         LiteRT × Qualcomm AI Engine Direct delivers 100× the speed of CPU
         execution. 50+ canonical models run in under 5&nbsp;ms on the NPU.
         MediaTek Dimensity 9400 hits 12× via the NeuroPilot Accelerator.
       </p>
+      <div className="flex items-center gap-5 mb-4" style={{ color: GRAY }}>
+        <span className="inline-flex items-center gap-2 text-sm">
+          <InlineIcon slug="google" color="1a73e8" size={20} />
+          <span className="font-semibold">Google</span>
+        </span>
+        <span style={{ color: MUTED }} className="text-base">×</span>
+        <span className="inline-flex items-center gap-2 text-sm">
+          <InlineIcon slug="qualcomm" color="3253dc" size={20} />
+          <span className="font-semibold">Qualcomm</span>
+        </span>
+        <span style={{ color: MUTED }} className="text-base">×</span>
+        <span className="inline-flex items-center gap-2 text-sm">
+          <InlineIcon slug="mediatek" color="ee3a3a" size={20} />
+          <span className="font-semibold">MediaTek</span>
+        </span>
+      </div>
       <p
         style={{ color: MUTED, fontFamily: FONT_BODY }}
         className="text-sm max-w-2xl"
@@ -555,19 +573,18 @@ function HardwareMoatHero() {
   );
 }
 
-// ─── Slide 2.4: Market map — Web AI / Agentic ecosystem × Google 1P ──────────
+// ─── Slide 2.4: Market map — On-device AI lifecycle × Google 1P ──────────────
 
 type MarketCell = { vendors: string[]; isGap?: boolean };
 type MarketCol = { col: string; sub: string; google: MarketCell; other: MarketCell };
 type MarketGroup = { header: string; color: string; cols: MarketCol[] };
 
-// Vendor census synthesized from:
-//   1. pitch/runbook/research/2026-05-06-market-map.md (Gemini Deep Research Max)
-//   2. pitch/runbook/research/2026-05-10-market-landscape-doc.md (the Web AI DevKit market doc)
-//   3. pitch/runbook/research/2026-05-10-market-map-verification.md (per-vendor WebSearch)
-// Format mirrors the Sequoia / Harness $11B Developer Toolchain map: super-headers
-// span sub-categories. Rows are simplified to two: Google 1P vs. Other ecosystem.
-// An empty Google cell with isGap is the strategic gap signal.
+// Vendor census scoped to the on-device AI lifecycle owned by the Google AI Edge
+// team per ai.google.dev/edge (2026-05-12). Twelve sub-categories grouped under
+// Setup & Authoring / Runtimes / Acceleration & Deployment. Rows simplified to
+// two: Google 1P vs. Other ecosystem. isGap=true with empty vendors renders
+// "GAP — NO 1P"; isGap=true with vendors renders "WEAK" (1P exists but loses
+// developer mindshare).
 const MARKET: MarketGroup[] = [
   {
     header: "Setup & Authoring",
@@ -753,6 +770,45 @@ const VENDOR_ICONS: Record<string, string | null> = {
 function shortName(name: string): string {
   // Drop trailing parenthetical so display labels stay compact.
   return name.replace(/\s*\(.*?\)\s*$/, "").trim();
+}
+
+type LogoItem = { name: string; slug?: string | null };
+function LogoStrip({ items, size = 12, color = "5f6368" }: { items: LogoItem[]; size?: number; color?: string }) {
+  return (
+    <span className="inline-flex flex-wrap gap-x-2.5 gap-y-1 items-center align-middle">
+      {items.map((item, i) => {
+        const slug = item.slug !== undefined ? item.slug : VENDOR_ICONS[item.name];
+        return (
+          <span key={i} className="inline-flex items-center gap-1">
+            {slug && (
+              <img
+                src={`https://cdn.simpleicons.org/${slug}/${color}`}
+                alt=""
+                width={size}
+                height={size}
+                loading="lazy"
+                className="shrink-0"
+              />
+            )}
+            <span>{item.name}</span>
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
+function InlineIcon({ slug, color = "5f6368", size = 14 }: { slug: string; color?: string; size?: number }) {
+  return (
+    <img
+      src={`https://cdn.simpleicons.org/${slug}/${color}`}
+      alt=""
+      width={size}
+      height={size}
+      loading="lazy"
+      className="inline-block align-middle shrink-0"
+    />
+  );
 }
 
 function MarketVendor({ name, tone }: { name: string; tone: "google" | "other" }) {
@@ -1231,14 +1287,25 @@ function Devkit() {
               <span>Proposed Launch Partners</span>
               <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="px-1.5 py-0.5 rounded text-[0.55rem] font-bold tracking-wider">TARGET LIST</span>
             </div>
-            <div style={{ color: INK }} className="text-sm">
-              Runtimes: LiteRT (.tflite) · LiteRT-LM (LLMs / RAG)<Cite ids={[1, 2]} />
-              <br />
-              CI/CD: Bitrise · CircleCI · Harness · GitHub Marketplace
-              <br />
-              Models: Hugging Face <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded text-xs">litert-community</code> · Ultralytics · Roboflow · Kaggle Models
-              <br />
-              Hardware: Qualcomm AI Engine Direct<Cite ids={[11, 12]} /> · MediaTek NeuroPilot<Cite ids={[13]} />
+            <div style={{ color: INK }} className="text-sm space-y-1.5">
+              <div>
+                <span style={{ color: MUTED }} className="font-semibold uppercase tracking-wider text-[10px] mr-2">Runtimes</span>
+                <LogoStrip items={[{ name: "LiteRT", slug: "google" }, { name: "LiteRT-LM", slug: "google" }]} />
+                <Cite ids={[1, 2]} />
+              </div>
+              <div>
+                <span style={{ color: MUTED }} className="font-semibold uppercase tracking-wider text-[10px] mr-2">CI/CD</span>
+                <LogoStrip items={[{ name: "Bitrise" }, { name: "CircleCI" }, { name: "Harness" }, { name: "GitHub Marketplace", slug: "github" }]} />
+              </div>
+              <div>
+                <span style={{ color: MUTED }} className="font-semibold uppercase tracking-wider text-[10px] mr-2">Models</span>
+                <LogoStrip items={[{ name: "Hugging Face" }, { name: "Ultralytics", slug: "ultralytics" }, { name: "Roboflow", slug: "roboflow" }, { name: "Kaggle Models", slug: "kaggle" }]} />
+              </div>
+              <div>
+                <span style={{ color: MUTED }} className="font-semibold uppercase tracking-wider text-[10px] mr-2">Hardware</span>
+                <LogoStrip items={[{ name: "Qualcomm AI Engine Direct", slug: "qualcomm" }, { name: "MediaTek NeuroPilot", slug: "mediatek" }]} />
+                <Cite ids={[11, 12, 13]} />
+              </div>
             </div>
           </Card>
           <Card accent={GREEN}>
@@ -1294,28 +1361,47 @@ function Devkit() {
 // ─── Slide 5: Pitch 1 — Partner Network ──────────────────────────────────────
 
 function PartnerNetwork() {
-  const classes = [
+  const classes: { name: string; examples: LogoItem[]; what: string; color: string }[] = [
     {
       name: "Hardware",
-      examples: "Qualcomm AI Hub, MediaTek NeuroPilot, ARM Ethos",
+      examples: [
+        { name: "Qualcomm AI Hub", slug: "qualcomm" },
+        { name: "MediaTek NeuroPilot", slug: "mediatek" },
+        { name: "ARM Ethos", slug: "arm" },
+      ],
       what: "NPU/GPU delegate validated on LiteRT vX.X",
       color: BLUE,
     },
     {
       name: "Training Platforms",
-      examples: "Ultralytics, Roboflow, W&B, Edge Impulse",
+      examples: [
+        { name: "Ultralytics", slug: "ultralytics" },
+        { name: "Roboflow", slug: "roboflow" },
+        { name: "W&B", slug: "weightsandbiases" },
+        { name: "Edge Impulse", slug: "edgeimpulse" },
+      ],
       what: "One-click .tflite export from training UI",
       color: GREEN,
     },
     {
       name: "Deployment Tools",
-      examples: "GitHub Actions, Harness, Bitrise, CircleCI",
+      examples: [
+        { name: "GitHub Actions", slug: "githubactions" },
+        { name: "Harness", slug: null },
+        { name: "Bitrise", slug: "bitrise" },
+        { name: "CircleCI", slug: "circleci" },
+      ],
       what: "Native LiteRT pipeline stage or action",
       color: RED,
     },
     {
       name: "Model Hubs",
-      examples: "HF litert-community, Kaggle Models, Roboflow Universe, Ultralytics HUB",
+      examples: [
+        { name: "HF litert-community", slug: "huggingface" },
+        { name: "Kaggle Models", slug: "kaggle" },
+        { name: "Roboflow Universe", slug: "roboflow" },
+        { name: "Ultralytics HUB", slug: "ultralytics" },
+      ],
       what: "Verified .tflite / LiteRT-LM model cards with benchmark data",
       color: YELLOW,
     },
@@ -1338,11 +1424,11 @@ function PartnerNetwork() {
             >
               {c.name}
             </div>
-            <div style={{ color: INK }} className="font-semibold mb-1">
+            <div style={{ color: INK }} className="font-semibold mb-2">
               {c.what}
             </div>
             <div style={{ color: GRAY }} className="text-sm">
-              {c.examples}
+              <LogoStrip items={c.examples} size={13} />
             </div>
           </Card>
         ))}
