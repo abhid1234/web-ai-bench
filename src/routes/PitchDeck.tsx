@@ -125,7 +125,7 @@ function Card({
   );
 }
 
-// ─── Slide 0: Cover ──────────────────────────────────────────────────────────
+// ─── Cover: hook + framing ───────────────────────────────────────────────────
 
 function Cover() {
   return (
@@ -179,7 +179,7 @@ function Cover() {
   );
 }
 
-// ─── Slide 1: The Problem ─────────────────────────────────────────────────────
+// ─── Problem: 6 manual steps + dev pain quotes ──────────────────────────────
 
 function Problem() {
   const steps = [
@@ -324,7 +324,7 @@ function Problem() {
   );
 }
 
-// ─── Slide 2: The Stakes ──────────────────────────────────────────────────────
+// ─── Stakes: 18-24 month window, 3 competitive threats ──────────────────────
 
 function Stakes() {
   return (
@@ -573,7 +573,7 @@ function HardwareMoatHero() {
   );
 }
 
-// ─── Slide 2.3: The Numbers — three landscapes, three openings ──────────────
+// ─── TheNumbers: 3-column quantitative evidence (verified Apr 30 2026) ──────
 
 function TheNumbers() {
   const columns = [
@@ -730,7 +730,7 @@ function TheNumbers() {
   );
 }
 
-// ─── Slide 2.4: Market map — On-device AI lifecycle × Google 1P ──────────────
+// ─── MarketMap: on-device AI lifecycle × Google 1P (12 columns × 2 rows) ────
 
 type MarketCell = { vendors: string[]; isGap?: boolean };
 type MarketCol = { col: string; sub: string; google: MarketCell; other: MarketCell };
@@ -1197,7 +1197,7 @@ function MarketMap() {
   );
 }
 
-// ─── Slide 2.5: Two Edge AI Worlds (AICore + DevKit) ─────────────────────────
+// ─── TwoWorlds: DevKit scope lead-in (AICore vs custom AI) ──────────────────
 
 function TwoWorlds() {
   return (
@@ -1256,7 +1256,7 @@ function TwoWorlds() {
   );
 }
 
-// ─── Slide 3: Three Plays ─────────────────────────────────────────────────────
+// ─── ThreePlays: 3-pitch overview, Pitch 2 highlighted as recommended ───────
 
 function ThreePlays() {
   return (
@@ -1350,7 +1350,7 @@ function ThreePlays() {
   );
 }
 
-// ─── Slide 4: Pitch 2 — DevKit ───────────────────────────────────────────────
+// ─── Devkit: Pitch 2 detail (the recommended play) ──────────────────────────
 
 function Devkit() {
   return (
@@ -1490,7 +1490,7 @@ function Devkit() {
   );
 }
 
-// ─── Slide 5: Pitch 1 — Partner Network ──────────────────────────────────────
+// ─── PartnerNetwork: Pitch 1 detail (parallel ecosystem motion) ─────────────
 
 function PartnerNetwork() {
   const classes: { name: string; examples: LogoItem[]; what: string; color: string }[] = [
@@ -1614,7 +1614,7 @@ function PartnerNetwork() {
   );
 }
 
-// ─── Slide 6: Pitch 3 — Vertex Bridge ────────────────────────────────────────
+// ─── VertexBridge: Pitch 3 detail (cross-org cloud-to-edge bridge) ──────────
 
 function VertexBridge() {
   return (
@@ -1736,7 +1736,7 @@ function VertexBridge() {
   );
 }
 
-// ─── Slide 7: Why This Team ──────────────────────────────────────────────────
+// ─── WhyThisTeam: case for a Partnerships PM (not engineering-only) ─────────
 
 function WhyThisTeam() {
   return (
@@ -1901,7 +1901,7 @@ function WhyThisTeam() {
   );
 }
 
-// ─── Slide 8: The Ask ─────────────────────────────────────────────────────────
+// ─── TheAsk: 6-month rotation + Year-1 deliverables ─────────────────────────
 
 function TheAsk() {
   return (
@@ -1987,7 +1987,7 @@ function TheAsk() {
   );
 }
 
-// ─── Slide 9: Deep Dives ──────────────────────────────────────────────────────
+// ─── DeepDives: pointer to runbook HTMLs ────────────────────────────────────
 
 function DeepDives() {
   const links = [
@@ -2066,7 +2066,7 @@ function DeepDives() {
   );
 }
 
-// ─── Slide 10: Sources ───────────────────────────────────────────────────────
+// ─── Sources: 22 verified citations ─────────────────────────────────────────
 
 function Sources() {
   return (
