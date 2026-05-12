@@ -1466,9 +1466,9 @@ function WhyThisTeam() {
           >
             Why Engineering Alone Can't Do This
           </div>
-          <ul className="space-y-3 flex-1">
+          <ul className="space-y-3">
             {[
-              "Can't walk into Bitrise, CircleCI, or Harness and speak CI/CD buyer language",
+              "Can't walk into a CI/CD vendor and speak DevOps buyer language",
               "No T1 ISV partnership design or execution background",
               "No Google Cloud credibility for cross-org Vertex/Firebase work",
               "No ecosystem relationships in DevOps or MLOps conference circuit",
@@ -1481,6 +1481,33 @@ function WhyThisTeam() {
               </li>
             ))}
           </ul>
+          <div className="mt-5 flex-1">
+            <div style={{ color: MUTED }} className="text-[10px] font-bold uppercase tracking-[0.14em] mb-2">
+              The ecosystem this role spans
+            </div>
+            <div className="space-y-1.5">
+              {[
+                { group: "CI/CD", items: ["GitHub Actions", "GitLab", "CircleCI", "Jenkins", "Bitrise", "Harness", "Buildkite"] },
+                { group: "MLOps", items: ["Hugging Face", "W&B", "MLflow", "Roboflow", "Ultralytics"] },
+                { group: "Silicon", items: ["Qualcomm", "MediaTek", "ARM", "Apple"] },
+              ].map((row) => (
+                <div key={row.group} className="flex items-center gap-2 flex-wrap">
+                  <span style={{ color: MUTED }} className="text-[9px] uppercase tracking-wider font-semibold w-12 shrink-0">
+                    {row.group}
+                  </span>
+                  {row.items.map((name) => (
+                    <span
+                      key={name}
+                      style={{ background: PAGE, border: `1px solid ${BORDER}`, color: INK }}
+                      className="px-2 py-0.5 rounded text-[10px] font-medium"
+                    >
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
           <div
             style={{
               background: BLUE + "0d",
@@ -1492,7 +1519,7 @@ function WhyThisTeam() {
               The bet
             </div>
             <div style={{ color: GRAY }} className="text-sm">
-              Partnerships background is the moat: Bitrise, CircleCI, Harness, Qualcomm, and Ultralytics all say yes faster to a peer than to a product team cold outreach.
+              Partnerships PMs already operate in this ecosystem every week — co-marketing, joint go-to-market, conference circuit. A peer call opens doors a product-team cold outreach can't.
             </div>
           </div>
         </Card>
