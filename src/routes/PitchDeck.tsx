@@ -1213,7 +1213,7 @@ function Devkit() {
         The Xcode for Google&apos;s edge AI stack.
         <br />
         <span style={{ color: GRAY }} className="text-2xl font-normal">
-          Nine 1P products. One workflow. <code style={{ background: PAGE, border: `1px solid ${BORDER}`, color: INK }} className="px-1.5 py-0.5 rounded text-xl font-mono">litert convert &amp;&amp; litert push</code>.
+          One CLI + three GitHub Actions + a public benchmark dashboard. <code style={{ background: PAGE, border: `1px solid ${BORDER}`, color: INK }} className="px-1.5 py-0.5 rounded text-xl font-mono">litert convert &amp;&amp; litert push</code> ties nine 1P products into one developer workflow.
         </span>
       </Title>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1">
@@ -1414,7 +1414,13 @@ function PartnerNetwork() {
           Certified Partner Network
         </span>
       </div>
-      <Title>"Intel Inside for edge AI."</Title>
+      <Title>
+        &ldquo;Intel Inside for edge AI.&rdquo;
+        <br />
+        <span style={{ color: GRAY }} className="text-2xl font-normal">
+          A 3-tier certification program (Community → Certified → Strategic) across 4 partner classes. Partners co-market a &ldquo;Validated for LiteRT&rdquo; badge on their products, giving buyers one trust signal across hardware, training, deployment, and model hubs.
+        </span>
+      </Title>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 content-start">
         {classes.map((c) => (
           <Card key={c.name} accent={c.color}>
@@ -1470,9 +1476,11 @@ function VertexBridge() {
         </span>
       </div>
       <Title>
-        "Fine-tune on Vertex. Deploy to nearly 4B Android devices.
+        &ldquo;Fine-tune on Vertex. Deploy to nearly 4B Android devices.&rdquo;
         <br />
-        One workflow."
+        <span style={{ color: GRAY }} className="text-2xl font-normal">
+          A &ldquo;Deploy to LiteRT&rdquo; button in Vertex Model Garden plus a Firebase ML Kit unification. One control plane for the cloud-to-edge model lifecycle, with GCS+CDN fallback if Firebase declines on-device hosting.
+        </span>
       </Title>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1">
         <div className="flex flex-col gap-4">
