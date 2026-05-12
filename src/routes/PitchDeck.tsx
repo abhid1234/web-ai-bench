@@ -1198,160 +1198,135 @@ function ThreePlays() {
 function Devkit() {
   return (
     <Wrap>
-      <div className="flex items-center gap-3 mb-4">
+      {/* Eyebrow */}
+      <div className="flex items-center gap-3 mb-5">
         <span
           style={{ background: BLUE }}
-          className="text-white text-xs font-bold px-3 py-1 rounded-full"
+          className="text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
         >
-          ⭐ PITCH 2 · RECOMMENDED
+          ⭐ Pitch 2 · Recommended
         </span>
-        <span style={{ color: MUTED }} className="text-sm">
+        <span style={{ color: MUTED }} className="text-xs uppercase tracking-widest font-semibold">
           LiteRT DevKit
         </span>
       </div>
-      <Title>
+
+      {/* Hero */}
+      <h2
+        style={{ color: INK, fontFamily: FONT_HEAD, letterSpacing: "-0.025em" }}
+        className="text-5xl md:text-[3.25rem] font-bold leading-[1.05] mb-3"
+      >
         The Xcode for Google&apos;s edge AI stack.
-        <br />
-        <span style={{ color: GRAY }} className="text-2xl font-normal">
-          One CLI + three GitHub Actions + a public benchmark dashboard. <code style={{ background: PAGE, border: `1px solid ${BORDER}`, color: INK }} className="px-1.5 py-0.5 rounded text-xl font-mono">litert convert &amp;&amp; litert push</code> ties nine 1P products into one developer workflow.
-        </span>
-      </Title>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1">
-        <div className="flex flex-col gap-4">
-          <div>
-            <div
-              style={{ color: MUTED }}
-              className="text-xs uppercase tracking-widest mb-2 font-semibold"
-            >
-              The CLI — 4 commands replace 6 manual steps
-            </div>
-            <div
-              style={{
-                background: PAGE,
-                border: `1px solid ${BORDER}`,
-              }}
-              className="rounded-xl p-4 font-mono text-sm space-y-1"
-            >
-              {[
-                ["convert", "model.pt --quantize int8 --target web"],
-                ["validate", "model.tflite --ref model.pt"],
-                ["bench", "model.tflite --targets web,android,ios"],
-                ["push", "model.tflite --hub litert-community"],
-              ].map(([cmd, args]) => (
-                <div key={cmd}>
-                  <span style={{ color: GREEN }}>$</span>{" "}
-                  <span style={{ color: INK }} className="font-bold">
-                    litert {cmd}
-                  </span>{" "}
-                  <span style={{ color: GRAY }}>{args}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <div
-              style={{ color: MUTED }}
-              className="text-xs uppercase tracking-widest mb-2 font-semibold flex items-center gap-2"
-            >
-              <span>GitHub Actions Suite</span>
-              <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="px-1.5 py-0.5 rounded text-[0.6rem] font-bold tracking-wider">PROPOSED</span>
-            </div>
-            <div
-              style={{ background: PAGE, border: `1px solid ${BORDER}` }}
-              className="rounded-xl p-4 font-mono text-xs space-y-1"
-            >
-              {[
-                "google-ai-edge/litert-convert-action@v1",
-                "google-ai-edge/litert-bench-action@v1",
-                "google-ai-edge/litert-gate-action@v1",
-              ].map((a) => (
-                <div key={a} style={{ color: GRAY }}>
-                  - uses:{" "}
-                  <span style={{ color: BLUE }} className="break-all">
-                    {a}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div style={{ color: MUTED }} className="text-[0.65rem] mt-1">
-              0 official LiteRT/TFLite Actions exist on GitHub Marketplace today.<Cite ids={[17]} />
-            </div>
-          </div>
+      </h2>
+      <p style={{ color: GRAY }} className="text-xl md:text-2xl font-light mb-5 leading-snug">
+        Nine 1P products. One developer workflow.
+      </p>
+
+      {/* What it is callout */}
+      <div
+        style={{ background: BLUE + "08", border: `1px solid ${BLUE}25` }}
+        className="rounded-xl px-5 py-3.5 mb-6 flex gap-4 items-start"
+      >
+        <div
+          style={{ background: BLUE, color: "white" }}
+          className="text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded shrink-0 mt-0.5"
+        >
+          What it is
         </div>
-        <div className="flex flex-col gap-3">
-          <Card>
-            <div
-              style={{ color: BLUE }}
-              className="text-xs font-semibold uppercase tracking-widest mb-2 flex items-center gap-2"
-            >
-              <span>Proposed Launch Partners</span>
-              <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="px-1.5 py-0.5 rounded text-[0.55rem] font-bold tracking-wider">TARGET LIST</span>
-            </div>
-            <div style={{ color: INK }} className="text-sm space-y-1.5">
-              <div>
-                <span style={{ color: MUTED }} className="font-semibold uppercase tracking-wider text-[10px] mr-2">Runtimes</span>
-                <LogoStrip items={[{ name: "LiteRT", slug: "google" }, { name: "LiteRT-LM", slug: "google" }]} />
-                <Cite ids={[1, 2]} />
+        <p style={{ color: INK }} className="text-sm leading-relaxed">
+          One CLI + three GitHub Actions + a public benchmark dashboard.{" "}
+          <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1.5 py-0.5 rounded text-xs font-mono">litert convert &amp;&amp; litert push</code>{" "}
+          ties nine 1P products into one developer workflow.
+        </p>
+      </div>
+
+      {/* 3 modules */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 flex-1 stagger-enter">
+        <Card>
+          <div style={{ color: BLUE }} className="text-[11px] font-bold uppercase tracking-widest mb-3">
+            01 · The CLI
+          </div>
+          <div className="font-mono text-xs space-y-1.5">
+            {[
+              ["convert", "model.pt --quantize int8"],
+              ["validate", "model.tflite --ref model.pt"],
+              ["bench", "model.tflite --targets all"],
+              ["push", "model.tflite --hub litert-community"],
+            ].map(([cmd, args]) => (
+              <div key={cmd} className="leading-tight">
+                <span style={{ color: GREEN }}>$</span>{" "}
+                <span style={{ color: INK }} className="font-bold">litert {cmd}</span>{" "}
+                <span style={{ color: GRAY }}>{args}</span>
               </div>
-              <div>
-                <span style={{ color: MUTED }} className="font-semibold uppercase tracking-wider text-[10px] mr-2">CI/CD</span>
-                <LogoStrip items={[{ name: "Bitrise" }, { name: "CircleCI" }, { name: "Harness" }, { name: "GitHub Marketplace", slug: "github" }]} />
+            ))}
+          </div>
+          <div style={{ color: MUTED }} className="text-[11px] mt-3 italic">
+            4 commands replace the 6 manual steps from Slide 2.
+          </div>
+        </Card>
+
+        <Card>
+          <div style={{ color: BLUE }} className="text-[11px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
+            <span>02 · GitHub Actions</span>
+            <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">PROPOSED</span>
+          </div>
+          <div className="font-mono text-xs space-y-1.5">
+            {[
+              "litert-convert-action@v1",
+              "litert-bench-action@v1",
+              "litert-gate-action@v1",
+            ].map((a) => (
+              <div key={a} className="leading-tight">
+                <span style={{ color: GREEN }}>-</span>{" "}
+                <span style={{ color: GRAY }}>uses:</span>{" "}
+                <span style={{ color: BLUE }} className="break-all">{a}</span>
               </div>
-              <div>
-                <span style={{ color: MUTED }} className="font-semibold uppercase tracking-wider text-[10px] mr-2">Models</span>
-                <LogoStrip items={[{ name: "Hugging Face" }, { name: "Ultralytics", slug: "ultralytics" }, { name: "Roboflow", slug: "roboflow" }, { name: "Kaggle Models", slug: "kaggle" }]} />
-              </div>
-              <div>
-                <span style={{ color: MUTED }} className="font-semibold uppercase tracking-wider text-[10px] mr-2">Hardware</span>
-                <LogoStrip items={[{ name: "Qualcomm AI Engine Direct", slug: "qualcomm" }, { name: "MediaTek NeuroPilot", slug: "mediatek" }]} />
-                <Cite ids={[11, 12, 13]} />
-              </div>
+            ))}
+          </div>
+          <div style={{ color: MUTED }} className="text-[11px] mt-3 italic">
+            0 official LiteRT Actions on GitHub Marketplace today.<Cite ids={[17]} />
+          </div>
+        </Card>
+
+        <Card>
+          <div style={{ color: BLUE }} className="text-[11px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
+            <span>03 · Launch Partners</span>
+            <span style={{ background: BLUE + "22", color: BLUE, border: `1px solid ${BLUE}55` }} className="px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">TARGETS</span>
+          </div>
+          <div className="text-xs space-y-2.5" style={{ color: INK }}>
+            <div>
+              <div style={{ color: MUTED }} className="text-[9px] font-bold uppercase tracking-wider mb-1">CI/CD</div>
+              <LogoStrip items={[{ name: "Bitrise" }, { name: "CircleCI" }, { name: "Harness" }, { name: "GitHub", slug: "github" }]} size={11} />
             </div>
-          </Card>
-          <Card accent={GREEN}>
-            <div
-              style={{ color: GREEN }}
-              className="text-xs font-semibold uppercase tracking-widest mb-2"
-            >
-              Hardware Moat (live today)
+            <div>
+              <div style={{ color: MUTED }} className="text-[9px] font-bold uppercase tracking-wider mb-1">Hardware</div>
+              <LogoStrip items={[{ name: "Qualcomm", slug: "qualcomm" }, { name: "MediaTek", slug: "mediatek" }, { name: "ARM", slug: "arm" }]} size={11} />
             </div>
-            <div style={{ color: INK }} className="text-sm">
-              <strong>Snapdragon 8 Elite Gen 5:</strong> LiteRT × Qualcomm AI Engine Direct delivers up to <span style={{ color: BLUE }} className="font-bold">100× CPU</span> on canonical models (50+ models &lt;5ms NPU).<Cite ids={[11, 12]} />
-              <br />
-              <strong>MediaTek Dimensity 9400:</strong> LiteRT NeuroPilot Accelerator hits <span style={{ color: BLUE }} className="font-bold">12× CPU / 10× GPU</span> via direct compiler integration (AOT + JIT).<Cite ids={[13]} />
-              <br />
-              ExecuTorch can&apos;t replicate this — these are Google × silicon-vendor compiler integrations.
+            <div>
+              <div style={{ color: MUTED }} className="text-[9px] font-bold uppercase tracking-wider mb-1">Models</div>
+              <LogoStrip items={[{ name: "Hugging Face" }, { name: "Kaggle", slug: "kaggle" }, { name: "Ultralytics", slug: "ultralytics" }, { name: "Roboflow", slug: "roboflow" }]} size={11} />
             </div>
-          </Card>
-          <Card className="flex-1">
-            <div
-              style={{ color: GREEN }}
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-            >
-              Year-1 Deliverables
-            </div>
-            <ul className="space-y-2">
-              {[
-                "litert CLI v1.0 — covers .tflite + LiteRT-LM",
-                "Actions on GitHub Marketplace + Bitrise Steps + CircleCI Orbs",
-                "Templates: on-device RAG · Translation · Camera+LLM (on Gemma 4 E2B/E4B)",
-                "Official DevKit at LiteRT × Qualcomm hackathons (Sunnyvale, Apr 30 – May 1, 2026 confirmed)",
-                "Benchmark dashboard: Qualcomm, MediaTek, ARM device profiles",
-                "Talk at AI Engineer World's Fair or PyTorch Conf",
-              ].map((d) => (
-                <li
-                  key={d}
-                  style={{ color: GRAY }}
-                  className="flex gap-2 text-sm"
-                >
-                  <span style={{ color: GREEN }} className="shrink-0">
-                    ✓
-                  </span>{" "}
-                  {d}
-                </li>
-              ))}
-            </ul>
-          </Card>
+          </div>
+        </Card>
+      </div>
+
+      {/* Year-1 footer strip */}
+      <div className="mt-5 pt-4 border-t" style={{ borderColor: BORDER }}>
+        <div className="flex items-baseline gap-3 flex-wrap">
+          <span style={{ color: MUTED }} className="text-[10px] font-bold uppercase tracking-widest shrink-0">Year 1 →</span>
+          {[
+            "CLI v1.0",
+            "Actions on Marketplace",
+            "RAG / Translation / Camera+LLM templates",
+            "Qualcomm hackathon · Apr 30, 2026",
+            "Public benchmark dashboard",
+            "World's Fair talk",
+          ].map((m, i) => (
+            <span key={i} className="inline-flex items-center gap-3">
+              {i > 0 && <span style={{ color: BORDER }}>•</span>}
+              <span style={{ color: GRAY }} className="text-xs">{m}</span>
+            </span>
+          ))}
         </div>
       </div>
     </Wrap>
@@ -1408,29 +1383,52 @@ function PartnerNetwork() {
   ];
   return (
     <Wrap>
-      <div className="flex items-center gap-3 mb-4">
+      {/* Eyebrow */}
+      <div className="flex items-center gap-3 mb-5">
         <Badge color={BLUE}>Pitch 1</Badge>
-        <span style={{ color: MUTED }} className="text-sm">
+        <span style={{ color: MUTED }} className="text-xs uppercase tracking-widest font-semibold">
           Certified Partner Network
         </span>
       </div>
-      <Title>
+
+      {/* Hero */}
+      <h2
+        style={{ color: INK, fontFamily: FONT_HEAD, letterSpacing: "-0.025em" }}
+        className="text-5xl md:text-[3.25rem] font-bold leading-[1.05] mb-3"
+      >
         &ldquo;Intel Inside for edge AI.&rdquo;
-        <br />
-        <span style={{ color: GRAY }} className="text-2xl font-normal">
-          A 3-tier certification program (Community → Certified → Strategic) across 4 partner classes. Partners co-market a &ldquo;Validated for LiteRT&rdquo; badge on their products, giving buyers one trust signal across hardware, training, deployment, and model hubs.
-        </span>
-      </Title>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 content-start">
+      </h2>
+      <p style={{ color: GRAY }} className="text-xl md:text-2xl font-light mb-5 leading-snug">
+        A &ldquo;Validated for LiteRT&rdquo; badge program.
+      </p>
+
+      {/* What it is callout */}
+      <div
+        style={{ background: BLUE + "08", border: `1px solid ${BLUE}25` }}
+        className="rounded-xl px-5 py-3.5 mb-6 flex gap-4 items-start"
+      >
+        <div
+          style={{ background: BLUE, color: "white" }}
+          className="text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded shrink-0 mt-0.5"
+        >
+          What it is
+        </div>
+        <p style={{ color: INK }} className="text-sm leading-relaxed">
+          A 3-tier certification (Community → Certified → Strategic) across 4 partner classes. Partners co-market the badge on their products; buyers get one trust signal across hardware, training, deployment, and model hubs.
+        </p>
+      </div>
+
+      {/* 4 modules — 2x2 grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 content-start stagger-enter">
         {classes.map((c) => (
           <Card key={c.name} accent={c.color}>
             <div
               style={{ color: c.color }}
-              className="text-xs font-bold uppercase tracking-widest mb-1"
+              className="text-[11px] font-bold uppercase tracking-widest mb-2"
             >
               {c.name}
             </div>
-            <div style={{ color: INK }} className="font-semibold mb-2">
+            <div style={{ color: INK }} className="font-semibold mb-3 text-sm leading-snug">
               {c.what}
             </div>
             <div style={{ color: GRAY }} className="text-sm">
@@ -1439,27 +1437,22 @@ function PartnerNetwork() {
           </Card>
         ))}
       </div>
-      <div className="flex flex-wrap gap-6 mt-4 text-sm">
-        <div style={{ color: GRAY }}>
-          <span style={{ color: INK }} className="font-semibold">
-            3 tiers:
-          </span>{" "}
-          Community → Certified → Strategic
-        </div>
-        <div style={{ color: GRAY }}>
-          <span style={{ color: INK }} className="font-semibold">
-            Year 1 target:
-          </span>{" "}
-          8 launch partners (none yet committed), public portal at ai.google.dev/edge/partners,
-          annual summit
+
+      {/* Footer strip */}
+      <div className="mt-5 pt-4 border-t" style={{ borderColor: BORDER }}>
+        <div className="flex items-baseline gap-3 flex-wrap text-xs">
+          <span style={{ color: MUTED }} className="font-bold uppercase tracking-widest shrink-0">Year 1 →</span>
+          <span style={{ color: GRAY }}>
+            <span style={{ color: INK }} className="font-semibold">8 launch partners</span> (none yet committed)
+          </span>
+          <span style={{ color: BORDER }}>•</span>
+          <span style={{ color: GRAY }}>Public portal at <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded font-mono text-[10px]">ai.google.dev/edge/partners</code></span>
+          <span style={{ color: BORDER }}>•</span>
+          <span style={{ color: GRAY }}>Annual summit</span>
+          <span style={{ color: BORDER }}>•</span>
+          <span style={{ color: GRAY }}>v2: Unsloth / ElevenLabs (gen-AI tier)</span>
         </div>
       </div>
-      <p style={{ color: MUTED }} className="text-xs mt-2">
-        Adjacent gen-AI partners (Unsloth, ElevenLabs) are scoped for the
-        Training-Platforms tier in a v2 expansion — not in v1 because the
-        certification suite is built around `.tflite` / LiteRT-LM compatibility,
-        which neither currently exports natively.
-      </p>
     </Wrap>
   );
 }
@@ -1469,145 +1462,117 @@ function PartnerNetwork() {
 function VertexBridge() {
   return (
     <Wrap>
-      <div className="flex items-center gap-3 mb-4">
+      {/* Eyebrow */}
+      <div className="flex items-center gap-3 mb-5">
         <Badge color={GREEN}>Pitch 3</Badge>
-        <span style={{ color: MUTED }} className="text-sm">
+        <span style={{ color: MUTED }} className="text-xs uppercase tracking-widest font-semibold">
           LiteRT × Vertex AI Bridge
         </span>
       </div>
-      <Title>
+
+      {/* Hero */}
+      <h2
+        style={{ color: INK, fontFamily: FONT_HEAD, letterSpacing: "-0.025em" }}
+        className="text-4xl md:text-[2.75rem] font-bold leading-[1.05] mb-3"
+      >
         &ldquo;Fine-tune on Vertex. Deploy to nearly 4B Android devices.&rdquo;
-        <br />
-        <span style={{ color: GRAY }} className="text-2xl font-normal">
-          A &ldquo;Deploy to LiteRT&rdquo; button in Vertex Model Garden plus a Firebase ML Kit unification. One control plane for the cloud-to-edge model lifecycle, with GCS+CDN fallback if Firebase declines on-device hosting.
-        </span>
-      </Title>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1">
-        <div className="flex flex-col gap-4">
-          <div>
-            <div
-              style={{ color: MUTED }}
-              className="text-xs uppercase tracking-widest mb-2 font-semibold"
-            >
-              Today: Fragmented.
-            </div>
-            <div
-              style={{
-                background: RED + "06",
-                border: `1px solid ${RED}25`,
-                borderLeft: `4px solid ${RED}`,
-              }}
-              className="rounded-xl p-4 font-mono text-sm"
-            >
-              <div style={{ color: GRAY }}>
-                Vertex AI (custom training){" "}
-                <span style={{ color: RED }}>→ no documented path</span>{" "}
-                → Android
-              </div>
-              <div style={{ color: MUTED }} className="mt-2 text-xs">
-                AutoML export to TFLite exists. Custom model path:
-                undocumented, multi-step, unsupported.
-              </div>
-              <div style={{ color: MUTED }} className="mt-1 text-xs">
-                Apple Core ML: train → export → ship. Google: no equivalent
-                for custom models.
-              </div>
-            </div>
-          </div>
-          <div>
-            <div
-              style={{ color: MUTED }}
-              className="text-xs uppercase tracking-widest mb-2 font-semibold"
-            >
-              Target: One API call
-            </div>
-            <div
-              style={{ background: PAGE, border: `1px solid ${BORDER}` }}
-              className="rounded-xl p-4 font-mono text-sm"
-            >
-              <div style={{ color: GRAY }}>model.export(</div>
-              <div className="pl-4">
-                <span style={{ color: INK }}>format</span>=
-                <span style={{ color: GREEN }}>'litert'</span>,
-              </div>
-              <div className="pl-4">
-                <span style={{ color: INK }}>quantization</span>=
-                <span style={{ color: GREEN }}>'int8'</span>,
-              </div>
-              <div className="pl-4">
-                <span style={{ color: INK }}>validate</span>=
-                <span style={{ color: BLUE }}>True</span>
-              </div>
-              <div style={{ color: GRAY }}>)</div>
-            </div>
-          </div>
+      </h2>
+      <p style={{ color: GRAY }} className="text-xl md:text-2xl font-light mb-5 leading-snug">
+        A &ldquo;Deploy to LiteRT&rdquo; button in Vertex Model Garden.
+      </p>
+
+      {/* What it is callout */}
+      <div
+        style={{ background: GREEN + "08", border: `1px solid ${GREEN}25` }}
+        className="rounded-xl px-5 py-3.5 mb-6 flex gap-4 items-start"
+      >
+        <div
+          style={{ background: GREEN, color: "white" }}
+          className="text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded shrink-0 mt-0.5"
+        >
+          What it is
         </div>
-        <div className="flex flex-col gap-3">
-          <Card accent={GREEN}>
-            <div
-              style={{ color: GREEN }}
-              className="text-xs font-semibold uppercase tracking-widest mb-2"
-            >
-              Kaggle-First Strategy
+        <p style={{ color: INK }} className="text-sm leading-relaxed">
+          A &ldquo;Deploy to LiteRT&rdquo; button in Vertex Model Garden plus a Firebase ML Kit unification. One control plane for the cloud-to-edge model lifecycle, with GCS+CDN fallback if Firebase declines on-device hosting.
+        </p>
+      </div>
+
+      {/* 3 modules */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 flex-1 stagger-enter">
+        <Card accent={RED}>
+          <div style={{ color: RED }} className="text-[11px] font-bold uppercase tracking-widest mb-3">
+            01 · Today
+          </div>
+          <div className="font-mono text-xs mb-3" style={{ color: GRAY }}>
+            Vertex AI (custom){" "}
+            <span style={{ color: RED }}>→ no path</span>{" "}
+            <span style={{ color: MUTED }}>→</span> Android
+          </div>
+          <div style={{ color: GRAY }} className="text-xs leading-relaxed">
+            AutoML → TFLite exists. Custom-model path: undocumented, multi-step, unsupported.
+          </div>
+          <div style={{ color: MUTED }} className="text-[11px] mt-3 italic">
+            Apple Core ML: train → export → ship. Google has no equivalent for custom models.
+          </div>
+        </Card>
+
+        <Card accent={GREEN}>
+          <div style={{ color: GREEN }} className="text-[11px] font-bold uppercase tracking-widest mb-3">
+            02 · Target
+          </div>
+          <div className="font-mono text-xs" style={{ color: GRAY }}>
+            <div>model.export(</div>
+            <div className="pl-4">
+              <span style={{ color: INK }}>format</span>=<span style={{ color: GREEN }}>&apos;litert&apos;</span>,
             </div>
-            <div style={{ color: GRAY }} className="text-sm">
-              Start with Google's own Kaggle Models — "Deploy to LiteRT" button
-              with zero cross-org politics. Use adoption data as the credential
-              before approaching Vertex AI PM.
+            <div className="pl-4">
+              <span style={{ color: INK }}>quantization</span>=<span style={{ color: GREEN }}>&apos;int8&apos;</span>,
             </div>
-          </Card>
-          <Card accent={BLUE}>
-            <div
-              style={{ color: BLUE }}
-              className="text-xs font-semibold uppercase tracking-widest mb-2"
-            >
-              4 Integration Points
+            <div className="pl-4">
+              <span style={{ color: INK }}>validate</span>=<span style={{ color: BLUE }}>True</span>,
             </div>
-            <ul className="space-y-1">
-              {[
-                "Vertex Model Garden → Deploy to LiteRT button",
-                "Vertex training job .export(format='litert') API",
-                "Firebase ML on-device deepening",
-                "LiteRT as the canonical Android ML runtime (vs. ML Kit fragmentation)",
-              ].map((i) => (
-                <li key={i} style={{ color: GRAY }} className="flex gap-2 text-sm">
-                  <span style={{ color: GREEN }} className="shrink-0">
-                    →
-                  </span>{" "}
-                  {i}
-                </li>
-              ))}
-            </ul>
-          </Card>
-          <Card>
-            <div
-              style={{ color: MUTED }}
-              className="text-xs uppercase tracking-widest mb-1 font-semibold"
-            >
-              Prerequisite
-            </div>
-            <div style={{ color: GRAY }} className="text-sm">
-              Requires GM support day 1. 4 teams: Vertex AI, Firebase, Android,
-              LiteRT.
-            </div>
-          </Card>
-          <Card accent={YELLOW}>
-            <div
-              style={{ color: YELLOW }}
-              className="text-xs font-semibold uppercase tracking-widest mb-2"
-            >
-              Fallback if Firebase declines
-            </div>
-            <div style={{ color: GRAY }} className="text-sm">
-              Firebase pivoted to cloud Gemini APIs in 2025; on-device TFLite
-              hosting may not get prioritized. Plan B keeps the bridge alive:
-              <span style={{ color: INK }} className="font-semibold"> GCS + Cloud CDN</span> as
-              the artifact store + an open-source Android lib (Play Core / WorkManager)
-              for authenticated background fetch. Or expose <span style={{ color: INK }} className="font-semibold">Vertex Model
-              Registry as a signed REST endpoint</span> mobile clients hit directly. Either
-              path bypasses Firebase without losing OTA updates or version control.
-            </div>
-          </Card>
+            <div>)</div>
+          </div>
+          <div style={{ color: MUTED }} className="text-[11px] mt-3 italic">
+            One API call replaces the entire custom-model export pipeline.
+          </div>
+        </Card>
+
+        <Card accent={BLUE}>
+          <div style={{ color: BLUE }} className="text-[11px] font-bold uppercase tracking-widest mb-3">
+            03 · Integration Points
+          </div>
+          <ul className="space-y-1.5">
+            {[
+              "Vertex Model Garden → Deploy to LiteRT button",
+              "Vertex training .export(format='litert') API",
+              "Firebase ML on-device deepening",
+              "LiteRT as canonical Android ML runtime",
+            ].map((i) => (
+              <li key={i} style={{ color: GRAY }} className="flex gap-2 text-xs leading-snug">
+                <span style={{ color: GREEN }} className="shrink-0">→</span>
+                <span>{i}</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+
+      {/* Footer strip — strategy, prerequisite, fallback */}
+      <div className="mt-5 pt-4 border-t" style={{ borderColor: BORDER }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div>
+            <span style={{ color: GREEN }} className="font-bold uppercase tracking-widest text-[10px] mr-2">Strategy</span>
+            <span style={{ color: GRAY }}>Kaggle-first ramp — zero cross-org politics, then approach Vertex.</span>
+          </div>
+          <div>
+            <span style={{ color: MUTED }} className="font-bold uppercase tracking-widest text-[10px] mr-2">Prerequisite</span>
+            <span style={{ color: GRAY }}>GM support day 1 across Vertex AI, Firebase, Android, LiteRT.</span>
+          </div>
+          <div>
+            <span style={{ color: YELLOW }} className="font-bold uppercase tracking-widest text-[10px] mr-2">Fallback</span>
+            <span style={{ color: GRAY }}>GCS+CDN+WorkManager or signed Vertex Registry REST if Firebase declines.</span>
+          </div>
         </div>
       </div>
     </Wrap>
