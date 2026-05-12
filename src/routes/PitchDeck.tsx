@@ -48,6 +48,9 @@ const SOURCES: Source[] = [
   { label: "GitHub Marketplace — current LiteRT / TFLite Actions inventory", url: "https://github.com/marketplace?type=actions&query=tflite" },
   { label: "Edge Impulse — build-deploy GitHub Action (MCU exception)", url: "https://github.com/edgeimpulse/build-deploy" },
   { label: "Apple — Core ML Tools and on-device deployment", url: "https://developer.apple.com/documentation/coreml" },
+  { label: "Hacker News — \"google really neglected it in the last 3 years or so\" (pzo, comment on LiteRT thread)", url: "https://news.ycombinator.com/item?id=44155827" },
+  { label: "Towards Data Science — \"My Journey in Converting PyTorch to TensorFlow Lite\" (Ran Rubin, Sept 2020)", url: "https://towardsdatascience.com/my-journey-in-converting-pytorch-to-tensorflow-lite-d244376beed/" },
+  { label: "GitHub issue tensorflow/tensorflow#53682 — NNAPI delegate fails to fall back to CPU (MoveNet on Android 11)", url: "https://github.com/tensorflow/tensorflow/issues/53682" },
 ];
 
 function Cite({ ids }: { ids: number[] }) {
@@ -253,11 +256,68 @@ function Problem() {
           </div>
         ))}
       </div>
-      <p style={{ color: MUTED }} className="text-sm mt-4">
+      <div className="mt-4 pt-3" style={{ borderTop: `1px solid ${BORDER}` }}>
+        <div className="flex items-baseline gap-3 mb-2">
+          <span style={{ color: INK }} className="text-[11px] font-bold uppercase tracking-[0.12em]">
+            What devs are saying
+          </span>
+          <span style={{ color: MUTED }} className="text-[10px]">
+            Verbatim · public sources
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <blockquote
+            style={{
+              background: SURFACE,
+              border: `1px solid ${BORDER}`,
+              borderLeft: `3px solid ${RED}`,
+            }}
+            className="p-2.5 rounded-lg text-xs leading-snug"
+          >
+            <span style={{ color: INK }} className="italic">
+              &ldquo;I haven&rsquo;t seen any SOTA model officially released having official port to tensorflow lite / liteRT for a long time&hellip;&rdquo;
+            </span>
+            <div style={{ color: MUTED }} className="mt-1.5 text-[10px] not-italic">
+              — pzo · Hacker News<Cite ids={[20]} />
+            </div>
+          </blockquote>
+          <blockquote
+            style={{
+              background: SURFACE,
+              border: `1px solid ${BORDER}`,
+              borderLeft: `3px solid ${RED}`,
+            }}
+            className="p-2.5 rounded-lg text-xs leading-snug"
+          >
+            <span style={{ color: INK }} className="italic">
+              &ldquo;I found myself collecting pieces of information from Stackoverflow posts and GitHub issues.&rdquo;
+            </span>
+            <div style={{ color: MUTED }} className="mt-1.5 text-[10px] not-italic">
+              — Ran Rubin · &ldquo;My Journey in Converting PyTorch to TensorFlow Lite&rdquo;<Cite ids={[21]} />
+            </div>
+          </blockquote>
+          <blockquote
+            style={{
+              background: SURFACE,
+              border: `1px solid ${BORDER}`,
+              borderLeft: `3px solid ${RED}`,
+            }}
+            className="p-2.5 rounded-lg text-xs leading-snug"
+          >
+            <span style={{ color: INK }} className="italic">
+              &ldquo;Even if the model is not supported by NNAPI delegate, it should fallback on CPU which is not happening.&rdquo;
+            </span>
+            <div style={{ color: MUTED }} className="mt-1.5 text-[10px] not-italic">
+              — GitHub issue #53682 · MoveNet on Android 11<Cite ids={[22]} />
+            </div>
+          </blockquote>
+        </div>
+      </div>
+      <p style={{ color: MUTED }} className="text-xs mt-3">
         ExecuTorch offers near-single-command export for PyTorch-native models
         with a public benchmark dashboard.<Cite ids={[3]} /> LiteRT has no equivalent packaged
         workflow. Edge Impulse covers the MCU/embedded slice via{" "}
-        <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded font-mono text-xs">edgeimpulse/build-deploy</code>;<Cite ids={[18]} />{" "}
+        <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded font-mono text-[10px]">edgeimpulse/build-deploy</code>;<Cite ids={[18]} />{" "}
         nothing comparable exists for mobile or web.
       </p>
     </Wrap>
