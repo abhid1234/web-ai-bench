@@ -570,168 +570,184 @@ type MarketGroup = { header: string; color: string; cols: MarketCol[] };
 // An empty Google cell with isGap is the strategic gap signal.
 const MARKET: MarketGroup[] = [
   {
-    header: "Setup & Compute Foundation",
+    header: "Setup & Authoring",
     color: BLUE,
     cols: [
       {
-        col: "Compute APIs",
-        sub: "WebGPU / WebNN / Wasm",
-        google: { vendors: ["WebGPU (Chrome-led)", "Chrome Built-in AI APIs", "WebMCP (Chrome / W3C)"] },
-        other: { vendors: ["Safari WebGPU 26", "Firefox WebGPU", "W3C WebNN", "WebAssembly"] },
+        col: "Authoring",
+        sub: "Where models start",
+        google: { vendors: ["TensorFlow", "JAX", "Keras"] },
+        other: { vendors: ["PyTorch", "MLX (Apple)", "Mojo"] },
       },
       {
-        col: "Browser ML Runtime",
-        sub: "Low-level inference",
-        google: { vendors: ["LiteRT.js", "MediaPipe Web", "TensorFlow.js (legacy)"] },
-        other: { vendors: ["ONNX Runtime Web (~300K/wk)"] },
+        col: "Model Hubs",
+        sub: "Discovery & distribution",
+        google: { vendors: ["Kaggle Models", "Vertex AI Model Garden"] },
+        other: { vendors: ["Hugging Face", "GitHub"] },
       },
       {
-        col: "Pipelines",
-        sub: "NLP / Vision tasks",
-        google: { vendors: ["MediaPipe tasks-genai"] },
-        other: { vendors: ["Transformers.js v4", "HF Optimum"] },
+        col: "Quantization",
+        sub: "Shrink for device",
+        google: { vendors: ["AI Edge Quantizer", "TF Model Optimization"] },
+        other: { vendors: ["AIMET (Qualcomm)", "Neural Magic", "ONNX Quantizer", "bitsandbytes", "GGUF (llama.cpp)"] },
       },
       {
-        col: "In-Browser LLMs",
-        sub: "Generative engines",
-        google: { vendors: ["Chrome Gemini Nano (Prompt / Translator / Summarizer / Lang-Detect)"] },
-        other: { vendors: ["WebLLM (MLC)", "llama.cpp wasm"] },
+        col: "Model Conversion",
+        sub: "Framework → runtime",
+        google: { vendors: ["ai-edge-torch", "LiteRT Converter", "MediaPipe Model Maker"] },
+        other: { vendors: ["ExecuTorch CLI", "Core ML Tools", "ONNX", "HF Optimum"] },
       },
     ],
   },
   {
-    header: "Implementation & Orchestration",
+    header: "Runtimes",
     color: GREEN,
     cols: [
       {
-        col: "Frontend AI UI",
-        sub: "TS / React orchestration",
-        google: { vendors: [], isGap: true },
-        other: { vendors: ["Vercel AI SDK", "LangChain.js", "Mastra (22k★)"] },
+        col: "Mobile Inference",
+        sub: "Android & iOS",
+        google: { vendors: ["LiteRT", "MediaPipe Tasks"] },
+        other: { vendors: ["ExecuTorch", "Core ML", "ONNX Runtime Mobile", "NCNN (Tencent)"] },
       },
       {
-        col: "Agent Orchestration",
-        sub: "Backend multi-agent",
-        google: { vendors: ["ADK 2.0", "Genkit", "Vertex AI Agent Engine"] },
-        other: { vendors: ["LangGraph", "CrewAI", "Pydantic AI", "AutoGen (declining)"] },
+        col: "Web Inference",
+        sub: "In-browser .tflite",
+        google: { vendors: ["LiteRT.js", "MediaPipe Web", "TensorFlow.js"] },
+        other: { vendors: ["ONNX Runtime Web", "Transformers.js"] },
       },
       {
-        col: "Browser Automation",
-        sub: "LAMs + agentic web",
-        google: { vendors: ["Puppeteer (legacy)"] },
-        other: { vendors: ["Browser Use (80k★)", "Stagehand v3 (CDP-native)", "Playwright", "Firecrawl (scraping)"] },
+        col: "MCU / Embedded",
+        sub: "Sub-1MB footprint",
+        google: { vendors: ["LiteRT Micro"], isGap: true },
+        other: { vendors: ["Edge Impulse", "Arduino TinyML", "STM X-CUBE-AI", "NXP eIQ"] },
       },
       {
-        col: "Agentic IDEs",
-        sub: "Autonomous coding",
-        google: { vendors: ["Antigravity", "Jules", "Gemini Code Assist"] },
-        other: { vendors: ["Cursor", "Windsurf (Cognition)", "Devin 3", "Amazon Kiro"] },
-      },
-      {
-        col: "Vibe Coding",
-        sub: "No-code AI apps",
-        google: { vendors: ["AI Studio Build", "Stitch", "Opal"] },
-        other: { vendors: ["Vercel v0", "Replit Agent 3", "Bolt.new", "Lovable"] },
+        col: "On-Device LLMs",
+        sub: "Generative on mobile",
+        google: { vendors: ["LiteRT-LM", "MediaPipe LLM", "Gemini Nano (AICore)"] },
+        other: { vendors: ["llama.cpp", "MLC LLM", "Ollama", "FoundationModels (Apple)", "Phi-Silica (MS)"] },
       },
     ],
   },
   {
-    header: "Deployment, Governance, Observability",
+    header: "Acceleration & Deployment",
     color: RED,
     cols: [
       {
-        col: "Headless Infra",
-        sub: "Agent sandboxes / browser hosting",
-        google: { vendors: ["Cloud Run sandboxes", "Vertex Agent Engine Code Exec", "GKE Agent Sandbox"] },
-        other: { vendors: ["Browserbase", "Cloudflare Browser Run", "Render", "Fly.io"] },
+        col: "NPU Acceleration",
+        sub: "Silicon delegates",
+        google: { vendors: ["AICore", "Edge TPU", "Coral"] },
+        other: { vendors: ["Qualcomm AI Engine Direct", "MediaTek NeuroPilot", "Apple Neural Engine", "ARM Ethos", "Intel OpenVINO"] },
       },
       {
-        col: "AI Observability",
-        sub: "Traces / evals / cost",
-        google: { vendors: ["Vertex Agent Observability", "Agent Anomaly Detection", "Agent Evaluation"], isGap: true },
-        other: { vendors: ["Langfuse (ClickHouse)", "Braintrust", "LangSmith", "Helicone", "Confident AI"] },
+        col: "Mobile / Edge CI/CD",
+        sub: "Build & ship pipelines",
+        google: { vendors: [], isGap: true },
+        other: { vendors: ["Bitrise", "GitHub Actions", "CircleCI", "Harness", "Jenkins", "EI build-deploy"] },
       },
       {
-        col: "Agentic Browser",
-        sub: "AI-first shell",
-        google: { vendors: ["Chrome + Gemini in Chrome"] },
-        other: { vendors: ["Comet (Perplexity)", "Atlas (OpenAI)", "Dia", "Sigma", "Arc (sunset)"] },
+        col: "Benchmarking",
+        sub: "Device matrix & perf",
+        google: { vendors: ["AI Edge Portal", "TFLite benchmark"], isGap: true },
+        other: { vendors: ["MLPerf Mobile", "AI Benchmark", "Geekbench AI"] },
+      },
+      {
+        col: "On-Device Observability",
+        sub: "Crash, perf, A/B",
+        google: { vendors: ["Firebase Crashlytics", "Firebase Performance", "Firebase A/B Testing"] },
+        other: { vendors: ["Sentry", "Datadog Mobile RUM", "Mixpanel", "AppCenter"] },
       },
     ],
   },
 ];
 
 const VENDOR_ICONS: Record<string, string | null> = {
-  // Compute Foundation
-  "WebGPU (Chrome-led)": "googlechrome",
-  "Chrome Built-in AI APIs": "googlechrome",
-  "WebMCP (Chrome / W3C)": "googlechrome",
-  "Safari WebGPU 26": "safari",
-  "Firefox WebGPU": "firefox",
-  "W3C WebNN": null,
-  "WebAssembly": "webassembly",
-  "LiteRT.js": "googlechrome",
-  "MediaPipe Web": "mediapipe",
-  "TensorFlow.js (legacy)": "tensorflow",
-  "ONNX Runtime Web (~300K/wk)": "onnx",
-  "MediaPipe tasks-genai": "mediapipe",
-  "Transformers.js v4": "huggingface",
+  // Authoring frameworks
+  "TensorFlow": "tensorflow",
+  "JAX": null,
+  "Keras": "keras",
+  "PyTorch": "pytorch",
+  "MLX (Apple)": "apple",
+  "Mojo": null,
+  // Model hubs
+  "Kaggle Models": "kaggle",
+  "Vertex AI Model Garden": "googlecloud",
+  "Hugging Face": "huggingface",
+  "GitHub": "github",
+  // Quantization
+  "AI Edge Quantizer": "google",
+  "TF Model Optimization": "tensorflow",
+  "AIMET (Qualcomm)": "qualcomm",
+  "Neural Magic": null,
+  "ONNX Quantizer": "onnx",
+  "bitsandbytes": null,
+  "GGUF (llama.cpp)": "meta",
+  // Model conversion
+  "ai-edge-torch": "google",
+  "LiteRT Converter": "google",
+  "MediaPipe Model Maker": "mediapipe",
+  "ExecuTorch CLI": "pytorch",
+  "Core ML Tools": "apple",
+  "ONNX": "onnx",
   "HF Optimum": "huggingface",
-  "Chrome Gemini Nano (Prompt / Translator / Summarizer / Lang-Detect)": "googlegemini",
-  "WebLLM (MLC)": null,
-  "llama.cpp wasm": null,
-  // Frontend / Orchestration
-  "Vercel AI SDK": "vercel",
-  "LangChain.js": "langchain",
-  "Mastra (22k★)": null,
-  "ADK 2.0": "google",
-  "Genkit": "firebase",
-  "Vertex AI Agent Engine": "googlecloud",
-  "LangGraph": "langgraph",
-  "CrewAI": "crewai",
-  "Pydantic AI": "pydantic",
-  "AutoGen (declining)": null,
-  "Puppeteer (legacy)": "puppeteer",
-  "Browser Use (80k★)": null,
-  "Stagehand v3 (CDP-native)": null,
-  "Playwright": null,
-  "Firecrawl (scraping)": null,
-  "Antigravity": null,
-  "Jules": "google",
-  "Gemini Code Assist": "googlegemini",
-  "Cursor": "cursor",
-  "Windsurf (Cognition)": "windsurf",
-  "Devin 3": null,
-  "Amazon Kiro": null,
-  "AI Studio Build": "googlegemini",
-  "Stitch": null,
-  "Opal": null,
-  "Vercel v0": "vercel",
-  "Replit Agent 3": "replit",
-  "Bolt.new": null,
-  "Lovable": null,
-  // Deployment / Observability / Browser
-  "Cloud Run sandboxes": "googlecloud",
-  "Vertex Agent Engine Code Exec": "googlecloud",
-  "GKE Agent Sandbox": "googlecloud",
-  "Browserbase": null,
-  "Cloudflare Browser Run": "cloudflare",
-  "Render": "render",
-  "Fly.io": "flydotio",
-  "Vertex Agent Observability": "googlecloud",
-  "Agent Anomaly Detection": "googlecloud",
-  "Agent Evaluation": "googlecloud",
-  "Langfuse (ClickHouse)": null,
-  "Braintrust": "braintrust",
-  "LangSmith": "langchain",
-  "Helicone": null,
-  "Confident AI": null,
-  "Chrome + Gemini in Chrome": "googlechrome",
-  "Comet (Perplexity)": "perplexity",
-  "Atlas (OpenAI)": null,
-  "Dia": null,
-  "Sigma": null,
-  "Arc (sunset)": "arc",
+  // Mobile inference
+  "LiteRT": "google",
+  "MediaPipe Tasks": "mediapipe",
+  "ExecuTorch": "pytorch",
+  "Core ML": "apple",
+  "ONNX Runtime Mobile": "onnx",
+  "NCNN (Tencent)": null,
+  // Web inference
+  "LiteRT.js": "google",
+  "MediaPipe Web": "mediapipe",
+  "TensorFlow.js": "tensorflow",
+  "ONNX Runtime Web": "onnx",
+  "Transformers.js": "huggingface",
+  // MCU / Embedded
+  "LiteRT Micro": "google",
+  "Edge Impulse": "edgeimpulse",
+  "Arduino TinyML": "arduino",
+  "STM X-CUBE-AI": "stmicroelectronics",
+  "NXP eIQ": "nxp",
+  // On-device LLMs
+  "LiteRT-LM": "google",
+  "MediaPipe LLM": "mediapipe",
+  "Gemini Nano (AICore)": "googlegemini",
+  "llama.cpp": "meta",
+  "MLC LLM": null,
+  "Ollama": "ollama",
+  "FoundationModels (Apple)": "apple",
+  "Phi-Silica (MS)": null,
+  // NPU Acceleration
+  "AICore": "android",
+  "Edge TPU": "google",
+  "Coral": null,
+  "Qualcomm AI Engine Direct": "qualcomm",
+  "MediaTek NeuroPilot": "mediatek",
+  "Apple Neural Engine": "apple",
+  "ARM Ethos": "arm",
+  "Intel OpenVINO": "intel",
+  // Mobile / Edge CI/CD
+  "Bitrise": "bitrise",
+  "GitHub Actions": "githubactions",
+  "CircleCI": "circleci",
+  "Harness": null,
+  "Jenkins": "jenkins",
+  "EI build-deploy": "edgeimpulse",
+  // Benchmarking
+  "AI Edge Portal": "google",
+  "TFLite benchmark": "tensorflow",
+  "MLPerf Mobile": null,
+  "AI Benchmark": null,
+  "Geekbench AI": null,
+  // On-device observability
+  "Firebase Crashlytics": "firebase",
+  "Firebase Performance": "firebase",
+  "Firebase A/B Testing": "firebase",
+  "Sentry": "sentry",
+  "Datadog Mobile RUM": "datadog",
+  "Mixpanel": "mixpanel",
+  "AppCenter": null,
 };
 
 function shortName(name: string): string {
@@ -792,10 +808,10 @@ function MarketMap() {
   return (
     <Wrap>
       <Title>
-        The Web AI / Agentic ecosystem.
+        The on-device AI ecosystem.
         <br />
         <span style={{ color: GRAY }} className="text-2xl font-normal">
-          Google 1P (blue) vs. the rest of the ecosystem. Empty 1P cells = gaps.
+          Google 1P (blue) vs. the rest. Where LiteRT, MediaPipe, and LiteRT-LM compete across the full lifecycle.
         </span>
       </Title>
       <div className="flex-1 overflow-x-auto -mx-2 px-2">
@@ -948,21 +964,21 @@ function MarketMap() {
           No competitive Google product
         </div>
         <div style={{ color: MUTED }} className="ml-auto text-[0.65rem]">
-          Reference: Sequoia / Harness $11B Developer Toolchain map · Vendor census: Gemini Deep Research Max (2026-05-06) + Market Landscape Map for AI DevKit (Google Doc, 2026-05-10) + per-vendor WebSearch verification (2026-05-10)
+          Scope: products the Google AI Edge team owns or competes with directly — per <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded font-mono text-[10px]">ai.google.dev/edge</code>. Vendor list verified against vendor docs · 2026-05-12.
         </div>
       </div>
       <p style={{ color: MUTED }} className="text-xs mt-2">
         <strong style={{ color: INK }}>Strategic read:</strong>{" "}
-        After per-vendor verification, Google leads end-to-end across this stack: compute APIs (WebGPU, Chrome Built-in AI, WebMCP), in-browser LLMs (Gemini Nano), backend orchestration (ADK 2.0, Genkit, Vertex Agent Engine), agentic IDEs (Antigravity, Jules, Gemini Code Assist), <strong style={{ color: BLUE }}>vibe coding</strong> (AI Studio Build, Stitch, Opal — all launched 2025–2026), agent sandboxes (Cloud Run + Vertex Agent Engine Code Exec + GKE Agent Sandbox), and the agentic browser shell (Chrome).
+        Across the on-device AI lifecycle, Google leads or competes seriously in 9 of 12 columns — authoring (TensorFlow + JAX + Keras), hubs (Kaggle + Vertex Model Garden), quantization (AI Edge Quantizer), conversion (ai-edge-torch), mobile + web + LLM runtimes (LiteRT, LiteRT.js, MediaPipe, LiteRT-LM, Gemini Nano), NPU delegates (AICore + Edge TPU), and observability (Firebase Crashlytics + Performance + A/B Testing). The 1P stack already covers the full pipeline from <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded font-mono text-[10px]">.pt</code> to device.
         <br />
-        <strong style={{ color: RED }}>One acute gap remains:</strong>{" "}
-        <strong style={{ color: RED }}>Frontend AI UI</strong> — Vercel AI SDK + LangChain.js + Mastra own the TS/React orchestration layer that Genkit (backend-only) and ADK (Python-first) don't address.
-        <strong style={{ color: RED }}> One weak position:</strong>{" "}
-        <strong style={{ color: RED }}>developer-facing LLM observability</strong> — Vertex Agent Observability suite exists, but Langfuse / Braintrust / Helicone / LangSmith own developer mindshare on prompt versioning + LLM-as-a-judge.
+        <strong style={{ color: RED }}>Three weak spots:</strong>{" "}
+        <strong style={{ color: RED }}>(1) GAP — Mobile / Edge CI/CD</strong> — zero 1P offering. Bitrise / GitHub Actions / Harness / Edge Impulse's <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded font-mono text-[10px]">build-deploy</code> Action own this lane. The DevKit closes this gap directly.<Cite ids={[17, 18]} />
+        <strong style={{ color: RED }}> (2) Weak — MCU / Embedded</strong> — LiteRT for Microcontrollers exists, but Edge Impulse owns developer mindshare for sub-1MB deployment.
+        <strong style={{ color: RED }}> (3) Weak — Benchmarking</strong> — AI Edge Portal is private preview; MLPerf Mobile, AI Benchmark, and Geekbench AI own public device-matrix mindshare.
         <br />
-        <strong style={{ color: INK }}>Pitch implication:</strong> the DevKit's highest-leverage partnership angles are <strong style={{ color: BLUE }}>Vercel</strong> (close the Frontend AI UI gap via SDK partnership) and <strong style={{ color: BLUE }}>Langfuse / Braintrust</strong> (close the observability mindshare gap via Strategic-tier integration).
+        <strong style={{ color: INK }}>Pitch implication:</strong> DevKit + AI Edge Portal public ramp + an Edge Impulse partnership close all three weak spots at once — and none require new tech, only packaging, distribution, and partnership work.
         <br />
-        <strong style={{ color: INK }}>The moat:</strong> Google has the most complete on-device AI stack in the industry — silicon (Pixel Tensor), OS (AICore + Android), models (Gemma 4), cloud training (Vertex AI), runtimes (LiteRT, LiteRT-LM), agent infra (ADK 2.0 + Agent Engine Code Exec). The DevKit packages this 1P stack into a <strong style={{ color: BLUE }}>single Apple-style workflow no competitor can replicate</strong> — because no competitor has the underlying stack.
+        <strong style={{ color: INK }}>The moat:</strong> Google has the most complete on-device AI stack in the industry — silicon (Pixel Tensor + Edge TPU), OS (AICore + Android), models (Gemma 4), cloud training (Vertex AI), four runtimes (mobile, web, MCU, LLM), and observability (Firebase). The DevKit packages this 1P stack into a <strong style={{ color: BLUE }}>single Apple-style developer workflow no competitor can replicate</strong> — because no competitor owns this full stack.
       </p>
     </Wrap>
   );
@@ -1902,7 +1918,7 @@ const SLIDE_META: SlideMeta[] = [
   { title: "Cover", section: "Opening", note: "Hook: deployment layer for on-device AI is missing. Three plays, one recommendation. Pause for eye contact." },
   { title: "Problem", section: "The Stakes", note: "Frame: nine great Google products, zero coherent workflow. A custom edge model still takes six manual steps. ExecuTorch ships a CLI; we don't." },
   { title: "Stakes", section: "The Stakes", note: "Three threats: ExecuTorch went vendor-neutral (Linux Foundation, April 2026), World's Fair has zero edge-CI/CD tracks, ONNX Runtime Web won browser AI. 18-24 month window." },
-  { title: "Market map", section: "The Stakes", note: "Reference slide. Per-vendor verified. 8 of 12 boxes have strong 1P. Net: 1 acute gap (Frontend AI UI) + 1 weak position (developer-facing observability mindshare). The DevKit packages the rest." },
+  { title: "Market map", section: "The Stakes", note: "Reference slide, scoped to the AI Edge team's actual lane (per ai.google.dev/edge). 9 of 12 boxes have strong 1P. Net: 1 acute GAP (Mobile / Edge CI/CD — the DevKit lane) + 2 weak positions (MCU mindshare vs Edge Impulse, benchmarking — AI Edge Portal still private preview)." },
   { title: "Two worlds", section: "The Stakes", note: "Pre-empt the AICore objection: AICore solves general AI on Android. DevKit is for the second world — custom domain models AICore won't serve." },
   { title: "100× hardware moat", section: "The Stakes", note: "Hero number. Pause. ExecuTorch can't replicate Google × Qualcomm AI Engine Direct or MediaTek NeuroPilot integrations. This is the silicon-vendor partnership advantage." },
   { title: "Part II · The plays", section: "The Plays", note: "Transition. Section break. Take a breath, then dive into the three pitches." },
