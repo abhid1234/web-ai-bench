@@ -1128,7 +1128,7 @@ function ThreePlays() {
             training platforms, deployment tools, and model hubs.
           </div>
           <div style={{ color: MUTED }} className="text-xs">
-            4 partner classes · 3 tiers · Annual summit
+            4 partner classes · 3 tiers · Year-2 Partner Summit (2027)
           </div>
         </div>
 
@@ -1318,9 +1318,9 @@ function Devkit() {
             "CLI v1.0",
             "Actions on Marketplace",
             "RAG / Translation / Camera+LLM templates",
-            "Qualcomm hackathon · Apr 30, 2026",
+            "Next Google × Qualcomm hackathon (target: H2 2026)",
             "Public benchmark dashboard",
-            "World's Fair talk",
+            "Talk proposal: World's Fair 2027 / PyTorch Conf",
           ].map((m, i) => (
             <span key={i} className="inline-flex items-center gap-3">
               {i > 0 && <span style={{ color: BORDER }}>•</span>}
@@ -1448,7 +1448,7 @@ function PartnerNetwork() {
           <span style={{ color: BORDER }}>•</span>
           <span style={{ color: GRAY }}>Public portal at <code style={{ background: PAGE, border: `1px solid ${BORDER}` }} className="px-1 rounded font-mono text-[10px]">ai.google.dev/edge/partners</code></span>
           <span style={{ color: BORDER }}>•</span>
-          <span style={{ color: GRAY }}>Annual summit</span>
+          <span style={{ color: GRAY }}>Inaugural Partner Summit at World&apos;s Fair 2027</span>
           <span style={{ color: BORDER }}>•</span>
           <span style={{ color: GRAY }}>v2: Unsloth / ElevenLabs (gen-AI tier)</span>
         </div>
@@ -1803,9 +1803,9 @@ function TheAsk() {
               "Actions on GitHub Marketplace + Bitrise Steps + CircleCI Orbs",
               "Templates: RAG · Translation · Camera+LLM — built on Gemma 4 E2B/E4B",
               "Hardware moat surfaced: Qualcomm AI Engine Direct (100× CPU) + MediaTek NeuroPilot (12× CPU) benchmark profiles",
-              "Official DevKit at Google × Qualcomm LiteRT hackathon (Sunnyvale, Apr 30 – May 1, 2026 confirmed)",
+              "Official DevKit at the next Google × Qualcomm LiteRT hackathon (target: H2 2026)",
               "3+ co-announcement partners (target: Harness, Roboflow, Ultralytics)",
-              "Talk accepted at AI Engineer World's Fair or PyTorch Conference",
+              "Talk proposal submitted to AI Engineer World's Fair 2027 / PyTorch Conference",
             ].map((d) => (
               <li
                 key={d}
