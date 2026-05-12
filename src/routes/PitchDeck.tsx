@@ -573,6 +573,163 @@ function HardwareMoatHero() {
   );
 }
 
+// ─── Slide 2.3: The Numbers — three landscapes, three openings ──────────────
+
+function TheNumbers() {
+  const columns = [
+    {
+      title: "Web ML Runtimes",
+      eyebrow: "Weekly npm downloads",
+      hero: "0.06%",
+      heroSub: "LiteRT.js share of ORT-Web",
+      accent: RED,
+      rows: [
+        { label: "onnxruntime-web", value: "1.4M / wk", logo: "onnx" },
+        { label: "@huggingface/transformers", value: "672K / wk", logo: "huggingface" },
+        { label: "@mlc-ai/web-llm", value: "40K / wk", logo: null },
+        { label: "@mediapipe/tasks-genai", value: "7.5K / wk", logo: "mediapipe" },
+        { label: "@litertjs/core", value: "0.8K / wk", logo: "google", emphasis: true },
+      ],
+      diagnosis: "Not a tech gap — LiteRT v2.1.4 (Apr 2026) is the officially recommended Android runtime with industry-leading NPU support. The gap is awareness + ecosystem + operationalization.",
+      pitchRef: "→ Pitch 1 (Partner Network)",
+    },
+    {
+      title: "On-Device AI CI/CD",
+      eyebrow: "GitHub Actions for LiteRT",
+      hero: "0",
+      heroSub: "Actions on Marketplace today",
+      accent: GREEN,
+      rows: [
+        { label: "GH Marketplace · TFLite", value: "0", logo: "githubactions", emphasis: true },
+        { label: "Harness", value: "no ML CI", logo: null },
+        { label: "Edge Impulse", value: "MCU only", logo: "edgeimpulse" },
+        { label: "ExecuTorch", value: "CLI + bench", logo: "pytorch" },
+        { label: "MLflow / W&B", value: "train-side only", logo: null },
+      ],
+      diagnosis: "Total whitespace at the mobile / Android / iOS / web layer. Edge Impulse owns MCU; nothing covers the rest. First mover wins.",
+      pitchRef: "→ Pitch 2 (DevKit) — Recommended",
+    },
+    {
+      title: "Cloud-to-Edge",
+      eyebrow: "Train → ship pipelines",
+      hero: "3 → 1",
+      heroSub: "Fragmented today → unified target",
+      accent: YELLOW,
+      rows: [
+        { label: "AWS SageMaker Edge", value: "EOL Apr 2024", logo: null },
+        { label: "Azure IoT + Azure ML", value: "not mobile-native", logo: null },
+        { label: "Apple Core ML + Xcode", value: "best in class", logo: "apple", emphasis: true },
+        { label: "Vertex AI → LiteRT", value: "no path", logo: "googlecloud" },
+      ],
+      diagnosis: "AWS exited the market. Apple is the gold standard for iOS. Google has 3 disconnected pipelines (Vertex, Firebase, LiteRT) and no documented custom-model path.",
+      pitchRef: "→ Pitch 3 (Vertex Bridge)",
+    },
+  ];
+
+  return (
+    <Wrap>
+      <h2
+        style={{ color: INK, fontFamily: FONT_HEAD, letterSpacing: "-0.025em" }}
+        className="text-4xl md:text-[2.75rem] font-bold leading-[1.05] mb-2"
+      >
+        The market we&apos;re sizing into.
+      </h2>
+      <p style={{ color: GRAY }} className="text-xl font-light mb-5 leading-snug">
+        Three landscapes, three openings — every claim verified April 30, 2026.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1 stagger-enter">
+        {columns.map((col) => (
+          <div
+            key={col.title}
+            style={{
+              background: SURFACE,
+              border: `1px solid ${BORDER}`,
+              borderTop: `3px solid ${col.accent}`,
+            }}
+            className="rounded-2xl p-4 flex flex-col"
+          >
+            <div style={{ color: col.accent }} className="text-[10px] font-bold uppercase tracking-widest mb-1">
+              {col.title}
+            </div>
+            <div style={{ color: MUTED }} className="text-[10px] uppercase tracking-wider mb-3">
+              {col.eyebrow}
+            </div>
+            <div className="mb-4">
+              <div
+                style={{ color: INK, fontFamily: FONT_HEAD, letterSpacing: "-0.04em", lineHeight: 0.95 }}
+                className="text-5xl font-bold"
+              >
+                {col.hero}
+              </div>
+              <div style={{ color: GRAY }} className="text-xs mt-1">
+                {col.heroSub}
+              </div>
+            </div>
+            <div className="space-y-1 mb-3 flex-1">
+              {col.rows.map((row) => {
+                const slug = row.logo;
+                const isEmph = row.emphasis;
+                return (
+                  <div
+                    key={row.label}
+                    className="flex items-center justify-between gap-2 text-[11px] py-0.5"
+                    style={{
+                      borderBottom: `1px solid ${BORDER}80`,
+                      paddingBottom: 3,
+                    }}
+                  >
+                    <span className="inline-flex items-center gap-1.5 min-w-0">
+                      {slug ? (
+                        <img
+                          src={`https://cdn.simpleicons.org/${slug}/${isEmph ? col.accent.slice(1) : "5f6368"}`}
+                          alt=""
+                          width={10}
+                          height={10}
+                          loading="lazy"
+                          className="shrink-0"
+                        />
+                      ) : (
+                        <span style={{ width: 10 }} className="shrink-0" />
+                      )}
+                      <span
+                        style={{ color: isEmph ? col.accent : INK, fontWeight: isEmph ? 700 : 500 }}
+                        className="truncate"
+                      >
+                        {row.label}
+                      </span>
+                    </span>
+                    <span
+                      style={{ color: isEmph ? col.accent : GRAY, fontWeight: isEmph ? 700 : 400 }}
+                      className="font-mono text-[10px] shrink-0"
+                    >
+                      {row.value}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <div
+              style={{ background: col.accent + "0d", border: `1px solid ${col.accent}25`, color: INK }}
+              className="rounded-lg p-2.5 text-[11px] leading-snug mb-2"
+            >
+              <span style={{ color: col.accent }} className="font-semibold">Diagnosis:</span>{" "}
+              {col.diagnosis}
+            </div>
+            <div style={{ color: col.accent }} className="text-[11px] font-bold uppercase tracking-wider">
+              {col.pitchRef}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p style={{ color: MUTED }} className="text-[10px] mt-3">
+        Sources: npm registry stats (Apr 30, 2026), GitHub Marketplace search, ExecuTorch v1.2.0 release notes, vendor product docs.<Cite ids={[3, 8, 17, 18]} />
+      </p>
+    </Wrap>
+  );
+}
+
 // ─── Slide 2.4: Market map — On-device AI lifecycle × Google 1P ──────────────
 
 type MarketCell = { vendors: string[]; isGap?: boolean };
@@ -1956,6 +2113,7 @@ const SLIDES = [
   <Cover />,
   <Problem />,
   <Stakes />,
+  <TheNumbers />,
   <MarketMap />,
   <TwoWorlds />,
   <HardwareMoatHero />,
@@ -1977,6 +2135,7 @@ const SLIDE_META: SlideMeta[] = [
   { title: "Cover", section: "Opening", note: "Hook: deployment layer for on-device AI is missing. Three plays, one recommendation. Pause for eye contact." },
   { title: "Problem", section: "The Stakes", note: "Frame: nine great Google products, zero coherent workflow. A custom edge model still takes six manual steps. ExecuTorch ships a CLI; we don't." },
   { title: "Stakes", section: "The Stakes", note: "Three threats: ExecuTorch went vendor-neutral (Linux Foundation, April 2026), World's Fair has zero edge-CI/CD tracks, ONNX Runtime Web won browser AI. 18-24 month window." },
+  { title: "The numbers", section: "The Stakes", note: "Quantitative backup for the three pitches. Web ML: LiteRT.js at 0.06% of ORT-Web (awareness gap, not tech). CI/CD: 0 LiteRT Actions on GitHub Marketplace (whitespace). Cloud-to-edge: AWS exited, Apple gold standard, Google has no path. Each column maps to one of the three pitches." },
   { title: "Market map", section: "The Stakes", note: "Reference slide, scoped to the AI Edge team's actual lane (per ai.google.dev/edge). 9 of 12 boxes have strong 1P. Net: 1 acute GAP (Mobile / Edge CI/CD — the DevKit lane) + 2 weak positions (MCU mindshare vs Edge Impulse, benchmarking — AI Edge Portal still private preview)." },
   { title: "Two worlds", section: "The Stakes", note: "Pre-empt the AICore objection: AICore solves general AI on Android. DevKit is for the second world — custom domain models AICore won't serve." },
   { title: "100× hardware moat", section: "The Stakes", note: "Hero number. Pause. ExecuTorch can't replicate Google × Qualcomm AI Engine Direct or MediaTek NeuroPilot integrations. This is the silicon-vendor partnership advantage." },
