@@ -661,20 +661,123 @@ const MARKET: MarketGroup[] = [
   },
 ];
 
-function MarketPill({ text, tone }: { text: string; tone: "google" | "other" }) {
+const VENDOR_ICONS: Record<string, string | null> = {
+  // Compute Foundation
+  "WebGPU (Chrome-led)": "googlechrome",
+  "Chrome Built-in AI APIs": "googlechrome",
+  "WebMCP (Chrome / W3C)": "googlechrome",
+  "Safari WebGPU 26": "safari",
+  "Firefox WebGPU": "firefox",
+  "W3C WebNN": null,
+  "WebAssembly": "webassembly",
+  "LiteRT.js": "googlechrome",
+  "MediaPipe Web": "mediapipe",
+  "TensorFlow.js (legacy)": "tensorflow",
+  "ONNX Runtime Web (~300K/wk)": "onnx",
+  "MediaPipe tasks-genai": "mediapipe",
+  "Transformers.js v4": "huggingface",
+  "HF Optimum": "huggingface",
+  "Chrome Gemini Nano (Prompt / Translator / Summarizer / Lang-Detect)": "googlegemini",
+  "WebLLM (MLC)": null,
+  "llama.cpp wasm": null,
+  // Frontend / Orchestration
+  "Vercel AI SDK": "vercel",
+  "LangChain.js": "langchain",
+  "Mastra (22k★)": null,
+  "ADK 2.0": "google",
+  "Genkit": "firebase",
+  "Vertex AI Agent Engine": "googlecloud",
+  "LangGraph": "langgraph",
+  "CrewAI": "crewai",
+  "Pydantic AI": "pydantic",
+  "AutoGen (declining)": null,
+  "Puppeteer (legacy)": "puppeteer",
+  "Browser Use (80k★)": null,
+  "Stagehand v3 (CDP-native)": null,
+  "Playwright": null,
+  "Firecrawl (scraping)": null,
+  "Antigravity": null,
+  "Jules": "google",
+  "Gemini Code Assist": "googlegemini",
+  "Cursor": "cursor",
+  "Windsurf (Cognition)": "windsurf",
+  "Devin 3": null,
+  "Amazon Kiro": null,
+  "AI Studio Build": "googlegemini",
+  "Stitch": null,
+  "Opal": null,
+  "Vercel v0": "vercel",
+  "Replit Agent 3": "replit",
+  "Bolt.new": null,
+  "Lovable": null,
+  // Deployment / Observability / Browser
+  "Cloud Run sandboxes": "googlecloud",
+  "Vertex Agent Engine Code Exec": "googlecloud",
+  "GKE Agent Sandbox": "googlecloud",
+  "Browserbase": null,
+  "Cloudflare Browser Run": "cloudflare",
+  "Render": "render",
+  "Fly.io": "flydotio",
+  "Vertex Agent Observability": "googlecloud",
+  "Agent Anomaly Detection": "googlecloud",
+  "Agent Evaluation": "googlecloud",
+  "Langfuse (ClickHouse)": null,
+  "Braintrust": "braintrust",
+  "LangSmith": "langchain",
+  "Helicone": null,
+  "Confident AI": null,
+  "Chrome + Gemini in Chrome": "googlechrome",
+  "Comet (Perplexity)": "perplexity",
+  "Atlas (OpenAI)": null,
+  "Dia": null,
+  "Sigma": null,
+  "Arc (sunset)": "arc",
+};
+
+function shortName(name: string): string {
+  // Drop trailing parenthetical so display labels stay compact.
+  return name.replace(/\s*\(.*?\)\s*$/, "").trim();
+}
+
+function MarketVendor({ name, tone }: { name: string; tone: "google" | "other" }) {
   const isG = tone === "google";
+  const slug = VENDOR_ICONS[name];
+  const accentHex = isG ? "1a73e8" : "202124";
+  const textColor = isG ? BLUE : INK;
   return (
-    <span
-      style={{
-        background: isG ? BLUE + "22" : "transparent",
-        color: isG ? BLUE : INK,
-        border: isG ? `1px solid ${BLUE}55` : "none",
-        fontWeight: isG ? 700 : 400,
-      }}
-      className="inline-block rounded px-1 py-px text-[0.55rem] leading-tight"
+    <div
+      className="inline-flex flex-col items-center text-center gap-0.5"
+      style={{ width: 52 }}
+      title={name}
     >
-      {text}
-    </span>
+      <span
+        style={{
+          background: isG ? BLUE + "14" : SURFACE,
+          border: `1px solid ${isG ? BLUE + "45" : BORDER}`,
+        }}
+        className="w-6 h-6 rounded flex items-center justify-center shrink-0"
+      >
+        {slug ? (
+          <img
+            src={`https://cdn.simpleicons.org/${slug}/${accentHex}`}
+            alt=""
+            width={14}
+            height={14}
+            loading="lazy"
+          />
+        ) : (
+          <span style={{ color: textColor }} className="text-[9px] font-black">
+            {name[0]}
+          </span>
+        )}
+      </span>
+      <span
+        style={{ color: textColor, lineHeight: 1.1, fontWeight: isG ? 600 : 500 }}
+        className="text-[7.5px] block"
+      >
+        {shortName(name)}
+      </span>
+    </div>
   );
 }
 
@@ -790,9 +893,9 @@ function MarketMap() {
                         Weak
                       </div>
                     )}
-                    <div className="flex flex-wrap gap-0.5">
+                    <div className="flex flex-wrap gap-x-1 gap-y-1.5 justify-start">
                       {col.google.vendors.map((v) => (
-                        <MarketPill key={v} text={v} tone="google" />
+                        <MarketVendor key={v} name={v} tone="google" />
                       ))}
                     </div>
                   </td>
@@ -824,9 +927,9 @@ function MarketMap() {
                   }}
                   className="p-1.5 align-top"
                 >
-                  <div className="flex flex-wrap gap-0.5">
+                  <div className="flex flex-wrap gap-x-1 gap-y-1.5 justify-start">
                     {col.other.vendors.map((v) => (
-                      <MarketPill key={v} text={v} tone="other" />
+                      <MarketVendor key={v} name={v} tone="other" />
                     ))}
                   </div>
                 </td>
